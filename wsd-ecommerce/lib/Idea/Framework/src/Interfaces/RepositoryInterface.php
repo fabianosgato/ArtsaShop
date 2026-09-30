@@ -37,4 +37,5 @@ interface RepositoryInterface
 
     public static function loadModel(): Model;
 
+
 }

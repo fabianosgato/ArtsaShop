@@ -25,12 +25,14 @@ use Idea\Framework\Repository\System\SysModuleRepository;
 
 class PermissionMatrix extends Field
 {
-    protected string $view = 'idea-components::forms.permission-matrix';
+
+    protected string $view = 'idea-components::wsdadmin.forms.permission-matrix';
 
     public ?int $groupId = null;
 
     protected function setUp(): void
     {
+
         parent::setUp();
 
         $this->default([]);

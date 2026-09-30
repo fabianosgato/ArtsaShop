@@ -25,4 +25,14 @@ class CmsFaqRepository extends AbstractRepository
 
     protected static $model = CmsFaq::class;
 
+    public static function updateOrCreate(?int $id, array $values = []): CmsFaq
+    {
+        return self::getData()->updateOrCreate(
+            attributes: [
+                'faq_id' => $id
+            ],
+            values: $values
+        );
+    }
+
 }

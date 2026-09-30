@@ -1,8 +1,4 @@
 <div>
-{{--<pre>--}}
-{{--STATE:--}}
-{{--{{ var_export($getState(), true) }}--}}
-{{--</pre>--}}
     @foreach($getPermissions() as $permission)
         <div class="card card-info card-outline mb-6">
             <div class="card-header">

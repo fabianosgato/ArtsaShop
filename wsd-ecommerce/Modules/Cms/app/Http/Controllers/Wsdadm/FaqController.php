@@ -15,9 +15,12 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
+
 namespace Modules\Cms\Http\Controllers\Wsdadm;
 
 use Idea\Framework\Admin\AdminController;
+use Idea\Framework\Repository\Cms\CmsFaqRepository;
+use Illuminate\Support\Facades\Session;
 
 class FaqController extends AdminController
 {
@@ -33,6 +36,36 @@ class FaqController extends AdminController
         return view('wsdadm.partials.grids', [
             'componentName' => 'cms::grids.faq-grid'
         ]);
+    }
+
+    public function insert()
+    {
+        // Retorna a View
+        return view('wsdadm.partials.forms', [
+            'componentName' => 'cms::form.faq-form',
+            'data' => []
+        ]);
+    }
+
+    public function edit($id)
+    {
+
+        // Retorna a faq pelo ID
+        $cmsFaq = CmsFaqRepository::find($id);
+
+        if ($cmsFaq) {
+            // Retorna a View
+            return view('wsdadm.partials.forms', [
+                'componentName' => 'cms::form.faq-form',
+                'data' => $cmsFaq->toArray()
+            ]);
+
+        }
+
+        Session::flash('error', 'O conteúdo da faq não foi localizado!');
+
+        return redirect()->route(route('wsdadm.cms.faq'));
+
     }
 
 }

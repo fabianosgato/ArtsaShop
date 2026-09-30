@@ -17,11 +17,13 @@
  */
 namespace Modules\Cms\Livewire\Grids;
 
+use App\Models\CmsFaq;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Idea\Framework\Admin\Grids\Grid;
 use Idea\Framework\Repository\Cms\CmsFaqRepository;
 
@@ -30,11 +32,11 @@ class FaqGrid extends Grid
 
     public string $heading = 'Páginas';
     public string $prefix = 'cmsPageGrid';
-    public string $primaryKey = 'page_id';
-    public string $sortField = 'page_id';
+    public string $primaryKey = 'faq_id';
+    public string $sortField = 'faq_id';
     public string $sortDirection = 'asc';
 
-    public function table(Tables\Table $table): Tables\Table
+    public function table(Table $table): Table
     {
 
         return $table
@@ -69,20 +71,20 @@ class FaqGrid extends Grid
 
                     Action::make('edit')
                         ->label('Editar')
-                        ->url(fn(CmsPage $record): string => route('wsdadm.cms.pages.edit', [
-                            'id' => $record->page_id
+                        ->url(fn(CmsFaq $record): string => route('wsdadm.cms.faq.edit', [
+                            'id' => $record->faq_id
                         ])),
 
                     DeleteAction::make()
                         ->label('Excluir')
                         ->icon(null)
                         ->modalHeading("Excluir Página")
-                        ->modalDescription("Deseja Excluir Essa Página?")
+                        ->modalDescription("Deseja Excluir Essa Faq?")
                         ->successNotification(
                             Notification::make()
                                 ->success()
-                                ->title('Página Excluída')
-                                ->body('Página foi excluida com sucesso'),
+                                ->title('FAQ Excluída')
+                                ->body('A FAQ foi excluida com sucesso'),
                         )
                 ]),
             ])

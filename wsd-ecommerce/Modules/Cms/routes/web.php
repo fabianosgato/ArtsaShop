@@ -1,17 +1,22 @@
 <?php
+/**
+ * Fabiano Gato
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ *
+ * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
+ * mais recentes no futuro.
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
+ *
+ */
 
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::prefix('wsdadm')->group(function () {
 
@@ -65,6 +70,12 @@ Route::prefix('wsdadm')->group(function () {
             Route::get('/', [\Modules\Cms\Http\Controllers\Wsdadm\FaqController::class, 'index'])
                 ->middleware('auth')
                 ->name('wsdadm.cms.faq');
+            Route::get('/edit/{id}', [\Modules\Cms\Http\Controllers\Wsdadm\FaqController::class, 'edit'])
+                ->middleware('auth')
+                ->name('wsdadm.cms.faq.edit');
+            Route::get('/insert', [\Modules\Cms\Http\Controllers\Wsdadm\FaqController::class, 'insert'])
+                ->middleware('auth')
+                ->name('wsdadm.cms.faq.insert');
 
         });
 
