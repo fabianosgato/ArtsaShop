@@ -14,10 +14,6 @@
                 <x-frontend.catalog-product-list title="Patinetes Elétricos" :products="$featuredThree"/>
             </div>
 
-            <div class="grid grid-cols-1 gap-6">
-                <x-frontend.catalog-product-list title="Lareiras Elétricas" :products="$featuredFour"/>
-            </div>
-
         </div>
     </div>
 </x-frontend.app-layout>

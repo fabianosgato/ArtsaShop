@@ -49,23 +49,24 @@ Route::prefix('wsdadm')->group(function () {
 
         });
 
-
         Route::prefix('banners')->group(function () {
-
             Route::get('/', [\Modules\Cms\Http\Controllers\Wsdadm\BannersController::class, 'index'])
                 ->middleware('auth')
                 ->name('wsdadm.cms.banners');
-
             Route::get('edit/{id}', [\Modules\Cms\Http\Controllers\Wsdadm\BannersController::class, 'edit'])
                 ->middleware('auth')
                 ->name('wsdadm.cms.banners.edit');
-
             Route::get('insert', [\Modules\Cms\Http\Controllers\Wsdadm\BannersController::class, 'insert'])
                 ->middleware('auth')
                 ->name('wsdadm.cms.banners.insert');
-
         });
 
+        Route::prefix('faq')->group(function () {
+            Route::get('/', [\Modules\Cms\Http\Controllers\Wsdadm\FaqController::class, 'index'])
+                ->middleware('auth')
+                ->name('wsdadm.cms.faq');
+
+        });
 
     });
 });

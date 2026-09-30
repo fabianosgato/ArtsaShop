@@ -34,8 +34,12 @@ class ContactsController extends Controller
 
     public function index()
     {
+        // Meta tags da página
         $this->getSeoMetaTags(
-            new SeoStaticPage('customer', 'Fale Conosco')
+            new SeoStaticPage(
+                code: 'customer',
+                title: 'Fale Conosco'
+            )
         );
 
         return view('frontend.page.contacts', [
