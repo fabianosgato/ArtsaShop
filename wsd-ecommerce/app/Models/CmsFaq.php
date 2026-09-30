@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $faq_id
  * @property string $faq_title
  * @property string $faq_content
- * @property bool $sort_order
+ * @property int $sort_order
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -27,7 +27,7 @@ class CmsFaq extends Model
 	protected $primaryKey = 'faq_id';
 
 	protected $casts = [
-		'sort_order' => 'bool'
+		'sort_order' => 'int'
 	];
 
 	protected $fillable = [

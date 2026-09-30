@@ -111,11 +111,11 @@
 
         <div class="p-4 form-list">
             <h2>Perguntas Frequentes</h2>
-            <div class="dy-join dy-join-vertical bg-base-100">
+            <div class="">
                 @foreach($faqs as $faq)
-                    <div class="dy-collapse dy-collapse-arrow dy-join-item">
+                    <div class="">
                         <input type="radio" name="faq-accordion"/>
-                        <div class="dy-collapse-title font-semibold">{{$faq->faq_id}} – {{$faq->faq_title}}</div>
+                        <div class="dy-collapse-title font-semibold">{{$faq->sort_order}} – {{$faq->faq_title}}</div>
                         <div class="dy-collapse-content text-sm">
                             <p>{!! $faq->faq_content !!}</p>
                         </div>

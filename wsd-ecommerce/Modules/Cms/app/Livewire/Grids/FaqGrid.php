@@ -30,10 +30,10 @@ use Idea\Framework\Repository\Cms\CmsFaqRepository;
 class FaqGrid extends Grid
 {
 
-    public string $heading = 'Páginas';
-    public string $prefix = 'cmsPageGrid';
+    public string $heading = 'Faq - perguntas e respostas';
+    public string $prefix = 'cmsFaqGrid';
     public string $primaryKey = 'faq_id';
-    public string $sortField = 'faq_id';
+    public string $sortField = 'sort_order';
     public string $sortDirection = 'asc';
 
     public function table(Table $table): Table
@@ -52,7 +52,7 @@ class FaqGrid extends Grid
                 TextColumn::make('sort_order')
                     ->label("Ordenação")
                     ->toggleable(false)
-                    ->searchable(['sort_order']),
+                    ->searchable(false),
 
                 TextColumn::make('updated_at')
                     ->label("Atualizado em")
@@ -91,6 +91,7 @@ class FaqGrid extends Grid
             ->paginationPageOptions(
                 options: $this->paginationPageOptions
             )
+            ->reorderable('sort_order')
             ->striped()
             ->recordUrl(null)
             ->defaultSort($this->sortField, $this->sortDirection)
