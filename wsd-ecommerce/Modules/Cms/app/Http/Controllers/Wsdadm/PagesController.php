@@ -15,6 +15,7 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
+
 namespace Modules\Cms\Http\Controllers\Wsdadm;
 
 use Idea\Framework\Admin\AdminController;
@@ -55,22 +56,22 @@ class PagesController extends AdminController
     public function edit($id)
     {
 
-        // Retorna os dados da pagina criada/atualizada
-        $data = CmsPageRepository::getData()
-            ->where(['page_id' => $id])
-            ->get();
+        // Retorna os dados da página criada/atualizada
+        $data = CmsPageRepository::find($id);
 
         if ($data) {
             // Retorna a View
             return view('wsdadm.partials.forms', [
                 'componentName' => 'cms::form.pages-form',
-                'data' => $data->first()->toArray()
+                'data' => $data->toArray()
             ]);
 
         }
 
-        return redirect()->route(route('wsdadm.cms.pages'));
-
+        // Redireciona em caso de erro
+        return redirect()->route('wsdadm.cms.pages')->withErrors(
+            'A página escolhida não foi localizada!'
+        );
 
     }
 

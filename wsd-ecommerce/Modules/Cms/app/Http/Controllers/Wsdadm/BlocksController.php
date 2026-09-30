@@ -1,5 +1,20 @@
 <?php
-
+/**
+ * Fabiano Gato
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ *
+ * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
+ * mais recentes no futuro.
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
+ *
+ */
 namespace Modules\Cms\Http\Controllers\Wsdadm;
 
 use Idea\Framework\Admin\AdminController;
@@ -38,22 +53,21 @@ class BlocksController extends AdminController
     public function edit($id)
     {
 
-        // Retorna os dados da pagina criada/atualizada
-        $data = CmsBlockRepository::getData()
-            ->where(['block_id' => $id])
-            ->get();
+        // Retorna os dados do conteúdo criado/atualizado
+        $data = CmsBlockRepository::find($id);
 
         if ($data) {
             // Retorna a View
             return view('wsdadm.partials.forms', [
                 'componentName' => 'cms::form.blocks-form',
-                'data' => $data->first()->toArray()
+                'data' => $data->toArray()
             ]);
 
         }
 
-        return redirect()->route(route('wsdadm.cms.blocks'));
-
+        return redirect()->route('wsdadm.cms.blocks')->withErrors(
+            'O Conteúdo estático não foi localizado'
+        );
 
     }
 

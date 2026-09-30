@@ -20,7 +20,6 @@ namespace Modules\Cms\Http\Controllers\Wsdadm;
 
 use Idea\Framework\Admin\AdminController;
 use Idea\Framework\Repository\Cms\CmsFaqRepository;
-use Illuminate\Support\Facades\Session;
 
 class FaqController extends AdminController
 {
@@ -62,9 +61,9 @@ class FaqController extends AdminController
 
         }
 
-        Session::flash('error', 'O conteúdo da faq não foi localizado!');
-
-        return redirect()->route(route('wsdadm.cms.faq'));
+        return redirect()->route('wsdadm.cms.faq')->withErrors(
+            'O conteúdo da faq não foi localizado!'
+        );
 
     }
 

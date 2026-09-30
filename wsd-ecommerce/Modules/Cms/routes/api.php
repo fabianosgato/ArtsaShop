@@ -1,19 +1,17 @@
 <?php
-
-use Illuminate\Support\Facades\Route;
-use Modules\Cms\Http\Controllers\CmsController;
-
-/*
- *--------------------------------------------------------------------------
- * API Routes
- *--------------------------------------------------------------------------
+/**
+ * Fabiano Gato
  *
- * Here is where you can register API routes for your application. These
- * routes are loaded by the RouteServiceProvider within a group which
- * is assigned the "api" middleware group. Enjoy building your API!
+ * NOTICE OF LICENSE
  *
-*/
-
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('cms', CmsController::class)->names('cms');
-});
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ *
+ * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
+ * mais recentes no futuro.
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
+ *
+ */

@@ -144,10 +144,8 @@ class PagesForm extends FormComponent
 
         if (!empty($data['page_id'])) {
             $message = "Página Atualizada com sucesso";
-
         } else {
             $message = "Página Criada com sucesso";
-
         }
 
         // Salva os dados do SEO

@@ -93,11 +93,14 @@ class FaqForm extends FormComponent
             ]
         );
 
-        if (!empty($postData['faq_id'])) {
-            Session::flash('success', 'FAQ inserida com sucesso!');
+        if (!empty($data['faq_id'])) {
+            $message = "FAQ atualizada com sucesso!";
         } else {
-            Session::flash('success', 'FAQ atualizada com sucesso!');
+            $message = "FAQ criada com sucesso";
         }
+
+        // Mensagem de sucesso ao salvar os dados
+        Session::flash('success', $message);
 
         return $cmsFaq;
 

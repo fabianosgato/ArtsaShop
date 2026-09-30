@@ -36,7 +36,7 @@ class BannersController extends AdminController
 
 
     /**
-     * Show the form for creating a new resource.
+     * Mostra o form para inserção.
      */
     public function insert()
     {
@@ -49,27 +49,27 @@ class BannersController extends AdminController
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Mostra o form para edição.
      */
     public function edit($id)
     {
 
         // Retorna os dados da página criada/atualizada
-        $data = CmsBannerRepository::getData()
-            ->where(['banner_id' => $id])
-            ->get();
+        $cmsBanner = CmsBannerRepository::find($id);
 
-        if ($data) {
+        if ($cmsBanner) {
             // Retorna a View
             return view('wsdadm.partials.forms', [
                 'componentName' => 'cms::form.banners-form',
-                'data' => $data->first()->toArray()
+                'data' => $cmsBanner->toArray()
             ]);
 
         }
 
-        return redirect()->route(route('wsdadm.cms.pages'));
-
+        return redirect()->route('wsdadm.cms.pages')->withErrors(
+            'O banner escolhido não está mais disponível.'
+        );
 
     }
+
 }
