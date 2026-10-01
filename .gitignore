@@ -12,6 +12,8 @@ artsashop/public/vendor/
 artsashop/public/tmp/
 artsashop/bootstrap/cache/
 artsashop/public/js/filament/
+artsashop/public/fonts/filament/
+artsashop/public/css/filament/
 
 # Compiled Java class files
 *.class
