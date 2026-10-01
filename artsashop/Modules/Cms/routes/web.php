@@ -67,6 +67,7 @@ Route::prefix('wsdadm')->group(function () {
         });
 
         Route::prefix('faq')->group(function () {
+
             Route::get('/', [\Modules\Cms\Http\Controllers\Wsdadm\FaqController::class, 'index'])
                 ->middleware('auth')
                 ->name('wsdadm.cms.faq');

@@ -4,13 +4,14 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
 # Node artifact files
-wsd-ecommerce/node_modules/
-wsd-ecommerce/dist/
-wsd-ecommerce/vendor/
-wsd-ecommerce/public/build/
-wsd-ecommerce/public/vendor/
-wsd-ecommerce/public/tmp/
-wsd-ecommerce/bootstrap/cache/
+artsashop/node_modules/
+artsashop/dist/
+artsashop/vendor/
+artsashop/public/build/
+artsashop/public/vendor/
+artsashop/public/tmp/
+artsashop/bootstrap/cache/
+artsashop/public/js/filament/
 
 # Compiled Java class files
 *.class
