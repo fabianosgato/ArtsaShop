@@ -10,7 +10,7 @@
                                 class="banner-main-link"
                             >
                                 <img
-                                    src="{{ asset("storage/{$banner->image}") }}"
+                                    src="{{ Storage::disk('public')->url($banner->image) }}"
                                     alt="{{ $banner->image_alt }}"
                                     class="banner-main-image"
                                 >

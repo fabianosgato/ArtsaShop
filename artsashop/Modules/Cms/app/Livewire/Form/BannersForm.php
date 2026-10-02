@@ -30,14 +30,15 @@ use Filament\Schemas\Components\Utilities\Get;
 use Idea\Framework\Repository\Cms\CmsBannerRepository;
 use Idea\Framework\View\Wsdadm\Components\FormComponent;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 class BannersForm extends FormComponent
 {
 
     public ?array $data = [];
-    public string $title = 'CMS: Blocks de Conteúdo';
-    public string $description = 'Inserir um Bloco de Conteúdo';
+    public string $title = 'CMS: Banners';
+    public string $description = 'Inserir um novo Banner';
 
     protected function getModel(): string
     {
@@ -46,7 +47,7 @@ class BannersForm extends FormComponent
 
     protected function getTitle(): string
     {
-        return 'Bloco de Conteúdo';
+        return 'Banners';
     }
 
     protected function getDescription(): string
@@ -70,10 +71,14 @@ class BannersForm extends FormComponent
     protected function saveData(array $data): ?Model
     {
 
+        // Insere/Atualiza as informações do Banner
         $cmsBanner = CmsBannerRepository::updateOrCreate(
             id: $data['banner_id'],
             values: $data
         );
+
+        // Limpa o cache do sistema
+        Cache::forget("{$cmsBanner->banner_type}_{$cmsBanner->banner_local}");
 
         if (!empty($postData['banner_id'])) {
             Session::flash('success', 'Banner Atualizado com sucesso!');
@@ -147,8 +152,9 @@ class BannersForm extends FormComponent
                     FileUpload::make('image')
                         ->label("Imagem do Banner")
                         ->image()
-                        ->directory('banners')
                         ->imageEditor()
+                        ->disk('public')
+                        ->directory('banners')
                         ->visibility('public'),
 
                     TextInput::make('banner_url')

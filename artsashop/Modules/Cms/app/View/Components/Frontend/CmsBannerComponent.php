@@ -44,21 +44,21 @@ class CmsBannerComponent extends Component
         // Retorna a rota do sistema
         $request = request()->route()->getName();
 
-        if ($request == 'index.home') {
-
+        if (($request == 'index.home') && ($bannerLocal == 'banner_main_top')) {
             $this->banners = Cache::rememberForever(
-                "banners_home_{$bannerLocal}_{$limit}",
-                function () use ($bannerLocal, $limit) {
+                key:"banner_home_{$bannerLocal}",
+                callback: function () use ($bannerLocal, $limit) {
 
-                return CmsBannerRepository::getData()
-                    ->where('is_active', '=', 1)
-                    ->where('banner_type', '=', 'banner_home')
-                    ->where('banner_local', '=', $bannerLocal)
-                    ->orderBy('banner_order')
-                    ->limit($limit)
-                    ->get();
+                    return CmsBannerRepository::getData()
+                        ->where('is_active', '=', 1)
+                        ->where('banner_type', '=', 'banner_home')
+                        ->where('banner_local', '=', $bannerLocal)
+                        ->whereNotNull(['image'])
+                        ->orderBy('banner_order')
+                        ->limit($limit)
+                        ->get();
 
-            });
+                });
 
         }
 
