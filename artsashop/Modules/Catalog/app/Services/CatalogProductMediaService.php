@@ -33,24 +33,19 @@ class CatalogProductMediaService
     {
 
         // Retorna as imagens do produto
-        $images = CatalogProductMediaRepository::getProductImages(
+        $catalogProductImages = CatalogProductMediaRepository::getProductImages(
             productId: $catalogProduct->product_id
         );
 
-        if ($images) {
+        if ($catalogProductImages) {
 
-            // Exclui as imagens atuais do produto
-            CatalogProductMediaRepository::deleteImagesProduct(
-                productId: $catalogProduct->product_id
-            );
-
-            foreach ($images as $idx => $image) {
+            foreach ($catalogProductImages as $idx => $catalogProductImage) {
 
                 // Valida se as images existem no diretório
-                if (Storage::disk('public')->exists($image->media_file)) {
+                if (Storage::disk('public')->exists($catalogProductImage->media_file)) {
 
                     // Retorna os dados da imagem
-                    $mediaFile = Storage::disk('public')->path($image->media_file);
+                    $mediaFile = Storage::disk('public')->path($catalogProductImage->media_file);
 
                     // Caminho da Imagem
                     $path = pathinfo($mediaFile);
@@ -71,11 +66,13 @@ class CatalogProductMediaService
                             );
 
                             // Salva a imagem no repositorio
-                            CatalogProductMediaRepository::create([
+                            CatalogProductMediaRepository::updateProductMedia([
+                                'media_id' => $catalogProductImage->media_id,
                                 'product_id' => $catalogProduct->product_id,
-                                'media_type' => 'jpg',
+                                'media_type' => $path['extension'],
                                 'media_file' => $stored['1000x1000']['relative_path'],
                                 'media_url' => $stored['1000x1000']['url'],
+                                'sort_order' => $idx
                             ]);
 
                             // Deverá salvar no produto somente a primeira imagem, pois é a principal

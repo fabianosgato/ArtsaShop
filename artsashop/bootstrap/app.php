@@ -33,6 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withCommands([
         \App\Console\Commands\GenerateSitemapCommand::class,
+        \App\Console\Commands\CommandIndexerProducts::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
 

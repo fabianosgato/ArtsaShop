@@ -85,6 +85,21 @@ class CatalogProductMediaRepository extends AbstractRepository
     }
 
     /**
+     * Atualiza a imagem de um produto
+     * @param $mediaData
+     * @return \App\Models\CatalogProductMedia
+     */
+    public static function updateProductMedia($mediaData): CatalogProductMedia
+    {
+        return self::getData()->updateOrCreate(
+            attributes: [
+                'media_id' => $mediaData['media_id'] ?? null
+            ],
+            values: $mediaData
+        );
+    }
+
+    /**
      * Retorna as imagens do produto
      * @param \App\Models\CatalogProduct $product
      * @return mixed
