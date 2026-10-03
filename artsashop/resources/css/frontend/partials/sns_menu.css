@@ -1,0 +1,79 @@
+/*--- Wrap: #sns_menu ---*/
+#sns_menu {
+    position: relative;
+    width: 100%;
+    background-color: #ff8400;
+}
+
+#sns_menu .inner {
+    width: 100%;
+}
+
+#sns_menu .container {
+    position: relative;
+    margin: 0 auto;
+}
+
+#sns_menu .menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#sns_menu .menu-item {
+    position: relative;
+}
+
+#sns_menu .menu-link {
+    display: block;
+    padding: 12px 0;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+#sns_menu .menu-link:hover {
+    color: #ffffff;
+}
+
+#sns_menu .menu-item:hover > .mega-menu {
+    display: block;
+}
+
+#sns_menu .mega-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    padding: 24px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+}
+
+#sns_menu .mega-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 32px;
+    row-gap: 8px;
+}
+
+#sns_menu .mega-menu-link {
+    display: block;
+
+    padding: 6px 8px;
+
+    color: #334155;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+#sns_menu .mega-menu-link:hover {
+    color: #ff8400;
+    background-color: #f5f5f5;
+}

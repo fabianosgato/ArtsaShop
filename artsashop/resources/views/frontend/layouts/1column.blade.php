@@ -5,10 +5,10 @@
 </head>
 <body>
 <section id="sns_wrapper">
-    @include('frontend.components.html.sns_topheader')
-    @include('frontend.components.html.sns_header')
+    @include('frontend.components.html.header-top')
+    @include('frontend.components.html.header')
     @include('frontend.components.catalog.navigation')
-    <x-frontend.breadcrumbs-component />
+    <x-frontend.breadcrumbs-component/>
 
     <div id="sns_content">
         <div class="container">

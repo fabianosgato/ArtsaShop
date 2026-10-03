@@ -1,6 +1,3 @@
-/* sns mixin */
-/* Color var */
-/* General style */
 button,
 input,
 select,
@@ -54,17 +51,6 @@ input[type="color"]:focus,
     border-radius: 0;
     color: inherit;
     text-shadow: none;
-    -moz-text-shadow: none;
-    -o-text-shadow: none;
-    -webkit-text-shadow: none;
-}
-
-body {
-    color: #909090;
-}
-
-body p {
-    line-height: 18px;
 }
 
 a {
@@ -306,10 +292,6 @@ button:hover {
 
 .price .text-box input[type="button"]:hover {
     background-color: #ff8400;
-}
-
-body {
-    font-size: 12px;
 }
 
 body.page-popup {
@@ -1585,7 +1567,6 @@ body.page-popup .add-to-row td {
 }
 
 /* Main style */
-body{overflow-x:hidden;position:relative}
 .wrap{width:100%;clear:both}
 #bd.boxed-layout{background:#dfdfdf}
 #bd.boxed-layout #sns_wrapper{max-width:1200px;margin:0 auto;background:#FFF;box-shadow:0 0 3px #0003}
@@ -3449,6 +3430,7 @@ label em {
     line-height: 36px;
     border-top: 5px solid #ff8400;
     position: relative;
+    font-size: 0.4em;
 }
 
 #sns_topheader:before {
@@ -4054,86 +4036,6 @@ label em {
     }
 }
 
-/*--- Wrap: #sns_menu ---*/
-
-#sns_menu {
-    position: relative;
-    width: 100%;
-    background-color: #ff8400;
-}
-
-#sns_menu .inner {
-    width: 100%;
-}
-
-#sns_menu .container {
-    position: relative;
-    margin: 0 auto;
-}
-
-#sns_menu .menu {
-    display: flex;
-    align-items: center;
-    gap: 28px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-#sns_menu .menu-item {
-    position: relative;
-}
-
-#sns_menu .menu-link {
-    display: block;
-    padding: 12px 0;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 500;
-    text-decoration: none;
-}
-
-#sns_menu .menu-link:hover {
-    color: #ffffff;
-}
-
-#sns_menu .menu-item:hover > .mega-menu {
-    display: block;
-}
-
-#sns_menu .mega-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    padding: 24px;
-    background-color: #ffffff;
-    box-sizing: border-box;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    z-index: 9999;
-}
-
-#sns_menu .mega-menu-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: 32px;
-    row-gap: 8px;
-}
-
-#sns_menu .mega-menu-link {
-    display: block;
-
-    padding: 6px 8px;
-
-    color: #334155;
-    font-size: 14px;
-    text-decoration: none;
-}
-
-#sns_menu .mega-menu-link:hover {
-    color: #ff8400;
-    background-color: #f5f5f5;
-}
 
 /*--- Wrap: #sns_slideshow ---*/
 #sns_slideshow {

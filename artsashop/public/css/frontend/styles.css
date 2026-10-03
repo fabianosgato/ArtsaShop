@@ -1,49 +1,5 @@
-/* open-sans-300 - latin_latin-ext */
-@font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 300;
-    src: url('fonts/open-sans-v44-latin_latin-ext-300.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-}
-/* open-sans-regular - latin_latin-ext */
-@font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 400;
-    src: url('fonts/open-sans-v44-latin_latin-ext-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-}
-/* open-sans-800 - latin_latin-ext */
-@font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 800;
-    src: url('fonts/open-sans-v44-latin_latin-ext-800.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-}
-/* open-sans-800italic - latin_latin-ext */
-@font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Open Sans';
-    font-style: italic;
-    font-weight: 800;
-    src: url('fonts/open-sans-v44-latin_latin-ext-800italic.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-}
-
-/* container padrão */
-.container {width: 100%;max-width: 1440px;margin: 0 auto;padding: 0;}
-
-body { font:13px/20px Open Sans, Arial, Helvetica, sans-serif; color:#404040; text-align: left;}
-
 /* Global Styles ========================================================================= */
-[x-cloak] { display: none !important; }
-.notification-container {position: fixed;top: 20px;right: 20px;z-index: 9999;display: flex;flex-direction: column;gap: 10px;}
-.notification {min-width: 250px;padding: 12px 18px;border-radius: 6px;color: #fff;font-size: 14px;box-shadow: 0 6px 16px rgba(0,0,0,.15);animation: slideIn .25s ease;}
-.notification.success { background: #2ecc71; }
-.notification.error   { background: #e74c3c; }
-.notification.warning { background: #f39c12; }
-.notification.info    { background: #3498db; }
+
 
 @keyframes slideIn {
     from { opacity: 0; transform: translateX(20px); }
@@ -519,7 +475,7 @@ li { list-style: none;}
 .product-view .product-name{margin:12px 0 25px}
 .product-view .product-name a{font:14px/14px OpenSans,Helvetica,sans-serif}
 .product-view .product-name a:hover{color:#7790b8}
-.product-view .product-name h1{margin:0;font-size:2.2em;color:#4f2900}
+.product-view .product-name h1{margin:0;font-size: 0.589em;color:#4f2900;font-weight: 300;}
 .product-view .product-shop a.nobr{color:#90b37f}
 .product-view .product-shop a.nobr:hover{color:#7790b8;text-decoration:none}
 .col3-layout .product-view .product-shop{float:none;width:auto}

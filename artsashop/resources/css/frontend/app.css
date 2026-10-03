@@ -1,10 +1,13 @@
 @import "../../../node_modules/tailwindcss";
 
+
 @import "@fortawesome/fontawesome-free/css/fontawesome.css";
 @import "@fortawesome/fontawesome-free/css/regular.css";
 @import "@fortawesome/fontawesome-free/css/solid.css";
 
-/* SEMPRE por último */
+/* Styles padrões */
+@import "./styles.css";
+@import "./partials/sns_menu.css";
 @import "./fontawesome-override.css";
 
 /* MAPEAMENTO DE CAMINHOS ADICIONAIS */
