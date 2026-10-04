@@ -14,7 +14,7 @@
         @if($product['status_key'] == 'in-stock')
             <div class="actions">
                 <ul class="add-to-links">
-                    <li class="add-to-cart"><button type="button" class="button btn-cart-page" data-original-title="Adicionar ao carrinho" rel="tooltip" data-product-id="{{ $product['product_id'] }}"><span><span>Adicionar ao carrinho</span></span></button></li>
+                    <li class="add-to-cart"><button type="button" class="button btn-cart-page" data-original-title="Adicionar ao carrinho" rel="tooltip" data-product-id="{{ $product['product_id'] }}">Adicionar ao carrinho</button></li>
                     <li class="add-to-favorites">
                         <x-catalog::product-wishlist-component productId="{{$product['product_id']}}" />
                     </li>

@@ -1,5 +1,5 @@
 @if($breadcrumbs)
-    <div id="sns_breadcrumbs" class="wrap">
+    <div class="breadcrumb-block">
         <div class="container">
             <div id="sns_titlepage">
                 <h2>{{ $seoData->title }}</h2>
@@ -16,7 +16,7 @@
                                     <li><a href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a></li>
                                 @endif
                             @else
-                                <li aria-current="page">{{ $breadcrumb->title }}</li>
+                                <li class="page">{{ $breadcrumb->title }}</li>
                             @endif
                         @endforeach
 

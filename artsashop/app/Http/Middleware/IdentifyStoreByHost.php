@@ -37,7 +37,7 @@ class IdentifyStoreByHost
         $store = SysStoreRepository::getStoreByHost($host);
 
         // Valida se a app nao está em produção
-        if ((config('app.env') != 'homolog') || (config('app.env') != 'local')) {
+        if (config('app.env') != 'local') {
 
             // Se a LOJA nao foi encontrada irá pegar a LOJA PADRAO
             if (!$store) {
@@ -62,6 +62,9 @@ class IdentifyStoreByHost
                 abort(404);
 
             }
+
+        } else {
+            $store = SysStoreRepository::getDefault();
 
         }
 

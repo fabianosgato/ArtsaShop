@@ -7,6 +7,7 @@
 
 /* Styles padrões */
 @import "./styles.css";
+@import "./responsive.css";
 @import "./partials/sns_menu.css";
 @import "./fontawesome-override.css";
 

@@ -4,14 +4,14 @@
     @include('frontend.components.html.head')
 </head>
 <body>
-<section id="sns_wrapper">
+<section class="wrapper">
     @include('frontend.components.html.header-top')
     @include('frontend.components.html.header')
     @include('frontend.components.catalog.navigation')
     <x-frontend.breadcrumbs-component/>
     {{--<x-frontend.banners-component />--}}
 
-    <div id="sns_content">
+    <div class="content">
         <div class="container">
             <div class="py-0">
                 {{ $slot }}

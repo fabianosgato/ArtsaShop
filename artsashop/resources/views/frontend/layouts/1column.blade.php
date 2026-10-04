@@ -10,7 +10,7 @@
     @include('frontend.components.catalog.navigation')
     <x-frontend.breadcrumbs-component/>
 
-    <div id="sns_content">
+    <div class="content">
         <div class="container">
             <div class="grid-cols-1 gap-2 lg:grid-cols-1 px-2 justify-center">
                 <main class="lg:col-span-9 py-6">

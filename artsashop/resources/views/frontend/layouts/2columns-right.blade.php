@@ -4,13 +4,13 @@
     @include('frontend.components.html.head')
 </head>
 <body>
-<section id="sns_wrapper">
+<section class="wrapper">
     @include('frontend.components.html.header-top')
     @include('frontend.components.html.header')
     @include('frontend.components.catalog.navigation')
     <x-frontend.breadcrumbs-component/>
 
-    <div id="sns_content">
+    <div class="content">
         <div class="container">
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
                 <main class="lg:col-span-9">

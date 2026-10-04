@@ -9,7 +9,7 @@
     @include('frontend.components.html.header')
     @include('frontend.components.catalog.navigation')
     <x-frontend.banners-component/>
-    <div id="sns_content">
+    <div class="content">
         <div class="container">
             <div class="py-0">
                 {{ $slot }}
