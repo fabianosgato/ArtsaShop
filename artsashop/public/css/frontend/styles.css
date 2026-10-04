@@ -1,25 +1,9 @@
 /* Global Styles ========================================================================= */
-
-
 @keyframes slideIn {
     from { opacity: 0; transform: translateX(20px); }
     to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Form Elements */
-input,select,textarea,button {
-    font:12px/15px Arial, Helvetica, sans-serif;
-    vertical-align:middle;
-    color:#2f2f2f;
-    background:#fff;
-}
-input.input-text,select,textarea { background:#fff; border:1px solid #eee; }
-input.input-text,textarea { padding:5px; }
-select { padding:1px; }
-select option { padding-right:10px; }
-select.multiselect option { border-bottom:1px solid #b6b6b6; padding:2px 5px; }
-select.multiselect option:last-child { border-bottom:0; }
-textarea { overflow:auto; }
 input.radio { margin-right:3px; }
 input.checkbox { margin-right:3px; }
 input.qty { width:2.5em !important; text-align:center;}
@@ -41,11 +25,7 @@ button.btn-cart:hover span{}
 .btn.btn-checkout a, .btn.btn-checkout a:hover {color:#fff;text-decoration:none}
 p.control input.checkbox,
 p.control input.radio { margin-right:6px; }
-
-/* Form Highlight */
-input.input-text:focus,select:focus,textarea:focus { background-color:#edf7fd; }
-/*.highlight { background:#efefef; }*/
-
+    
 /* Grouped fields */
 .form-list { margin:0 auto; overflow:hidden; }
 .form-list h2 {font-size: .9rem}

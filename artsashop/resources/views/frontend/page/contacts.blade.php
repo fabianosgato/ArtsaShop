@@ -29,68 +29,68 @@
                 @csrf
 
                 <div class="py-2">
-                    <label class="block text-sm font-medium mb-1 required">
+                    <label class="required">
                         <em>*</em> Nome Completo
+                        <input type="text"
+                               name="contact_name"
+                               value="{{ session('success') ? '' : old('contact_name') }}"
+                               required
+                               class="w-full">
                     </label>
-                    <input type="text"
-                           name="contact_name"
-                           value="{{ session('success') ? '' : old('contact_name') }}"
-                           required
-                           class="w-full border border-gray-300 px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blumine-500 focus:border-blumine-500 transition">
-
                 </div>
 
                 {{-- EMAIL --}}
                 <div class="py-2">
-                    <label class="block text-sm font-medium mb-1 required">
+                    <label class="required">
                         <em>*</em> Endereço de E-mail
+                        <input type="email"
+                               name="email_address"
+                               value="{{ session('success') ? '' : old('email_address') }}"
+                               required
+                               class="w-full border border-gray-300 px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blumine-500 focus:border-blumine-500 transition">
+                        <span class="obs">
+                            Nunca compartilharemos seu e-mail com ninguém.
+                        </span>
                     </label>
-                    <input type="email"
-                           name="email_address"
-                           value="{{ session('success') ? '' : old('email_address') }}"
-                           required
-                           class="w-full border border-gray-300 px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blumine-500 focus:border-blumine-500 transition">
-                    <p class="text-xs text-gray-500 mt-1">
-                        Nunca compartilharemos seu e-mail com ninguém.
-                    </p>
                 </div>
 
                 {{-- Telefone --}}
                 <div class="py-2">
-                    <label class="block text-sm font-medium mb-1 required">
+                    <label class="required">
                         <em>*</em> Telefone/WhatsApp
+                        <input type="text"
+                               name="phone_contacts"
+                               value="{{ session('success') ? '' : old('phone_contacts') }}"
+                               required
+                               class="mask-telefone w-full">
+                        <span class="obs">
+                            Nunca compartilharemos seu telefone com ninguém.
+                        </span>
                     </label>
-                    <input type="text"
-                           name="phone_contacts"
-                           value="{{ session('success') ? '' : old('phone_contacts') }}"
-                           required
-                           class="mask-telefone w-full border border-gray-300 px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blumine-500 focus:border-blumine-500 transition">
-                    <p class="text-xs text-gray-500 mt-1">
-                        Nunca compartilharemos seu telefone com ninguém.
-                    </p>
                 </div>
 
                 {{-- Assunto --}}
                 <div class="py-2">
-                    <label class="block text-sm font-medium mb-1 required">
+                    <label class="required">
                         <em>*</em> Assunto
+                        <input type="text"
+                               name="subject_contacts"
+                               value="{{ session('success') ? '' : old('subject_contacts') }}"
+                               required
+                               class="w-full">
                     </label>
-                    <input type="text"
-                           name="subject_contacts"
-                           value="{{ session('success') ? '' : old('subject_contacts') }}"
-                           required
-                           class="w-full border border-gray-300 px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blumine-500 focus:border-blumine-500 transition">
                 </div>
 
                 {{-- Mensagem --}}
                 <div class="mb-6">
-                    <label for="message_contacts" class="block text-gray-700 font-medium mb-2 required">
+                    <label for="message_contacts" class="required">
                         <em>*</em> Mensagem
+                        <textarea id="message_contacts"
+                                  name="message_contacts"
+                                  rows="4"
+                                  required
+                                  class="w-full">{{ session('success') ? '' : old('message_contacts') }}</textarea>
                     </label>
-                    <textarea id="message_contacts" name="message_contacts" rows="4" required
-                              class="w-full border border-gray-300 px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blumine-500 focus:border-blumine-500 transition">
-                        {{ session('success') ? '' : old('message_contacts') }}
-                    </textarea>
                 </div>
 
                 <div class="mb-4">

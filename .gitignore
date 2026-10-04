@@ -14,6 +14,7 @@ artsashop/bootstrap/cache/
 artsashop/public/js/filament/
 artsashop/public/fonts/filament/
 artsashop/public/css/filament/
+artsashop/public/.well-known/
 
 # Compiled Java class files
 *.class
@@ -54,3 +55,4 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+

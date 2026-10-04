@@ -4,7 +4,7 @@
     @include('frontend.components.html.head')
 </head>
 <body>
-<section id="sns_wrapper">
+<section class="wrapper">
     @include('frontend.components.html.header-top')
     @include('frontend.components.html.header')
     @include('frontend.components.catalog.navigation')

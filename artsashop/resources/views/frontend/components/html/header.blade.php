@@ -1,4 +1,4 @@
-<div id="sns_header" class="header">
+<div class="header">
     <div class="container">
         <div class="header-content">
 
