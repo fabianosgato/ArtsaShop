@@ -50,6 +50,14 @@ final class EavAttributesSetGrid extends Grid
             ->heading($this->heading)
             ->columns([
 
+                TextColumn::make('attribute_set_id')
+                    ->label("Id")
+                    ->toggleable(false)
+                    ->searchable(['eav_attributes_set.attribute_set_id'])
+                    ->extraHeaderAttributes([
+                        'class' => 'w-4'
+                    ]),
+
                 TextColumn::make('attribute_set_name')
                     ->label("Grupo de Atributos")
                     ->toggleable(false)

@@ -36,6 +36,9 @@ class CmsPagesController extends Controller
         // Retorna a pagina pelo ID
         $page = CmsPageRepository::getPage($pageId);
 
+        if (!$page)
+            abort(404);
+
         // Compartilha as informacoes da página para o breadcrumb
         view()->share('cms', $page);
 
