@@ -43,7 +43,7 @@ trait CreditCard
             'type' => PaymentTypes::CARD,
             'method' => $this->getBrand($paymentCard['card_brand']),
             'installments' => $paymentCard['card_installments'],
-            'softdescriptor' => config('app.name'),
+            'softdescriptor' => 'Examix.com.br',
             'capture' => true,
             'fraud_analysis' => true,
             'card' => [

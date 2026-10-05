@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\SalesRules\Http\Controllers\SalesRulesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +13,21 @@ use Modules\SalesRules\Http\Controllers\SalesRulesController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('salesrules', SalesRulesController::class)->names('salesrules');
+// Inicializa as rotas do Admin
+Route::prefix('wsdadm')->middleware('auth')->group(function () {
+
+    Route::prefix('sales-rules')->group(function () {
+
+        Route::get('/', [Modules\SalesRules\Http\Controllers\Wsdadm\SalesRulesController::class, 'index'])
+            ->name('wsdadm.sales-rules');
+
+        Route::get('/insert', [Modules\SalesRules\Http\Controllers\Wsdadm\SalesRulesController::class, 'insert'])
+            ->name('wsdadm.sales-rules.insert');
+
+        Route::get('/edit/{id}', [Modules\SalesRules\Http\Controllers\Wsdadm\SalesRulesController::class, 'edit'])
+            ->name('wsdadm.sales-rules.edit');
+
+    });
+
+
 });

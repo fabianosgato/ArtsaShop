@@ -11,10 +11,11 @@ class OnepagePaymentsComponent extends Component
     public array $methods;
 
     public function __construct(
+        protected PaymentManager $paymentManager,
         public array $quote
     ) {
 
-        $this->methods = app(PaymentManager::class)->all([
+        $this->methods = $this->paymentManager->all([
             'quote' => $this->quote,
             'customer' => auth()->user(),
         ]);

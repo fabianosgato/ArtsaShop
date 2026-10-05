@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\SalesRules\Http\Controllers\SalesRulesController;
+use Modules\SalesRules\Http\Controllers\Wsdadm\SalesRulesController;
 
 /*
  *--------------------------------------------------------------------------

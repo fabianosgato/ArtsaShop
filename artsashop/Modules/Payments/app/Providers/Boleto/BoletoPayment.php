@@ -20,7 +20,7 @@ class BoletoPayment implements PaymentMethodInterface
 
     public function isAvailable(array $context = []): bool
     {
-        return true; // regras: valor mínimo, país, etc
+        return false;
     }
 
     public function authorize(SalesOrder $order, array $data): array

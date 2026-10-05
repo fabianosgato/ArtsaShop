@@ -17,23 +17,23 @@
  */
 namespace Modules\SalesRules\Services;
 
+use App\Models\SalesDiscountRule;
+
 class DiscountCalculatorService
 {
     /**
      * Realiza o calculo do descono aplicado
      * @param float $subtotal
-     * @param $rule
+     * @param \App\Models\SalesDiscountRule $rule
      * @return float
      */
-    public function calculate(float $subtotal, $rule): float
+    public function calculate(float $subtotal, SalesDiscountRule $rule): float
     {
 
-        if ($rule) {
+        if ($rule->is_active && $rule->discount_value > 0) {
             if ($rule->discount_type === 'percent') {
                 return round($subtotal * ($rule->discount_value / 100), 2);
-            }
-
-            if ($rule->discount_type === 'fixed') {
+            } else if ($rule->discount_type === 'fixed') {
                 return min($rule->discount_value, $subtotal);
             }
         }

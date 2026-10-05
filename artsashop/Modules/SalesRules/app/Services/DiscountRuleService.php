@@ -17,11 +17,41 @@
  */
 namespace Modules\SalesRules\Services;
 
+use App\Models\SalesDiscountRule;
 use Carbon\Carbon;
 use Idea\Framework\Repository\Sales\SalesDiscountRuleRepository;
+use Idea\Framework\Repository\Sales\SalesOrderRepository;
 
 class DiscountRuleService
 {
+
+    /**
+     * Retorna uma regra de promoção pelo desconto
+     * @param $discountCode
+     * @return \App\Models\SalesDiscountRule|null
+     */
+    public function getRuleByCoupon($discountCode): ?\App\Models\SalesDiscountRule
+    {
+
+        return SalesDiscountRuleRepository::getRuleByCode(
+            code: $discountCode
+        );
+
+    }
+
+    public function hasUsageAvailable(SalesDiscountRule $rule): bool
+    {
+
+        if ($rule->max_usage === 0) {
+            return true;
+        }
+
+        $usage = SalesOrderRepository::countByCouponCode(
+            couponCode: $rule->code
+        );
+
+        return $usage < $rule->max_usage;
+    }
 
     /**
      * Retorna as regras de desconto
@@ -32,6 +62,11 @@ class DiscountRuleService
     public function getRulesForPayment(string $paymentMethod, float $subtotal)
     {
         return SalesDiscountRuleRepository::getData()
+            ->where(
+                column: 'rule_type',
+                operator: '=',
+                value: 'payment'
+            )
             ->where(
                 column: 'is_active',
                 operator: '=',

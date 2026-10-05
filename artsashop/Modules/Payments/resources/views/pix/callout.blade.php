@@ -7,6 +7,12 @@
         </svg>
         <span>Pagamento via PIX - Importante</span>
     </div>
+
+    <ul class="list-disc pl-5 space-y-1 text-gray-700">
+        <li>O pagamento deve ser realizado por conta bancária de sua titularidade.</li>
+        <li>O CPF informado será utilizado como responsável legal pela compra.</li>
+    </ul>
+
     <div class="text-xs text-gray-500">
         Ao concluir o pagamento, você concorda com os termos acima.
     </div>

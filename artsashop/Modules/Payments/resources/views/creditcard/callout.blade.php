@@ -12,7 +12,7 @@
                 placeholder="Exemplo: Fulano da Silva"
                 :disabled="selectedPayment !== 'credit_card'"
             />
-            <p class="text-xs text-gray-500 mt-1">
+            <p class="text-xs text-danger-50 mt-1">
                 Digite exatamente como está no cartão (nome e sobrenome)
             </p>
             <p class="text-red-500 text-sm" x-show="errors.holder" x-text="errors.holder"></p>
@@ -173,6 +173,11 @@
             type="hidden"
             name="payment[card_brand]"
             :value="brand"
+        >
+        <input
+            type="hidden"
+            name="payment[card_token]"
+            id="cardToken"
         >
 
     </div>
