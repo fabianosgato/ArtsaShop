@@ -19,6 +19,7 @@
 namespace Modules\Catalog\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Idea\Framework\Concerns\ResultApiResponse;
 use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
 use Illuminate\Http\Request;
 use Modules\Catalog\Concerns\ProductsApiResponse;
@@ -28,7 +29,7 @@ use Modules\Catalog\Services\CatalogProductService;
 class CatalogProductController extends Controller
 {
 
-    use ProductsApiResponse;
+    use ProductsApiResponse, ResultApiResponse;
 
     /**
      * Lista todos os produtos do sistema
@@ -103,7 +104,13 @@ class CatalogProductController extends Controller
 
     }
 
-    public function updateImages(Request $request)
+    /**
+     * Atualiza as imagens do sistema
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function updateImages(Request $request): \Illuminate\Http\JsonResponse
     {
 
         if ($request->accepts(['application/json'])) {
@@ -120,32 +127,62 @@ class CatalogProductController extends Controller
 
                 if ($catalogProduct) {
 
-                    CatalogProductMediaService::processImages(
-                        dataPost: $arrayData,
-                        catalogProduct: $catalogProduct
+                    // Valida se o produto possui imagens
+                    $productImages = CatalogProductMediaService::getProductImages(
+                        $catalogProduct
                     );
 
-                    return response()->json([
-                        'error' => false,
-                        'message' => 'Dados Atualizados com sucesso',
-                    ]);
+                    // Se o produto não possuir imagens, irá atualizar as mesmas
+                    if (empty($productImages)) {
+
+                        // Atualiza as imagens do produto
+                        CatalogProductMediaService::processImages(
+                            dataPost: $arrayData,
+                            catalogProduct: $catalogProduct
+                        );
+
+                        // Retorna a lista de imagens processadas
+                        return response()->json(
+                            $this->response(
+                                request: CatalogProductMediaService::getProductImages(
+                                    $catalogProduct
+                                )
+                            )
+                        );
+
+                    } else {
+
+                        // Retorna a lista de imagens processadas
+                        return response()->json(
+                            $this->response(
+                                request: $productImages
+                            )
+                        );
+
+                    }
 
                 }
 
             } else {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'Dados enviados sao incorretos ',
-                ], 500);
+                // Retorna a lista de imagens processadas
+                return response()->json(
+                    data: $this->error(
+                        'Dados enviados sao incorretos'
+                    ),
+                    status: 500
+                );
 
             }
 
         }
 
-        return response()->json([
-            'error' => true,
-            'message' => 'Dados Vazios',
-        ], 500);
+        // Retorna a lista de imagens processadas
+        return response()->json(
+            data: $this->error(
+                'Dados Vazios'
+            ),
+            status: 500
+        );
 
     }
 

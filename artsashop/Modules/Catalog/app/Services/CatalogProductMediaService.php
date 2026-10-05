@@ -29,6 +29,42 @@ use Illuminate\Support\Facades\Storage;
 class CatalogProductMediaService
 {
 
+    /**
+     * Retorna as imagens do produto caso existam no storage
+     * @param \App\Models\CatalogProduct $catalogProduct
+     * @return array
+     */
+    public static function getProductImages(CatalogProduct $catalogProduct): array
+    {
+
+        $productImages = [];
+
+        // Retorna as imagens do produto
+        $catalogProductImages = CatalogProductMediaRepository::getProductImages(
+            productId: $catalogProduct->product_id
+        );
+
+        foreach  ($catalogProductImages as $catalogProductImage) {
+
+            if (Storage::disk('public')->exists($catalogProductImage->media_file)) {
+                $productImages[] = [
+                    'media_file' => $catalogProductImage->media_file,
+                    'media_url' => $catalogProductImage->media_url,
+                ];
+            }
+        }
+
+        return $productImages;
+
+
+    }
+
+
+    /**
+     * Processa e atualiza os arquivos de imagem de um produto
+     * @param \App\Models\CatalogProduct $catalogProduct
+     * @return void
+     */
     public static function proccessImages(CatalogProduct $catalogProduct): void
     {
 
@@ -103,8 +139,8 @@ class CatalogProductMediaService
 
     /**
      * Metodo que valida as imagens do produto e realiza os resizes
-     * @param $dataPost
-     * @param $productId
+     * @param array $dataPost
+     * @param \App\Models\CatalogProduct $catalogProduct
      * @return void
      * @throws \Exception
      */
