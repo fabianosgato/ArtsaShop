@@ -39,7 +39,7 @@ class ReindexProductImagesTask extends Task
 
         Log::info("[{$this->index}] Processando: {$product->sku} - {$product->name}");
 
-        CatalogProductMediaService::proccessImages(
+        CatalogProductMediaService::proccessAllImages(
             catalogProduct: $product
         );
 

@@ -44,14 +44,32 @@ class CatalogProductMediaService
             productId: $catalogProduct->product_id
         );
 
-        foreach  ($catalogProductImages as $catalogProductImage) {
+        if ($catalogProductImages) {
 
-            if (Storage::disk('public')->exists($catalogProductImage->media_file)) {
-                $productImages[] = [
-                    'media_file' => $catalogProductImage->media_file,
-                    'media_url' => $catalogProductImage->media_url,
-                ];
+            foreach ($catalogProductImages as $catalogProductImage) {
+
+                if (Storage::disk('public')->exists($catalogProductImage->media_file)) {
+
+                    $mediaUrl = str_replace(
+                        search: '//storage',
+                        replace: '/storage',
+                        subject: $catalogProductImage->media_url
+                    );
+
+                    CatalogProductMediaRepository::updateProductMedia([
+                        'media_id' => $catalogProductImage->media_id,
+                        'media_url' => $mediaUrl
+                    ]);
+
+                    $productImages[] = [
+                        'media_file' => $catalogProductImage->media_file,
+                        'media_url' => $mediaUrl,
+                    ];
+
+                }
+
             }
+
         }
 
         return $productImages;
@@ -61,11 +79,11 @@ class CatalogProductMediaService
 
 
     /**
-     * Processa e atualiza os arquivos de imagem de um produto
+     * Processa e atualiza todos os arquivos de imagem de um produto
      * @param \App\Models\CatalogProduct $catalogProduct
      * @return void
      */
-    public static function proccessImages(CatalogProduct $catalogProduct): void
+    public static function proccessAllImages(CatalogProduct $catalogProduct): void
     {
 
         // Retorna as imagens do produto

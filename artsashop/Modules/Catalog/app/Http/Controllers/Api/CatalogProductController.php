@@ -129,7 +129,7 @@ class CatalogProductController extends Controller
 
                     // Valida se o produto possui imagens
                     $productImages = CatalogProductMediaService::getProductImages(
-                        $catalogProduct
+                        catalogProduct: $catalogProduct
                     );
 
                     // Se o produto não possuir imagens, irá atualizar as mesmas

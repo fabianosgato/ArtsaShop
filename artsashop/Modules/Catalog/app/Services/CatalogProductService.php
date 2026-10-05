@@ -398,7 +398,7 @@ class CatalogProductService
             if ($processImage)
                 CatalogProductMediaService::processImages(
                     dataPost: $payload,
-                    productId: $product->product_id
+                    catalogProduct: $product
                 );
 
             DB::commit();
@@ -408,7 +408,7 @@ class CatalogProductService
                 self::saveSeo($product, $payload);
             }
 
-            CatalogProductMediaService::proccessImages(
+            CatalogProductMediaService::proccessAllImages(
                 catalogProduct: $product
             );
 

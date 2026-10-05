@@ -30,7 +30,7 @@ class IndexerService
 
             print("$index : {$catalogProduct->product_id} {$catalogProduct->sku} : {$catalogProduct->name} \n");
 
-            CatalogProductMediaService::proccessImages(
+            CatalogProductMediaService::proccessAllImages(
                 catalogProduct: $catalogProduct
             );
 
