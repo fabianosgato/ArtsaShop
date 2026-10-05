@@ -9,8 +9,6 @@
             <form action="{{ route('checkout.addTo') }}" method="post">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product['product_id'] }}">
-                <input type="hidden" name="qty" value="1">
-
                 @if(session('error'))
                     <div class="mb-4 p-3 bg-red-100 border border-red-300 text-red-700">
                         {{ session('error') }}
@@ -39,6 +37,12 @@
                         <div class="actions mt-6">
                         @if($product['status_key'] == 'in-stock')
                         <div class="add-to-cart">
+                            <label for="qty">Qtd:</label>
+                            <div class="qty-container">
+                                <input type="text" name="qty" id="qty" value="1" title="Qtd" class="input-text qty">
+                                <input type="button" class="qty-decrease" onclick="var qty_el = document.getElementById('qty'); var qty = qty_el.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) qty_el.value--;return false;">
+                                <input type="button" class="qty-increase" onclick="var qty_el = document.getElementById('qty'); var qty = qty_el.value; if( !isNaN( qty )) qty_el.value++;return false;">
+                            </div>
                             <button type="submit" id="product-addtocart-button" class="button btn-cart" data-original-title="Adicionar ao carrinho" rel="tooltip"><span><span>Adicionar ao carrinho</span></span></button>
                             <ul class="add-to-links mt-3">
                                 <li class="add-to-favorites">
@@ -102,26 +106,23 @@
             </div>
         @endif
 
-        <div class="product-tabs-content mt-12" x-data="{ tab: 'description' }">
+        <div class="product-tabs-content" x-data="{ tab: 'description' }">
 
             <div class="product-collateral">
 
-                <div class="flex border-b mb-6">
+                <div class="product-tabs">
                     <button @click="tab='description'"
-                            :class="tab === 'description' ? 'border-b-2 border-black font-semibold' : ''"
-                            class="px-4 py-2">
+                            :class="tab === 'description' ? 'active' : ''">
                         Descrição do produto
                     </button>
 
                     <button @click="tab='additional'"
-                            :class="tab === 'additional' ? 'border-b-2 border-black font-semibold' : ''"
-                            class="px-4 py-2">
+                            :class="tab === 'additional' ? 'active' : ''">
                         Informações adicionais
                     </button>
 
                     <button @click="tab='reviews'"
-                            :class="tab === 'reviews' ? 'border-b-2 border-black font-semibold' : ''"
-                            class="px-4 py-2">
+                            :class="tab === 'reviews' ? 'active' : ''">
                         Reviews
                     </button>
                 </div>
@@ -157,10 +158,8 @@
                     <div class="box-collateral box-reviews" id="customer-reviews">
 
                         <div class="flex flex-col md:flex-row gap-10">
-
                             <div class="md:w-1/2">
                                 <h2>Opiniões do cliente</h2>
-                                <dl></dl>
                             </div>
 
                             <div class="md:w-1/2">
@@ -170,8 +169,7 @@
                                     </div>
                                     <p class="review-nologged">
                                         Apenas usuarios registrados pode escrever reviews.
-                                        Por favor, <a href="customer/account/login">Entre</a> ou
-                                        <a href="customer/account/create/">Registre-se</a>
+                                        Por favor, <a href="{{ route('account.login') }}">Entre</a> ou <a href="{{ route('account.create') }}">Registre-se</a>
                                     </p>
                                 </div>
                             </div>
