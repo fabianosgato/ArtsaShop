@@ -10,6 +10,7 @@
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product['product_id'] }}">
                 <input type="hidden" name="qty" value="1">
+
                 @if(session('error'))
                     <div class="mb-4 p-3 bg-red-100 border border-red-300 text-red-700">
                         {{ session('error') }}

@@ -108,66 +108,64 @@ class CatalogProductMediaService
      * @return void
      * @throws \Exception
      */
-    public static function processImages($dataPost, $productId): void
+    public static function processImages(array $dataPost, CatalogProduct $catalogProduct): void
     {
 
         // Exclui as imagens do produto
-        CatalogProductMediaRepository::deleteImagesProduct($productId);
+        CatalogProductMediaRepository::deleteImagesProduct(
+            $catalogProduct->product_id
+        );
 
-        foreach ($dataPost['skus'] as $productSku) {
+        if (count($dataPost['product']['images']) > 0) {
 
-            if (count($productSku['images']) > 0) {
+            foreach ($dataPost['product']['images'] as $idx => $image) {
 
-                foreach ($productSku['images'] as $idx => $image) {
+                // Diretório criado UMA ÚNICA VEZ
+                $targetDir = MediaDownloader::createDir($catalogProduct->sku);
 
-                    // Diretório criado UMA ÚNICA VEZ
-                    $targetDir = MediaDownloader::createDir($productSku['productSku']);
+                // Realiza o download da Imagem
+                $originalPath = MediaDownloader::getImage(
+                    $image,
+                    $catalogProduct->sku,
+                    $idx
+                );
 
-                    // Realiza o download da Imagem
-                    $originalPath = MediaDownloader::getImage(
-                        $image,
-                        $productSku['productSku'],
-                        $idx
+                if (!$originalPath || !ImageValidator::isValid($originalPath)) {
+                    // remove lixo
+                    @unlink($originalPath);
+                }
+
+                // Resize das imagens
+                $resized = ImageResizer::resize($originalPath);
+
+                if (count($resized) > 0) {
+
+                    // Salva as imagens no disco
+                    $stored = ImageStorage::save(
+                        images: $resized,
+                        absoluteTargetDir: $targetDir,
+                        baseName: "{$catalogProduct->sku}_{$idx}"
                     );
 
-                    if (!$originalPath || !ImageValidator::isValid($originalPath)) {
-                        // remove lixo
-                        @unlink($originalPath);
-                    }
+                    // Salva a imagem no repositorio
+                    CatalogProductMediaRepository::create([
+                        'product_id' => $catalogProduct->product_id,
+                        'media_type' => 'jpg',
+                        'media_file' => $stored['1000x1000']['relative_path'],
+                        'media_url' => $stored['1000x1000']['url'],
+                    ]);
 
-                    // Resize das imagens
-                    $resized = ImageResizer::resize($originalPath);
+                    // Deverá salvar no produto somente a primeira imagem, pois é a principal
+                    if ($idx == 0) {
 
-                    if (count($resized) > 0) {
-
-                        // Salva as imagens no disco
-                        $stored = ImageStorage::save(
-                            images: $resized,
-                            absoluteTargetDir: $targetDir,
-                            baseName: "{$productSku['productSku']}_{$idx}"
+                        // Salva as imagens na tabela de produtos
+                        CatalogProductsRepository::updateImageProduct(
+                            $catalogProduct->product_id,
+                            [
+                                'image' => $stored['255x255']['url'],
+                                'thumbnail' => $stored['80x80']['url']
+                            ]
                         );
-
-                        // Salva a imagem no repositorio
-                        CatalogProductMediaRepository::create([
-                            'product_id' => $productId,
-                            'media_type' => 'jpg',
-                            'media_file' => $stored['1000x1000']['relative_path'],
-                            'media_url' => $stored['1000x1000']['url'],
-                        ]);
-
-                        // Deverá salvar no produto somente a primeira imagem, pois é a principal
-                        if ($idx == 0) {
-
-                            // Salva as imagens na tabela de produtos
-                            CatalogProductsRepository::updateImageProduct(
-                                $productId,
-                                [
-                                    'image' => $stored['255x255']['url'],
-                                    'thumbnail' => $stored['80x80']['url']
-                                ]
-                            );
-
-                        }
 
                     }
 
@@ -176,6 +174,7 @@ class CatalogProductMediaService
             }
 
         }
+
 
     }
 

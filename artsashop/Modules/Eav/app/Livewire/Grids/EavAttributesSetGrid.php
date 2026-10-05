@@ -22,11 +22,14 @@ use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Models\EavAttributesSet;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkAction;
+use Filament\Notifications\Notification;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Idea\Framework\Admin\Grids\Grid;
 use Idea\Framework\Repository\Eav\EavAttributeSetRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 final class EavAttributesSetGrid extends Grid
@@ -88,7 +91,26 @@ final class EavAttributesSetGrid extends Grid
                     ->csvDelimiter(';')
                     ->defaultFormat('csv')
                     ->disablePdf()
-                    ->disableXlsx()
+                    ->disableXlsx(),
+
+                BulkAction::make('deleteAttributeSet')
+                    ->label("Excluir Grupos")
+                    ->icon('heroicon-o-trash')
+                    ->requiresConfirmation()
+                    ->modalHeading("Você deseja excluir esses grupos?")
+                    ->deselectRecordsAfterCompletion()
+                    ->successNotification(
+                        Notification::make()->success()
+                            ->title('Sucesso !!!')
+                            ->body('Grupos Excluídos com Sucesso')
+                    )
+                    ->action(function (Collection $records, array $data): void {
+                        foreach ($records as $record) {
+                            EavAttributeSetRepository::delete(
+                                id:$record->attribute_set_id
+                            );
+                        }
+                    }),
             ])
             ->paginationPageOptions(
                 options: $this->paginationPageOptions

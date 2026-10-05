@@ -38,6 +38,9 @@ Route::middleware('check.apikey')->prefix('v1')->group(function () {
         Route::Post('/', [CatalogProductController::class, 'store'])->name('store');
         Route::Put('/', [CatalogProductController::class, 'update'])->name('update');
 
+        Route::Put('/update-images', [CatalogProductController::class, 'updateImages'])
+            ->name('updateImages');
+
         Route::get('/product', [CatalogProductController::class, 'show'])->name('product');
 
     });

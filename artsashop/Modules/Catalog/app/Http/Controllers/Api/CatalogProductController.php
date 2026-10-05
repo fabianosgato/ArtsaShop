@@ -15,12 +15,14 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
+
 namespace Modules\Catalog\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
 use Illuminate\Http\Request;
 use Modules\Catalog\Concerns\ProductsApiResponse;
+use Modules\Catalog\Services\CatalogProductMediaService;
 use Modules\Catalog\Services\CatalogProductService;
 
 class CatalogProductController extends Controller
@@ -37,7 +39,7 @@ class CatalogProductController extends Controller
         if ($request->accepts(['application/json'])) {
 
             // Retorna os itens por página
-            $perPage = $request->get('per_page', 20);
+            $perPage = $request->input('per_page', 20);
 
             // Retorna as Marcas do sistema
             $catalogProducts = CatalogProductsRepository::getProductsPagination($perPage);
@@ -101,6 +103,52 @@ class CatalogProductController extends Controller
 
     }
 
+    public function updateImages(Request $request)
+    {
+
+        if ($request->accepts(['application/json'])) {
+
+            // Array data vindos da API
+            $arrayData = $request->all();
+
+            if ($arrayData) {
+
+                // Reetorna o produto da base
+                $catalogProduct = CatalogProductsRepository::getProductBySku(
+                    $arrayData['product']['sku']
+                );
+
+                if ($catalogProduct) {
+
+                    CatalogProductMediaService::processImages(
+                        dataPost: $arrayData,
+                        catalogProduct: $catalogProduct
+                    );
+
+                    return response()->json([
+                        'error' => false,
+                        'message' => 'Dados Atualizados com sucesso',
+                    ]);
+
+                }
+
+            } else {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Dados enviados sao incorretos ',
+                ], 500);
+
+            }
+
+        }
+
+        return response()->json([
+            'error' => true,
+            'message' => 'Dados Vazios',
+        ], 500);
+
+    }
+
     /**
      * Atualzia um produto.
      */
@@ -152,7 +200,7 @@ class CatalogProductController extends Controller
 
                 // Retorna o produto pelo SKU
                 $catalogProduct = CatalogProductsRepository::getProductBySku(
-                    productSku:$request->get('productSku')
+                    productSku: $request->get('productSku')
                 );
 
                 if ($catalogProduct != null)
