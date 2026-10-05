@@ -9,6 +9,21 @@ class PaymentManager
 
     protected array $methods = [];
 
+    public function gateway(): string
+    {
+        if (getConfigData('payments/ipag/active')) {
+            return 'ipag';
+        }
+
+        if (getConfigData('payments/pagarme/active')) {
+            return 'pagarme';
+        }
+
+        throw new \RuntimeException(
+            'Nenhum gateway de pagamento está ativo.'
+        );
+    }
+
     public function register(PaymentMethodInterface $method): void
     {
         $this->methods[$method->code()] = $method;
@@ -19,7 +34,7 @@ class PaymentManager
 
         return array_filter(
             $this->methods,
-            fn ($method) => $method->isAvailable($context)
+            fn($method) => $method->isAvailable($context)
         );
     }
 
