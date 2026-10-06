@@ -49,8 +49,11 @@ class PaymentsController extends Controller
         // Retorna o Pedido do Cliente
         $order = SalesOrderRepository::getOrder($orderId)->first();
 
+        // Retorna o gateway habilitado
+        $gateway = $this->paymentGatewayFactory->make();
+
         if ($order->payment_method == 'pix') {
-            $this->paymentGatewayFactory->paymentPix($order);
+            $gateway->paymentPix($order);
 
         }
 
