@@ -34,39 +34,7 @@ class IdentifyStoreByHost
         $host = $request->getHost();
 
         // Busca store pelo host
-        $store = SysStoreRepository::getStoreByHost($host);
-
-        // Valida se a app nao está em produção
-        if (config('app.env') != 'local') {
-
-            // Se a LOJA nao foi encontrada irá pegar a LOJA PADRAO
-            if (!$store) {
-
-                // Loja padrão
-                $defaultStore = SysStoreRepository::getDefault();
-
-                // Segurança extra
-                if (!empty($defaultStore->host)) {
-
-                    // Mantém URI + query string
-                    $uri = $request->getRequestUri();
-
-                    // URL final
-                    $redirectUrl = 'https://' . $defaultStore->host . $uri;
-
-                    // Redirect 301 permanente
-                    return redirect()->to($redirectUrl, 301);
-
-                }
-
-                abort(404);
-
-            }
-
-        } else {
-            $store = SysStoreRepository::getDefault();
-
-        }
+        $store = SysStoreRepository::getDefault();
 
         // Disponibiliza globalmente
         app()->instance('currentStore', $store);
