@@ -48,10 +48,9 @@ class IpagPayment
     public function __construct()
     {
 
-        // Chaves (API_ID, API_KEY) armazenadas em config ou .env
-        $apiId = config('services.ipag.api_id');
-        $apiKey = config('services.ipag.api_key');
-        $apiEnvironment = config('services.ipag.api_env');
+        $apiId = getConfigData('payments/ipag/sandbox_ipag_id');
+        $apiKey = getConfigData('payments/ipag/sandbox_ipag_key');
+        $apiEnvironment = getConfigData('payments/ipag/environment');
 
         // Inicializa o Client do IPag
         $this->ipagClient = new IpagClient(
@@ -66,7 +65,7 @@ class IpagPayment
      * @param $orderId
      * @return array
      */
-    private function getOrderItens($orderId)
+    private function getOrderItens($orderId): array
     {
 
         $itens = [];
