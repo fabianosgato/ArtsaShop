@@ -11,17 +11,16 @@ class PaymentManager
 
     public function gateway(): string
     {
-        if (getConfigData('payments/ipag/active')) {
-            return 'ipag';
-        }
 
-        if (getConfigData('payments/pagarme/active')) {
-            return 'pagarme';
-        }
+        $gateway = getConfigData('payments/gateway/default');
 
-        throw new \RuntimeException(
-            'Nenhum gateway de pagamento está ativo.'
-        );
+        if (!$gateway)
+            throw new \RuntimeException(
+                'Nenhum gateway de pagamento está ativo.'
+            );
+
+        return $gateway;
+
     }
 
     public function register(PaymentMethodInterface $method): void
