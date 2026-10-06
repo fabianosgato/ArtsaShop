@@ -25,6 +25,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
 use Idea\Framework\Repository\System\SysConfigRespository;
 use Idea\Framework\View\Wsdadm\Components\FormComponent;
 use Illuminate\Support\Facades\Cache;
@@ -39,6 +40,15 @@ class SysConfigForm extends FormComponent
 
         foreach ($data as $key => $value) {
             $this->data[$key] = $value;
+        }
+
+        if (blank($this->data['payments/gateway/default'] ?? null)) {
+
+            if (($this->data['payments/pagarme/active'] ?? null) === '1') {
+                $this->data['payments/gateway/default'] = 'pagarme';
+            } elseif (($this->data['payments/ipag/active'] ?? null) === '1') {
+                $this->data['payments/gateway/default'] = 'ipag';
+            }
         }
 
         $this->params = $params;
@@ -199,16 +209,17 @@ class SysConfigForm extends FormComponent
 
                 ]),
 
-//                Tab::make('Repasse')->schema([
-//
-//                    Fieldset::make('Configurações gerais do Repasse')->schema([
-//
-//
-//                    ])
-//
-//                ]),
-
                 Tab::make('Pagamentos')->schema([
+
+                    Radio::make('payments/gateway/default')
+                        ->label('Gateway de pagamento')
+                        ->helperText('Selecione o gateway de pagamento utilizado pela loja.')
+                        ->options([
+                            'pagarme' => 'Pagar.me',
+                            'ipag' => 'iPag',
+                        ])
+                        ->required()
+                        ->live(),
 
                     Fieldset::make('Pagar-me')->schema([
 
@@ -257,7 +268,11 @@ class SysConfigForm extends FormComponent
                             ->label('SecretKey do Ambiente de Produção')
                             ->helperText('Chave Privada do Pagar-me para o ambiente de produção'),
 
-                    ])->columns(1),
+                    ])
+                    ->visible(fn (Get $get) =>
+                        $get('payments/gateway/default') === 'pagarme'
+                    )
+                    ->columns(1),
 
                     Fieldset::make('Ipag')->schema([
 
@@ -306,7 +321,11 @@ class SysConfigForm extends FormComponent
                             ->label('Chave SandBox do Ipag')
                             ->helperText('Chave do ambiente de Produção no IPag'),
 
-                    ])->columns(1),
+                    ])
+                        ->visible(fn (Get $get) =>
+                            $get('payments/gateway/default') === 'ipag'
+                        )
+                        ->columns(1),
 
                 ])
 
