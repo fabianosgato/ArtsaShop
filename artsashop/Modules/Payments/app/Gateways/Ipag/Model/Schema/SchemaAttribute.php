@@ -1,0 +1,171 @@
+<?php
+/**
+ * Fabiano Gato
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ *
+ * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
+ * mais recentes no futuro.
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
+ *
+ */
+namespace Modules\Payments\Gateways\Ipag\Model\Schema;
+
+use Idea\Framework\Services\Payments\Ipag\Util\StringUtil;
+use Modules\Payments\Gateways\Ipag\Model\Schema\Exception\SchemaAttributeParseException;
+
+/**
+ * @codeCoverageIgnore
+ */
+class SchemaAttribute
+{
+    protected Schema $schema;
+    protected string $name;
+    protected ?string $visibleName;
+    protected bool $nullable;
+    protected bool $hidden;
+    protected $default;
+    protected $hasDefault;
+
+    public function __construct(Schema $schema, string $name)
+    {
+        $this->schema = $schema;
+        $this->name = $name;
+        $this->visibleName = null;
+        $this->nullable = false;
+        $this->hidden = false;
+
+        $this->default = null;
+        $this->hasDefault = false;
+    }
+
+    public static function from(Schema $schema, string $name): self
+    {
+        return new static($schema, $name);
+    }
+
+    public function getAbsoluteName(): string
+    {
+        return implode('.', [$this->getSchema()->getName(), $this->getVisibleName()]);
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getSchema(): Schema
+    {
+        return $this->schema;
+    }
+
+    public function getVisibleName(): string
+    {
+        return $this->visibleName ?? $this->getName();
+    }
+
+    public function setVisibleName(string $name): self
+    {
+        $this->visibleName = $name;
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return StringUtil::classBasename(get_class($this));
+    }
+
+    public function getDefault()
+    {
+        return $this->default;
+    }
+
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    public function hasDefault(): bool
+    {
+        return $this->hasDefault;
+    }
+
+    //
+
+    public function nullable(bool $value = true): self
+    {
+        $this->nullable = $value;
+        return $this;
+    }
+
+    public function hidden(bool $value = true): self
+    {
+        $this->hidden = $value;
+        return $this;
+    }
+
+    public function default($value): self
+    {
+        $this->default = $value;
+        $this->hasDefault = true;
+        return $this;
+    }
+
+    public function list(): SchemaAttribute
+    {
+        return $this->array();
+    }
+
+    public function array(): SchemaAttribute
+    {
+        return $this->schema->array($this->getName(), $this);
+    }
+
+    //
+
+    public function tryParse($value)
+    {
+        try {
+            return $this->parse($value);
+        } catch (SchemaAttributeParseException $e) {
+            return null;
+        }
+    }
+
+    public function parse($value)
+    {
+        if (is_null($value) && $this->isNullable()) {
+            return $value;
+        }
+
+        return $this->parseContextual($value);
+    }
+
+    public function isNullable(): bool
+    {
+        return $this->nullable;
+    }
+
+    public function parseContextual($value)
+    {
+        return $value;
+    }
+
+    public function serialize($value)
+    {
+        return $value;
+    }
+
+    //
+
+    public function copy(): self
+    {
+        return clone $this;
+    }
+}

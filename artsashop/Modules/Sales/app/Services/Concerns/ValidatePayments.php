@@ -22,7 +22,7 @@ use App\Models\SalesOrderPayment;
 use Idea\Framework\Repository\Sales\SalesOrderPaymentRepository;
 use Idea\Framework\Repository\Sales\SalesOrderRepository;
 use Idea\Framework\Repository\Sales\SalesOrderStatusRepository;
-use Idea\Framework\Services\Payments\IpagPayment;
+use Modules\Payments\Gateways\IpagPayment;
 
 trait ValidatePayments
 {
