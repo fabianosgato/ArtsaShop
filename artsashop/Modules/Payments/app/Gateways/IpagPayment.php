@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Modules\Payments\Concerns\CreditCard;
+use Modules\Payments\Contracts\PaymentGatewayInterface;
 use Modules\Payments\Gateways\Ipag\Concerns\BankSlip;
 use Modules\Payments\Gateways\Ipag\Core\Enums\AcquirerStatus;
 use Modules\Payments\Gateways\Ipag\Core\Enums\GatewayStatus;
@@ -37,7 +38,7 @@ use Modules\Payments\Gateways\Ipag\Exception\HttpException;
 use Modules\Payments\Gateways\Ipag\Model\PaymentTransaction;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
-class IpagPayment
+class IpagPayment implements PaymentGatewayInterface
 {
 
     use CreditCard;

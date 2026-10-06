@@ -20,13 +20,14 @@ declare(strict_types=1);
 namespace Modules\Payments\Gateways;
 
 use App\Models\SalesOrder;
+use Modules\Payments\Contracts\PaymentGatewayInterface;
 use Modules\Payments\Gateways\Pagarme\Core\PagarmeClient;
 use Modules\Payments\Gateways\Pagarme\Order\PagarmeOrder;
 use Modules\Payments\Gateways\Pagarme\Order\PagarmeRefund;
 use Modules\Payments\Gateways\Pagarme\Types\PagarmeCreditCard;
 use Modules\Payments\Gateways\Pagarme\Types\PagarmePix;
 
-class PagarmePayment
+class PagarmePayment implements PaymentGatewayInterface
 {
 
     /**
@@ -165,4 +166,40 @@ class PagarmePayment
 
     }
 
+    public function paymentPix(SalesOrder $salesOrder): array
+    {
+        return $this->processPayment(
+            salesOrder: $salesOrder,
+            paymentType: 'PIX',
+            paymentPayload: []
+        );
+    }
+
+    public function paymentCreditCard(SalesOrder $salesOrder, array $paymentCard): array
+    {
+        return $this->processPayment(
+            salesOrder: $salesOrder,
+            paymentType: 'CC',
+            paymentPayload: []
+        );
+    }
+
+    public function paymentBankSlips(SalesOrder $salesOrder): array
+    {
+        return $this->processPayment(
+            salesOrder: $salesOrder,
+            paymentType: 'CC',
+            paymentPayload: []
+        );
+    }
+
+    public function checkPayment(string $transactionId)
+    {
+        dd($transactionId);
+    }
+
+    #[\Override] public function consult(SalesOrder $salesOrder, string $transactionId)
+    {
+        // TODO: Implement consult() method.
+    }
 }
