@@ -23,6 +23,7 @@ use Idea\Framework\Repository\Sales\SalesOrderRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Modules\Payments\Factories\PaymentGatewayFactory;
 use Modules\Payments\Gateways\IpagPayment;
 use Modules\Sales\Emails\SalesOrderApprovedMail;
 use Modules\Sales\Emails\SalesOrderCanceledMail;
@@ -33,11 +34,15 @@ class PaymentsController extends Controller
 {
 
     public function __construct(
-        protected IpagPayment $ipagPayment
+        protected PaymentGatewayFactory $paymentGatewayFactory
     )
     {
     }
 
+    /**
+     * @param $orderId
+     * @return void
+     */
     public function pay($orderId)
     {
 
@@ -45,7 +50,7 @@ class PaymentsController extends Controller
         $order = SalesOrderRepository::getOrder($orderId)->first();
 
         if ($order->payment_method == 'pix') {
-            $this->ipagPayment->paymentPix($order);
+            $this->paymentGatewayFactory->paymentPix($order);
 
         }
 
@@ -120,7 +125,7 @@ class PaymentsController extends Controller
                 ], 404);
             }
 
-            $statusOrder = $this->ipagPayment->checkPayment(
+            $statusOrder = $this->paymentGatewayFactory->checkPayment(
                 $payload['id']
             );
 
