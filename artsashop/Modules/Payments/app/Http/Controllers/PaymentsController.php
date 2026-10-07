@@ -15,6 +15,7 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
+
 namespace Modules\Payments\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -24,7 +25,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Modules\Payments\Factories\PaymentGatewayFactory;
-use Modules\Payments\Gateways\IpagPayment;
 use Modules\Sales\Emails\SalesOrderApprovedMail;
 use Modules\Sales\Emails\SalesOrderCanceledMail;
 use Modules\Sales\Emails\SalesOrderCreatedMail;
@@ -136,12 +136,12 @@ class PaymentsController extends Controller
             SalesOrderRepository::updateOrder(
                 orderId: $order->order_id,
                 attributes: [
-                    'status_id'    => $statusOrder->status_id,
-                    'status_type'  => $statusOrder->status,
-                    'status_code'  => $statusOrder->status,
+                    'status_id' => $statusOrder->status_id,
+                    'status_type' => $statusOrder->status,
+                    'status_code' => $statusOrder->status,
                     'status_label' => $statusOrder->label,
-                    'shipping_cost'=> $quoteModel->shipping_cost ?? 0,
-                    'canal'        => 'web',
+                    'shipping_cost' => $quoteModel->shipping_cost ?? 0,
+                    'canal' => 'web',
                 ]);
 
             // Retorna todos os dados do pedido
@@ -203,7 +203,7 @@ class PaymentsController extends Controller
             );
 
             // Realiza a consulta do pedido no IPag e retorna o status do pedido
-            $statusOrder = app(IpagPayment::class)->consult(
+            $statusOrder = app(PaymentGatewayFactory::class)->consult(
                 $salesOrder,
                 $payload['transaction_id']
             );
@@ -212,12 +212,12 @@ class PaymentsController extends Controller
             SalesOrderRepository::updateOrder(
                 orderId: $salesOrder->order_id,
                 attributes: [
-                    'status_id'    => $statusOrder->status_id,
-                    'status_type'  => $statusOrder->status,
-                    'status_code'  => $statusOrder->status,
+                    'status_id' => $statusOrder->status_id,
+                    'status_type' => $statusOrder->status,
+                    'status_code' => $statusOrder->status,
                     'status_label' => $statusOrder->label,
-                    'shipping_cost'=> $quoteModel->shipping_cost ?? 0,
-                    'canal'        => 'web',
+                    'shipping_cost' => $quoteModel->shipping_cost ?? 0,
+                    'canal' => 'web',
                 ]);
 
             // Retorna todos os dados do pedido

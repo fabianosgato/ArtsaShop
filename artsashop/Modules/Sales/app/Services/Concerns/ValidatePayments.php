@@ -15,6 +15,7 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
+
 namespace Modules\Sales\Services\Concerns;
 
 use App\Models\SalesOrder;
@@ -22,7 +23,7 @@ use App\Models\SalesOrderPayment;
 use Idea\Framework\Repository\Sales\SalesOrderPaymentRepository;
 use Idea\Framework\Repository\Sales\SalesOrderRepository;
 use Idea\Framework\Repository\Sales\SalesOrderStatusRepository;
-use Modules\Payments\Gateways\IpagPayment;
+use Modules\Payments\Factories\PaymentGatewayFactory;
 
 trait ValidatePayments
 {
@@ -57,7 +58,7 @@ trait ValidatePayments
         if ($salesOrderPayment->method === 'credit_card') {
 
             // Realiza o pagamento do "Cartão de crédito"
-            $paymentInformation = app(IpagPayment::class)->paymentCreditCard(
+            $paymentInformation = app(PaymentGatewayFactory::class)->paymentCreditCard(
                 salesOrder: SalesOrderRepository::getOrder($salesOrder->order_id)->get()->first(),
                 paymentCard: $payload['payment']
             );
@@ -93,7 +94,7 @@ trait ValidatePayments
         } else if ($salesOrderPayment->method === 'pix') {
 
             // Retorna as informações do pagamento "PIX"
-            $paymentInformation = app(IpagPayment::class)->paymentPix(
+            $paymentInformation = app(PaymentGatewayFactory::class)->paymentPix(
                 salesOrder: SalesOrderRepository::getOrder($salesOrder->order_id)->get()->first()
             );
 
@@ -121,7 +122,7 @@ trait ValidatePayments
         } else if ($salesOrderPayment->method === 'boleto') {
 
             // Retorna as informações do pagamento "Boleto"
-            $paymentInformation = app(IpagPayment::class)->paymentBankSlips(
+            $paymentInformation = app(PaymentGatewayFactory::class)->paymentBankSlips(
                 salesOrder: SalesOrderRepository::getOrder($salesOrder->order_id)->get()->first()
             );
 
@@ -158,12 +159,12 @@ trait ValidatePayments
         SalesOrderRepository::updateOrder(
             orderId: $salesOrder->order_id,
             attributes: [
-                'status_id'    => $statusOrder->status_id,
-                'status_type'  => $statusOrder->status,
-                'status_code'  => $statusOrder->status,
+                'status_id' => $statusOrder->status_id,
+                'status_type' => $statusOrder->status,
+                'status_code' => $statusOrder->status,
                 'status_label' => $statusOrder->label,
-                'shipping_cost'=> $quoteModel->shipping_cost ?? 0,
-                'canal'        => 'web',
+                'shipping_cost' => $quoteModel->shipping_cost ?? 0,
+                'canal' => 'web',
             ]);
 
         // Retorna as informações do pedido

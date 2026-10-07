@@ -175,7 +175,6 @@ class SalesOrderPlacementService
 
         });
 
-
         // =============================
         // FORA DA TRANSACTION
         // =============================
