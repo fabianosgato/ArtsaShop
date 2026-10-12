@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * Class SysUser
@@ -34,7 +35,7 @@ class User extends Authenticatable
     protected $table = 'sys_users';
     protected $primaryKey = 'user_id';
 
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     protected $casts = [
         'group_id' => 'int',

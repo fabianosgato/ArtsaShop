@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Listeners\LoadCartAfterLogin;
 use App\Listeners\SaveCartBeforeLogout;
+use App\Models\SysPersonalAccessToken;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
@@ -11,6 +12,7 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+        //
+        Sanctum::usePersonalAccessTokenModel(SysPersonalAccessToken::class);
 
         // Força o Filament a reconhecer que as classes do Tailwind v4 vêm do seu app.css principal
         FilamentAsset::register([
