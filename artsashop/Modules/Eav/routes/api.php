@@ -4,11 +4,12 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the EULA
- * that is bundled with this package in the file LICENSE.txt.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
  *
- * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
- * mais recentes no futuro.
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
  *****************************************************
  *
  * @copyright    Copyright (c) Fabiano Gato
@@ -17,27 +18,23 @@
  */
 
 use Illuminate\Support\Facades\Route;
-use Modules\Eav\Http\Controllers\Api\AttributeSetController;
 
-/*
- *--------------------------------------------------------------------------
- * API Routes
- *--------------------------------------------------------------------------
- *
- * Here is where you can register API routes for your application. These
- * routes are loaded by the RouteServiceProvider within a group which
- * is assigned the "api" middleware group. Enjoy building your API!
- *
- */
 
-Route::middleware('check.apikey')->prefix('v1')->group(function () {
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     Route::prefix('attribute-sets')->group(function () {
 
-        Route::get('/', [AttributeSetController::class, 'index'])->name('get.attributes-set.index');
-        Route::Post('/', [AttributeSetController::class, 'store'])->name('post.attributes-set.store');
-        Route::Put('/', [AttributeSetController::class, 'update'])->name('put.attributes-set.update');
-        Route::get('/{id}', [AttributeSetController::class, 'show'])->name('get.attribute-set.show');
+        Route::get('/', [\Modules\Eav\Http\Controllers\Api\AttributeSetController::class, 'index'])
+            ->name('api.v1.attributes-set.index');
+
+        Route::Post('/', [\Modules\Eav\Http\Controllers\Api\AttributeSetController::class, 'store'])
+            ->name('api.v1.attributes-set.store');
+
+        Route::Put('/', [\Modules\Eav\Http\Controllers\Api\AttributeSetController::class, 'update'])
+            ->name('api.v1.attributes-set.update');
+
+        Route::get('/{id}', [\Modules\Eav\Http\Controllers\Api\AttributeSetController::class, 'show'])
+            ->name('api.v1.attribute-set.show');
 
     });
 

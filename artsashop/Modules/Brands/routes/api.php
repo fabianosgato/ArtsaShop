@@ -1,27 +1,44 @@
 <?php
-
-use Illuminate\Support\Facades\Route;
-use Modules\Brands\Http\Controllers\Api\CatalogBrandController;
-
-/*
- *--------------------------------------------------------------------------
- * API Routes
- *--------------------------------------------------------------------------
+/**
+ * Fabiano Gato
  *
- * Here is where you can register API routes for your application. These
- * routes are loaded by the RouteServiceProvider within a group which
- * is assigned the "api" middleware group. Enjoy building your API!
+ * NOTICE OF LICENSE
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ *
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
 
-Route::middleware('check.apikey')->prefix('v1')->group(function () {
+use Illuminate\Support\Facades\Route;
+
+
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     Route::prefix('brands')->group(function () {
 
-        Route::get('/', [CatalogBrandController::class, 'index'])->name('get.brand.index');
-        Route::Post('/', [CatalogBrandController::class, 'store'])->name('post.brand.index');
-        Route::Put('/{key}', [CatalogBrandController::class, 'update'])->name('put.brand.index');
-        Route::Delete('/', [CatalogBrandController::class, 'destroy'])->name('delete.brand.index');
+        // Retorna as marcas do sistema
+        Route::get('/', [\Modules\Brands\Http\Controllers\Api\CatalogBrandController::class, 'index'])
+            ->name('api.v1.catalog.brand.index');
+
+        // Insere marca no sistema
+        Route::Post('/', [\Modules\Brands\Http\Controllers\Api\CatalogBrandController::class, 'store'])
+            ->name('api.v1.catalog.brand.store');
+
+        // Atualiza uma marca no sistema
+        Route::Put('/{key}', [\Modules\Brands\Http\Controllers\Api\CatalogBrandController::class, 'update'])
+            ->name('api.v1.catalog.brand.update');
+
+        // Deleta uma marca no sistema
+        Route::Delete('/', [\Modules\Brands\Http\Controllers\Api\CatalogBrandController::class, 'destroy'])
+            ->name('api.v1.catalog.brand.delete');
 
     });
 

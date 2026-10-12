@@ -4,11 +4,12 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the EULA
- * that is bundled with this package in the file LICENSE.txt.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
  *
- * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
- * mais recentes no futuro.
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
  *****************************************************
  *
  * @copyright    Copyright (c) Fabiano Gato
@@ -17,31 +18,30 @@
  */
 
 use Illuminate\Support\Facades\Route;
-use Modules\Catalog\Http\Controllers\Api\CatalogProductController;
 
-/*
- *--------------------------------------------------------------------------
- * API Routes
- *--------------------------------------------------------------------------
- *
- * Here is where you can register API routes for your application. These
- * routes are loaded by the RouteServiceProvider within a group which
- * is assigned the "api" middleware group. Enjoy building your API!
- *
- */
-
-Route::middleware('check.apikey')->prefix('v1')->group(function () {
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     Route::prefix('catalog')->group(function () {
 
-        Route::get('/', [CatalogProductController::class, 'index'])->name('index');
-        Route::Post('/', [CatalogProductController::class, 'store'])->name('store');
-        Route::Put('/', [CatalogProductController::class, 'update'])->name('update');
+        // Lista todos os produtos
+        Route::get('/', [\Modules\Catalog\Http\Controllers\Api\CatalogProductController::class, 'index'])
+            ->name('api.v1.catalog.product.index');
 
-        Route::Put('/update-images', [CatalogProductController::class, 'updateImages'])
-            ->name('updateImages');
+        // Insere um produto
+        Route::Post('/', [\Modules\Catalog\Http\Controllers\Api\CatalogProductController::class, 'store'])
+            ->name('api.v1.catalog.product.store');
 
-        Route::get('/product', [CatalogProductController::class, 'show'])->name('product');
+        // Atualiza um produto
+        Route::Put('/', [\Modules\Catalog\Http\Controllers\Api\CatalogProductController::class, 'update'])
+            ->name('api.v1.catalog.product.update');
+
+        // Atualiza as imagens de um produto
+        Route::Put('/update-images', [\Modules\Catalog\Http\Controllers\Api\CatalogProductController::class, 'updateImages'])
+            ->name('api.v1.catalog.product.updateImages');
+
+        // Retorna as informações de um produto
+        Route::get('/product', [\Modules\Catalog\Http\Controllers\Api\CatalogProductController::class, 'show'])
+            ->name('api.v1.catalog.product.product');
 
     });
 

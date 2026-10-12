@@ -4,11 +4,12 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the EULA
- * that is bundled with this package in the file LICENSE.txt.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
  *
- * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
- * mais recentes no futuro.
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
  *****************************************************
  *
  * @copyright    Copyright (c) Fabiano Gato
@@ -18,7 +19,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('check.apikey')->prefix('v1')->group(function () {
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     // Roda dos relatorios
     Route::prefix('report')->group(function () {
@@ -28,7 +29,7 @@ Route::middleware('check.apikey')->prefix('v1')->group(function () {
 
             // PUT do relatorio de Logs
             Route::put('/', [\Modules\Reports\Http\Controllers\Api\LogsController::class, 'store'])
-                ->name('logs.store');
+                ->name('api.v1.report.logs.store');
 
         });
 
