@@ -247,7 +247,7 @@ class CatalogProductsRepository extends AbstractRepository
      * Retorna os produtos paginados filtrando por uma categoria específica
      * @param int $categoryId
      * @param int $perPage
-     * @param array|null $prices
+     * @param array|null $priceRange
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public static function getProductsByCategoryPagination(int $categoryId, int $perPage=32, ?array $priceRange): LengthAwarePaginator

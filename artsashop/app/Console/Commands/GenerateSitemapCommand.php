@@ -4,18 +4,18 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the EULA
- * that is bundled with this package in the file LICENSE.txt.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
  *
- * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
- * mais recentes no futuro.
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
  *****************************************************
  *
  * @copyright    Copyright (c) Fabiano Gato
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
-
 namespace App\Console\Commands;
 
 use Idea\Framework\Services\SiteMapService;
@@ -23,8 +23,14 @@ use Illuminate\Console\Command;
 
 class GenerateSitemapCommand extends Command
 {
+    /**
+     * The name and signature of the console command.
+     */
     protected $signature = 'sitemap:generate';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Generate sitemap files';
 
     public function handle(): int
