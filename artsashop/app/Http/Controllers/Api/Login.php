@@ -16,7 +16,7 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
