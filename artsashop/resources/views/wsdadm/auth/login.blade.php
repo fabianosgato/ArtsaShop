@@ -1,6 +1,17 @@
 <x-guest-layout>
     <div class="flex flex-col items-center justify-center">
         <div class="w-full max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow dark:bg-gray-800">
+
+            @if ($errors->any())
+                <div class="mb-6 p-4 rounded bg-red-100 text-red-700 text-sm">
+                    <ul class="list-disc pl-5 space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form method="POST" class="mt-8 space-y-6" action="{{ route('wsdadmin.login.store') }}">
                 @csrf
                 <div>

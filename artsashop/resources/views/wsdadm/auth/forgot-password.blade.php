@@ -5,7 +5,15 @@
 
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
-
+    @if ($errors->any())
+        <div class="mb-6 p-4 rounded bg-red-100 text-red-700 text-sm">
+            <ul class="list-disc pl-5 space-y-1">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <form method="POST" action="{{ route('password.email') }}">
         @csrf
 
@@ -17,9 +25,9 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
+            <button type="submit" class="w-full btn btn-sm btn-primary">
                 {{ __('Email Password Reset Link') }}
-            </x-primary-button>
+            </button>
         </div>
     </form>
 </x-guest-layout>
