@@ -27,10 +27,11 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
+
     /**
-     * Display the login view.
+     * Retorna a view do login do usuário
      */
-    public function create(): View
+    public function login(): View
     {
         return view('wsdadm.auth.login');
     }

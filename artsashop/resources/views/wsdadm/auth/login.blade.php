@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="flex flex-col items-center justify-center">
         <div class="w-full max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow dark:bg-gray-800">
-            <form method="POST" class="mt-8 space-y-6" action="{{ route('wsdadmin.login') }}">
+            <form method="POST" class="mt-8 space-y-6" action="{{ route('wsdadmin.login.store') }}">
                 @csrf
                 <div>
                     <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">E-mail</label>
@@ -30,7 +30,6 @@
                 <button type="submit" class="w-full btn btn-sm btn-primary">
                     Entrar
                 </button>
-
             </form>
         </div>
     </div>

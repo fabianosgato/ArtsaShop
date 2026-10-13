@@ -65,7 +65,7 @@ return [
     | the application so that it's available within Artisan commands.
     |
     */
-    'url' => env('APP_URL', 'http://ecommerce-laravel.server/'),
+    'url' => env('APP_URL', 'https://ecommerce.lef-tecnologia.com.br/'),
 
     /*
     |--------------------------------------------------------------------------

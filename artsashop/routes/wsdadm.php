@@ -1,35 +1,59 @@
 <?php
-
 /**
  * Fabiano Gato
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the EULA
- * that is bundled with this package in the file LICENSE.txt.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
  *
- * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
- * mais recentes no futuro.
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
  *****************************************************
  *
  * @copyright    Copyright (c) Fabiano Gato
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
- * Rotas padroes do sistema
  */
 
 use Illuminate\Support\Facades\Route;
 
-// Rota padrao para o Dashboard
-//Route::get('/wsdadm', [\App\Http\Controllers\Backend\Dashboard::class, 'index'])
-//    ->name('dashboard');
+Route::middleware('guest')->group(function () {
 
-// Rotas para o "profile" do usuario
+    // Rota para o login do usuário
+    Route::get('/wsdadm', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'login'])
+        ->name('wsdadmin.login');
+
+    // Realiza o POST do login do usuário
+    Route::post('/wsdadm/login-post', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store'])
+        ->name('wsdadmin.login.store');
+
+    // Rota para o form do "esqueci a senha" do WsdAdmin
+    Route::get('forgot-password', [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'create'])
+        ->name('password.request');
+
+    // Realiza o POST do "esqueci a senha"
+    Route::post('forgot-password', [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'store'])
+        ->name('password.email');
+
+    Route::get('reset-password/{token}', [\App\Http\Controllers\Auth\NewPasswordController::class, 'create'])
+        ->name('password.reset');
+
+    Route::post('reset-password', [\App\Http\Controllers\Auth\NewPasswordController::class, 'store'])
+        ->name('password.store');
+
+});
+
+
+// Rotas padrões do WsdAdmin
 Route::middleware('auth')->group(function () {
 
-    Route::get('/wsdadm', [\App\Http\Controllers\Backend\Dashboard::class, 'index'])
+    // Rota para o Dashboard do sistema
+    Route::get('/dashboard', [\App\Http\Controllers\Backend\Dashboard::class, 'index'])
         ->name('wsdadm.dashboard');
 
+    // Rota para edição do perfil do usuá´rio
     Route::get('/profile', [\App\Http\Controllers\Backend\ProfileController::class, 'edit'])
         ->name('profile.edit');
 
@@ -44,4 +68,4 @@ Route::middleware('auth')->group(function () {
 
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

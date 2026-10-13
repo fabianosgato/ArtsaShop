@@ -38,6 +38,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ])
     ->withMiddleware(function (Middleware $middleware): void {
 
+        // Redireciona para o login, usuários não autenticados
+        $middleware->redirectGuestsTo(
+            fn (Request $request) => route('wsdadmin.login')
+        );
+
         // Proxy / Cloudflare
         $middleware->trustProxies(
             at: '*',

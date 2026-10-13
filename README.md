@@ -1,4 +1,4 @@
-# WSD Ecommerce
+# ArtsaShop
 
 > Plataforma de e-commerce desenvolvida com Laravel, utilizando uma arquitetura modular e separação entre frontend e painel administrativo.
 
@@ -8,7 +8,7 @@
 
 ## Sobre o projeto
 
-O **WSD Ecommerce** é uma plataforma de comércio eletrônico desenvolvida com **Laravel 13**, criada com foco em uma arquitetura organizada, modular e preparada para evolução.
+O **ArtsaShop** é uma plataforma de comércio eletrônico desenvolvida com **Laravel 13**, criada com foco em uma arquitetura organizada, modular e preparada para evolução.
 
 O projeto foi desenvolvido como uma aplicação real, buscando aplicar boas práticas de desenvolvimento backend, organização de domínio, separação de responsabilidades e integração entre diferentes componentes da aplicação.
 

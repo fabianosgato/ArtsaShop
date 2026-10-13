@@ -127,7 +127,6 @@ return [
     | confirmation screen. By default, the timeout lasts for three hours.
     |
     */
-
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
 ];
