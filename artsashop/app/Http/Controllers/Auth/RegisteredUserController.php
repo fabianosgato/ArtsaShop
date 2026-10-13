@@ -62,5 +62,6 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         return redirect(route('wsdadm.dashboard', absolute: false));
+
     }
 }
