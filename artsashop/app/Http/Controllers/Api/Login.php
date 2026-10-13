@@ -20,7 +20,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Idea\Framework\Interfaces\Auth\TokenServiceInterface;
+use Idea\Framework\Services\Auth\TokenService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -28,8 +28,8 @@ class Login extends Controller
 {
 
     public function store(
-        Request               $request,
-        TokenServiceInterface $tokenService
+        Request $request,
+        TokenService $tokenService
     ): JsonResponse
     {
 
