@@ -92,5 +92,3 @@ Route::middleware('auth')->group(function () {
         ->name('password.update');
 
 });
-
-require __DIR__ . '/auth.php';
