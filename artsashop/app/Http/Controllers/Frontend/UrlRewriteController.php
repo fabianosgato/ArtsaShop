@@ -31,7 +31,6 @@ class UrlRewriteController extends Controller
     /**
      * Este método resolve as URLs vindas do sistema de rewrite.
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|never
      */
     public function resolve(Request $request)
     {
@@ -42,35 +41,38 @@ class UrlRewriteController extends Controller
         // Retorna o slug
         $rewrite = SysUrlRewriteRepository::getBySlug($slug);
 
-        // Valida as opções do redirect
-        if (!empty($rewrite['options'])) {
+        if ($rewrite) {
 
-            $options = json_decode($rewrite['options'], true);
+            // Valida as opções do redirect
+            if (!empty($rewrite['options'])) {
 
-            if (($options['redirect'] ?? null) === 301) {
+                $options = json_decode($rewrite['options'], true);
 
-                // Busca a URL canônica (principal)
-                $canonical = SysUrlRewriteRepository::getCanonicalByTargetPath(
-                    $rewrite['target_path']
-                );
+                if (($options['redirect'] ?? null) === 301) {
 
-                if ($canonical && $canonical['request_path'] !== $slug) {
-                    return redirect('/' . $canonical['request_path'], 301);
+                    // Busca a URL canônica (principal)
+                    $canonical = SysUrlRewriteRepository::getCanonicalByTargetPath(
+                        $rewrite['target_path']
+                    );
+
+                    if ($canonical && $canonical['request_path'] !== $slug) {
+                        return redirect('/' . $canonical['request_path'], 301);
+                    }
+
                 }
 
             }
 
+            list($targetType, $id) = explode('/', $rewrite['target_path']);
+
+            return match ($targetType) {
+                'product' => app(CatalogProductController::class)->index($id),
+                'category' => app(CatalogCategoryController::class)->index($id),
+                'brand' => app(BrandController::class)->index($id),
+                'cms' => app(CmsPagesController::class)->index($id),
+                default => abort(404),
+            };
         }
-
-        list($targetType, $id) = explode('/', $rewrite['target_path']);
-
-        return match ($targetType) {
-            'product'  => app(CatalogProductController::class)->index($id),
-            'category' => app(CatalogCategoryController::class)->index($id),
-            'brand'    => app(BrandController::class)->index($id),
-            'cms'      => app(CmsPagesController::class)->index($id),
-            default    => abort(404),
-        };
 
     }
 

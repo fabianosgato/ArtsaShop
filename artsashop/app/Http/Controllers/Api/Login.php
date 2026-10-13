@@ -32,6 +32,7 @@ class Login extends Controller
         TokenServiceInterface $tokenService
     ): JsonResponse
     {
+
         $validated = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
