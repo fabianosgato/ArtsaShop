@@ -40,8 +40,8 @@
                             <label for="qty">Qtd:</label>
                             <div class="qty-container">
                                 <input type="text" name="qty" id="qty" value="1" title="Qtd" class="input-text qty">
-                                <input type="button" class="qty-decrease" onclick="var qty_el = document.getElementById('qty'); var qty = qty_el.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) qty_el.value--;return false;">
-                                <input type="button" class="qty-increase" onclick="var qty_el = document.getElementById('qty'); var qty = qty_el.value; if( !isNaN( qty )) qty_el.value++;return false;">
+{{--                                <input type="button" class="qty-decrease" onclick="var qty_el = document.getElementById('qty'); var qty = qty_el.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) qty_el.value--;return false;">--}}
+{{--                                <input type="button" class="qty-increase" onclick="var qty_el = document.getElementById('qty'); var qty = qty_el.value; if( !isNaN( qty )) qty_el.value++;return false;">--}}
                             </div>
                             <button type="submit" id="product-addtocart-button" class="button btn-cart" data-original-title="Adicionar ao carrinho" rel="tooltip"><span><span>Adicionar ao carrinho</span></span></button>
                             <ul class="add-to-links mt-3">
