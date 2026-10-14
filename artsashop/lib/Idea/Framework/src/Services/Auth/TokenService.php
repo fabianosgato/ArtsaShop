@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Idea\Framework\Services\Auth;
 
 use Idea\Framework\Interfaces\Auth\TokenServiceInterface;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class TokenService implements TokenServiceInterface
 {
@@ -58,8 +59,12 @@ class TokenService implements TokenServiceInterface
      */
     public function deleteToken(?string $bearerToken)
     {
+        if ($bearerToken === null) {
+            return;
+        }
 
-
+        $token = PersonalAccessToken::findToken($bearerToken);
+        $token?->delete();
 
     }
 
