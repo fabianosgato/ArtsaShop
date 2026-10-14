@@ -56,8 +56,10 @@ class TokenService implements TokenServiceInterface
      * Metodo usado para deletar um Token
      * @return void
      */
-    public function deleteToken()
+    public function deleteToken(?string $bearerToken)
     {
+
+
 
     }
 

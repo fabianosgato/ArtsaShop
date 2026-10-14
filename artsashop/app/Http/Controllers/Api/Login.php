@@ -69,11 +69,16 @@ class Login extends Controller
         TokenService $tokenService
     ): JsonResponse
     {
-        $tokenService->deleteToken();
 
-        return response()->json([
+        $tokenService->deleteToken(
+            $request->bearerToken()
+        );
 
-        ]);
+        return response()->json(
+            $this->response(
+                request: 'Token Revogado'
+            )
+        );
 
     }
 
