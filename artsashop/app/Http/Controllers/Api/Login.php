@@ -64,6 +64,9 @@ class Login extends Controller
 
     }
 
+    public function delete(Request $request)
+    {
 
+    }
 
 }

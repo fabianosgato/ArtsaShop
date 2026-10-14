@@ -96,11 +96,12 @@ class ApiAuthLoginTest extends TestCase
      */
     public function test_user_invalid_password(): void
     {
+
         // Arrange
         $email = 'api-login-test4@example.com';
         $password = 'password123';
 
-        $user = User::factory()->create([
+        User::factory()->create([
             'email' => $email,
             'password' => Hash::make($password),
             'status' => true,

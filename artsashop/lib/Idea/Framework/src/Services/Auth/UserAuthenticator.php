@@ -52,6 +52,7 @@ class UserAuthenticator implements UserAuthenticatorInterface
         }
 
         return $user;
+
     }
 
 }

@@ -52,4 +52,13 @@ class TokenService implements TokenServiceInterface
 
     }
 
+    /**
+     * Metodo usado para deletar um Token
+     * @return void
+     */
+    public function deleteToken()
+    {
+
+    }
+
 }
