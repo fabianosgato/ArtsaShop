@@ -7,7 +7,9 @@ namespace Tests\Unit\Services\Auth;
 use App\Models\User;
 use Idea\Framework\Interfaces\Auth\AccessTokenIssuerInterface;
 use Idea\Framework\Interfaces\Auth\UserAuthenticatorInterface;
+use Idea\Framework\Services\Auth\SanctumAccessTokenIssuer;
 use Idea\Framework\Services\Auth\TokenService;
+use Idea\Framework\Services\Auth\UserAuthenticator;
 use Mockery;
 use Tests\TestCase;
 
@@ -23,7 +25,7 @@ class TokenServiceTest extends TestCase
         $user = new User();
 
         $userAuthenticator = Mockery::mock(
-            UserAuthenticatorInterface::class
+            UserAuthenticator::class
         );
 
         $userAuthenticator
@@ -33,7 +35,7 @@ class TokenServiceTest extends TestCase
             ->andReturn($user);
 
         $tokenIssuer = Mockery::mock(
-            AccessTokenIssuerInterface::class
+            SanctumAccessTokenIssuer::class
         );
 
         $tokenIssuer

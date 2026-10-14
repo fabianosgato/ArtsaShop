@@ -24,6 +24,7 @@ use Idea\Framework\Interfaces\Auth\TokenServiceInterface;
 
 class TokenService implements TokenServiceInterface
 {
+
     public function __construct(
         private readonly UserAuthenticator $userAuthenticator,
         private readonly SanctumAccessTokenIssuer $tokenIssuer,

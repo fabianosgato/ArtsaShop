@@ -41,5 +41,6 @@ class SanctumAccessTokenIssuer implements AccessTokenIssuerInterface
         $accessToken = $user->createToken($deviceName);
 
         return $accessToken->plainTextToken;
+
     }
 }
