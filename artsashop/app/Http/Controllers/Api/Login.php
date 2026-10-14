@@ -64,8 +64,16 @@ class Login extends Controller
 
     }
 
-    public function delete(Request $request)
+    public function delete(
+        Request $request,
+        TokenService $tokenService
+    ): JsonResponse
     {
+        $tokenService->deleteToken();
+
+        return response()->json([
+
+        ]);
 
     }
 

@@ -91,7 +91,7 @@ class ApiAuthLoginTest extends TestCase
     }
 
     /**
-     * Teste para ideintificar se o usuario errou a senha
+     * Teste para identificar se o usuario errou a senha
      * @return void
      */
     public function test_user_invalid_password(): void
