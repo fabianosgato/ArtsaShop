@@ -30,8 +30,6 @@ use Tests\TestCase;
 class AbstractRepositoryTest extends TestCase
 {
 
-    private string $testEmail = "create@example.com";
-
     public function testCreate()
     {
 
@@ -41,7 +39,7 @@ class AbstractRepositoryTest extends TestCase
 
         $model = $repository::create(
             attributes: [
-                'email' => $this->testEmail,
+                'email' => 'create@example.com',
                 'email_verified_at' => null,
             ],
             values: [
@@ -56,7 +54,7 @@ class AbstractRepositoryTest extends TestCase
         $this->assertInstanceOf(User::class, $model);
 
         $this->assertDatabaseHas('sys_users', [
-            'email' => $this->testEmail,
+            'email' => 'create@example.com',
             'name' => 'Usuário Teste',
         ]);
 
@@ -72,12 +70,12 @@ class AbstractRepositoryTest extends TestCase
         $user = User::query()->where(
             column: 'email',
             operator: '=',
-            value:$this->testEmail
+            value:'create@example.com'
         )->first();
 
         $model = $repository::create(
             [
-                'email' => $this->testEmail,
+                'email' => 'create@example.com',
             ],
             [
                 'name' => 'Outro Nome',
@@ -104,7 +102,7 @@ class AbstractRepositoryTest extends TestCase
         $user = User::query()->where(
             column: 'email',
             operator: '=',
-            value:$this->testEmail
+            value:'create@example.com'
         )->first();
 
         $newName = 'Nome atualizado pelo teste';
@@ -142,17 +140,26 @@ class AbstractRepositoryTest extends TestCase
 
     }
 
+    public function testFind()
+    {
+
+        $repository = new class extends AbstractRepository {
+            protected static $model = User::class;
+        };
+
+        $model = $repository::find(1);
+
+        $this->assertInstanceOf(User::class, $model);
+
+    }
+
     public function testDelete(): void
     {
         $repository = new class extends AbstractRepository {
             protected static $model = User::class;
         };
 
-        $user = User::query()->where(
-            column: 'email',
-            operator: '=',
-            value:$this->testEmail
-        )->first();
+        $user = User::query()->find(1);
 
         $delete = $repository::delete($user->getKey());
 
@@ -200,19 +207,6 @@ class AbstractRepositoryTest extends TestCase
 
         $this->assertInstanceOf(User::class, $model);
         $this->assertInstanceOf(Model::class, $model);
-
-    }
-
-    public function testFind()
-    {
-
-        $repository = new class extends AbstractRepository {
-            protected static $model = User::class;
-        };
-
-        $model = $repository::find(1);
-
-        $this->assertInstanceOf(User::class, $model);
 
     }
 
