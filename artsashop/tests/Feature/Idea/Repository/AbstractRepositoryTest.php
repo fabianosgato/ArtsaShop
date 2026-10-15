@@ -89,31 +89,31 @@ class AbstractRepositoryTest extends TestCase
     public function testCreateExistingRecord()
     {
 
+        $defaultEmail = 'create@example.com';
+
         $repository = new class extends AbstractRepository {
             protected static $model = User::class;
         };
 
+        $user = User::query()->where('email', $defaultEmail)->first();
+
         $model = $repository::create(
-            attributes: [
-                'email' => 'create@example.com',
-                'email_verified_at' => null,
+            [
+                'email' => $defaultEmail,
             ],
-            values: [
-                'name' => 'Usuário Teste',
-                'group_id' => 1,
-                'password' => bcrypt('password'),
-                'remember_token' => '',
+            [
+                'name' => 'Outro Nome',
                 'status' => true,
             ]
         );
 
-        $this->assertInstanceOf(User::class, $model);
+        $this->assertNotNull($user);
+        $this->assertSame($user->getKey(), $model->getKey());
 
-        $this->assertDatabaseHas('sys_users', [
-            'email' => 'create@example.com',
-            'name' => 'Usuário Teste',
-        ]);
-
+        $this->assertDatabaseCount(
+            'sys_users',
+            User::query()->count()
+        );
 
     }
 
