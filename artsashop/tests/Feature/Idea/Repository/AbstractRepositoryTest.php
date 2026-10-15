@@ -22,6 +22,7 @@ namespace Feature\Idea\Repository;
 
 use App\Models\User;
 use Idea\Framework\Repository\AbstractRepository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Tests\TestCase;
@@ -29,25 +30,137 @@ use Tests\TestCase;
 class AbstractRepositoryTest extends TestCase
 {
 
-    public function testUpdate()
+    private string $testEmail = "create@example.com";
+
+    public function testCreate()
     {
+
+        $repository = new class extends AbstractRepository {
+            protected static $model = User::class;
+        };
+
+        $model = $repository::create(
+            attributes: [
+                'email' => $this->testEmail,
+                'email_verified_at' => null,
+            ],
+            values: [
+                'name' => 'Usuário Teste',
+                'group_id' => 1,
+                'password' => bcrypt('password'),
+                'remember_token' => '',
+                'status' => true,
+            ]
+        );
+
+        $this->assertInstanceOf(User::class, $model);
+
+        $this->assertDatabaseHas('sys_users', [
+            'email' => $this->testEmail,
+            'name' => 'Usuário Teste',
+        ]);
 
     }
 
-    public function testGetData()
+    public function testCreateExistingRecord()
     {
+
+        $repository = new class extends AbstractRepository {
+            protected static $model = User::class;
+        };
+
+        $user = User::query()->where(
+            column: 'email',
+            operator: '=',
+            value:$this->testEmail
+        )->first();
+
+        $model = $repository::create(
+            [
+                'email' => $this->testEmail,
+            ],
+            [
+                'name' => 'Outro Nome',
+                'status' => true,
+            ]
+        );
+
+        $this->assertNotNull($user);
+        $this->assertSame($user->getKey(), $model->getKey());
+
+        $this->assertDatabaseCount(
+            'sys_users',
+            User::query()->count()
+        );
 
     }
 
-    public function testDelete()
+    public function testUpdate(): void
     {
         $repository = new class extends AbstractRepository {
             protected static $model = User::class;
         };
 
-        $delete = $repository::delete(29);
+        $user = User::query()->where(
+            column: 'email',
+            operator: '=',
+            value:$this->testEmail
+        )->first();
+
+        $newName = 'Nome atualizado pelo teste';
+
+        $update = $repository::update(
+            $user->getKey(),
+            [
+                'name' => $newName,
+            ]
+        );
+
+        $this->assertIsInt($update);
+
+        $this->assertEquals(1, $update);
+
+        $this->assertDatabaseHas('sys_users', [
+            'user_id' => $user->getKey(),
+            'name' => $newName,
+        ]);
+
+    }
+
+    public function testGetData()
+    {
+        $repository = new class extends AbstractRepository {
+            protected static $model = User::class;
+        };
+
+        $builder = $repository::getData();
+
+        $this->assertInstanceOf(
+            Builder::class,
+            $builder
+        );
+
+    }
+
+    public function testDelete(): void
+    {
+        $repository = new class extends AbstractRepository {
+            protected static $model = User::class;
+        };
+
+        $user = User::query()->where(
+            column: 'email',
+            operator: '=',
+            value:$this->testEmail
+        )->first();
+
+        $delete = $repository::delete($user->getKey());
 
         $this->assertIsInt($delete);
+
+        $this->assertEquals(1, $delete);
+
+        $this->assertModelMissing($user);
 
     }
 
@@ -72,67 +185,6 @@ class AbstractRepositoryTest extends TestCase
         $this->assertEquals(
             User::query()->pluck('user_id')->sort()->values()->all(),
             $models->pluck('user_id')->sort()->values()->all()
-        );
-
-    }
-
-    public function testCreate()
-    {
-
-        $repository = new class extends AbstractRepository {
-            protected static $model = User::class;
-        };
-
-        $model = $repository::create(
-            attributes: [
-                'email' => 'create@example.com',
-                'email_verified_at' => null,
-            ],
-            values: [
-                'name' => 'Usuário Teste',
-                'group_id' => 1,
-                'password' => bcrypt('password'),
-                'remember_token' => '',
-                'status' => true,
-            ]
-        );
-
-        $this->assertInstanceOf(User::class, $model);
-
-        $this->assertDatabaseHas('sys_users', [
-            'email' => 'create@example.com',
-            'name' => 'Usuário Teste',
-        ]);
-
-    }
-
-    public function testCreateExistingRecord()
-    {
-
-        $defaultEmail = 'create@example.com';
-
-        $repository = new class extends AbstractRepository {
-            protected static $model = User::class;
-        };
-
-        $user = User::query()->where('email', $defaultEmail)->first();
-
-        $model = $repository::create(
-            [
-                'email' => $defaultEmail,
-            ],
-            [
-                'name' => 'Outro Nome',
-                'status' => true,
-            ]
-        );
-
-        $this->assertNotNull($user);
-        $this->assertSame($user->getKey(), $model->getKey());
-
-        $this->assertDatabaseCount(
-            'sys_users',
-            User::query()->count()
         );
 
     }
