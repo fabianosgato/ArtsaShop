@@ -47,7 +47,7 @@ abstract class AbstractRepository implements RepositoryInterface
         return self::loadModel()::query()->find($id);
     }
 
-    public static function create(array $attributes = []): Model|null
+    public static function create(array $attributes = [], array $values = []): Model|null
     {
         return self::loadModel()::query()->firstOrCreate($attributes);
     }

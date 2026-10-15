@@ -28,7 +28,7 @@ interface RepositoryInterface
 
     public static function all(): Collection;
 
-    public static function create(array $attributes): Model|null;
+    public static function create(array $attributes, array $values = []): Model|null;
 
     public static function find(int $id): Model|null;
 

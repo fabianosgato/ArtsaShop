@@ -63,17 +63,19 @@ class AbstractRepositoryTest extends TestCase
             protected static $model = User::class;
         };
 
-        $attributes = [
-            'group_id' => 1,
-            'name' => 'Usuário Teste',
-            'email' => 'create@example.com',
-            'email_verified_at' => null,
-            'password' => bcrypt('password'),
-            'remember_token' => '',
-            'status' => true,
-        ];
-
-        $model = $repository::create($attributes);
+        $model = $repository::create(
+            attributes: [
+                'email' => 'create@example.com',
+                'email_verified_at' => null,
+            ],
+            values: [
+                'name' => 'Usuário Teste',
+                'group_id' => 1,
+                'password' => bcrypt('password'),
+                'remember_token' => '',
+                'status' => true,
+            ]
+        );
 
         $this->assertInstanceOf(User::class, $model);
 
@@ -91,17 +93,19 @@ class AbstractRepositoryTest extends TestCase
             protected static $model = User::class;
         };
 
-        $attributes = [
-            'group_id' => 1,
-            'name' => 'Usuário Teste',
-            'email' => 'create@example.com',
-            'email_verified_at' => null,
-            'password' => bcrypt('password'),
-            'remember_token' => '',
-            'status' => true,
-        ];
-
-        $model = $repository::create($attributes);
+        $model = $repository::create(
+            attributes: [
+                'email' => 'create@example.com',
+                'email_verified_at' => null,
+            ],
+            values: [
+                'name' => 'Usuário Teste',
+                'group_id' => 1,
+                'password' => bcrypt('password'),
+                'remember_token' => '',
+                'status' => true,
+            ]
+        );
 
         $this->assertInstanceOf(User::class, $model);
 
@@ -109,6 +113,7 @@ class AbstractRepositoryTest extends TestCase
             'email' => 'create@example.com',
             'name' => 'Usuário Teste',
         ]);
+
 
     }
 

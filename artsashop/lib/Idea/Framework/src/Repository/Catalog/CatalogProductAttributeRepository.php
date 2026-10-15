@@ -107,14 +107,18 @@ class CatalogProductAttributeRepository extends AbstractRepository
                         ]);
                 } else {
                     // Cria o novo atributo do produto
-                    self::create([
-                        'attribute_set_id' => $atributeSetId,
-                        'attribute_id' => $eavAttribute->attribute_id,
-                        'product_id' => $productId,
-                        'attribute_code' => $attributeCode,
-                        'value' => $value,
-                        'serialized_value' => json_encode($serializedValue)
-                    ]);
+                    self::create(
+                        attributes:[
+                            'attribute_set_id' => $atributeSetId,
+                            'attribute_id' => $eavAttribute->attribute_id,
+                        ],
+                        values:[
+                            'product_id' => $productId,
+                            'attribute_code' => $attributeCode,
+                            'value' => $value,
+                            'serialized_value' => json_encode($serializedValue)
+                        ]
+                    );
 
                 }
 
