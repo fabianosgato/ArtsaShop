@@ -59,14 +59,14 @@ class IndexController extends Controller
                 $brands = CatalogProductBrandRepository::getBrandByKey(app('currentStore')->code);
 
                 View::share('seoTags', [
-                    'title' => $brands['seo_page_title'],
-                    'description' => $brands['seo_meta_description'],
+                    'title' => $brands->seo_page_title,
+                    'description' => $brands->seo_meta_description,
                     'canonical' => "",
                     'og:locale' => "pt_BR",
                     'og:type' => "website",
-                    'og:title' => "{$brands['seo_page_title']}",
-                    'og:description' => $brands['seo_meta_description'],
-                    'og:site_name' => "{$brands['seo_page_title']}",
+                    'og:title' => "{$brands->seo_page_title}",
+                    'og:description' => $brands->seo_meta_description,
+                    'og:site_name' => "{$brands->seo_page_title}",
                     'og:image:width' => "",
                     'og:image:height' => "",
                 ]);

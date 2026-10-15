@@ -80,17 +80,6 @@ class CatalogProductBrandRepository extends AbstractRepository
     }
 
     /**
-     * Metodo usado para atualizar uma Marca no sistema
-     * @param int $id
-     * @param array $attributes
-     * @return int
-     */
-    public static function update(int $id, array $attributes = []): int
-    {
-        return self::getData()->where(['brand_id' => $id])->update($attributes);
-    }
-
-    /**
      * Insere/Atualiza uma Marca no Sistema
      * @param int|null $id
      * @param array $values

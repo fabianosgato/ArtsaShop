@@ -62,6 +62,17 @@ abstract class AbstractRepository implements RepositoryInterface
             ->update($attributes);
     }
 
+    public static function updateOrCreate(?int $id, array $values = []): ?Model
+    {
+        return self::getData()->updateOrCreate(
+            attributes: [
+                self::loadModel()->getKeyName() => $id
+            ],
+            values: $values
+        );
+
+    }
+
     public static function delete(int $id): int
     {
         return self::loadModel()::destroy($id);
