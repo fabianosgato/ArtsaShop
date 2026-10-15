@@ -40,11 +40,19 @@ class AbstractRepositoryTest extends TestCase
 
     public function testDelete()
     {
+        $repository = new class extends AbstractRepository {
+            protected static $model = User::class;
+        };
+
+        $delete = $repository::delete(29);
+
+        $this->assertIsInt($delete);
 
     }
 
     public function testAll()
     {
+
 
     }
 
@@ -55,11 +63,52 @@ class AbstractRepositoryTest extends TestCase
             protected static $model = User::class;
         };
 
-        $user = $repository::create([
-            ''
+        $attributes = [
+            'group_id' => 1,
+            'name' => 'Usuário Teste',
+            'email' => 'create@example.com',
+            'email_verified_at' => null,
+            'password' => bcrypt('password'),
+            'remember_token' => '',
+            'status' => true,
+        ];
+
+        $model = $repository::create($attributes);
+
+        $this->assertInstanceOf(User::class, $model);
+
+        $this->assertDatabaseHas('sys_users', [
+            'email' => 'create@example.com',
+            'name' => 'Usuário Teste',
         ]);
 
-        $this->assertInstanceOf(User::class, $user);
+    }
+
+    public function testCreateExistingRecord()
+    {
+
+        $repository = new class extends AbstractRepository {
+            protected static $model = User::class;
+        };
+
+        $attributes = [
+            'group_id' => 1,
+            'name' => 'Usuário Teste',
+            'email' => 'create@example.com',
+            'email_verified_at' => null,
+            'password' => bcrypt('password'),
+            'remember_token' => '',
+            'status' => true,
+        ];
+
+        $model = $repository::create($attributes);
+
+        $this->assertInstanceOf(User::class, $model);
+
+        $this->assertDatabaseHas('sys_users', [
+            'email' => 'create@example.com',
+            'name' => 'Usuário Teste',
+        ]);
 
     }
 
@@ -90,7 +139,7 @@ class AbstractRepositoryTest extends TestCase
 
     }
 
-    public function testSearchRecordNonexistent()
+    public function testFindRecordNonexistent()
     {
 
         $repository = new class extends AbstractRepository {
