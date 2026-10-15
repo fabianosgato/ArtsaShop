@@ -79,20 +79,4 @@ class CatalogProductBrandRepository extends AbstractRepository
 
     }
 
-    /**
-     * Insere/Atualiza uma Marca no Sistema
-     * @param int|null $id
-     * @param array $values
-     * @return \App\Models\CatalogProductBrand|null
-     */
-    public static function updateOrCreate(?int $id, array $values = []): ?CatalogProductBrand
-    {
-        return self::getData()->updateOrCreate(
-            attributes: [
-                'brand_id' => $id
-            ],
-            values: $values
-        );
-    }
-
 }
