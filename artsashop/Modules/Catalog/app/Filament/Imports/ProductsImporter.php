@@ -4,22 +4,21 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the EULA
- * that is bundled with this package in the file LICENSE.txt.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
  *
- * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
- * mais recentes no futuro.
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
  *****************************************************
  *
  * @copyright    Copyright (c) Fabiano Gato
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
-
 namespace Modules\Catalog\Filament\Imports;
 
-
-use App\Models\AmazonImporter;
+use App\Models\CatalogProduct;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
@@ -28,7 +27,7 @@ use Idea\Framework\Utils;
 class ProductsImporter extends Importer
 {
 
-    protected static ?string $model = AmazonImporter::class;
+    protected static ?string $model = CatalogProduct::class;
 
     protected static ?string $title = 'Importar Novos Produtos';
 
@@ -45,9 +44,9 @@ class ProductsImporter extends Importer
     /**
      * Importa os Asins
      */
-    public function resolveRecord(): ?AmazonImporter
+    public function resolveRecord(): ?CatalogProduct
     {
-        return AmazonImporter::firstOrNew([
+        return CatalogProduct::firstOrNew([
             'asin' => Utils::clearAsin($this->data['asin']),
         ]);
     }

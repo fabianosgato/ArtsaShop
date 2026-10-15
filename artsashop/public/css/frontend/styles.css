@@ -52,7 +52,6 @@ p.required {font-size:11px;text-align:right;color: #9c0000;}
 .success-msg { border-color:#446423; background-color:#eff5ea; color:#3d6611; }
 .note-msg, .notice-msg { border-color:#eee; background-color:#fafaec; color:#3d6611; }
 
-
 /* Sorter */
 .sorter { padding: 10px 0; float: left; }
 .sorter .view-mode { float:left; margin:0; }
