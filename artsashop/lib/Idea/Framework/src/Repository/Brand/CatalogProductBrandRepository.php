@@ -31,6 +31,16 @@ class CatalogProductBrandRepository extends AbstractRepository
     protected static $model = CatalogProductBrand::class;
 
     /**
+     * Retorna uma marca pelo Id
+     * @param $brandId
+     * @return \App\Models\CatalogProductBrand|null
+     */
+    public static function getBrand($brandId): ?CatalogProductBrand
+    {
+        return self::find($brandId);
+    }
+
+    /**
      * Metodo usado para listar as marcas com Paginação
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
@@ -48,34 +58,24 @@ class CatalogProductBrandRepository extends AbstractRepository
     }
 
     /**
-     * Retorna uma marca pelo Id
-     * @param $brandId
-     * @return CatalogProductBrand
-     */
-    public static function getBrand($brandId): CatalogProductBrand
-    {
-        return self::find($brandId);
-    }
-
-    /**
      * Retorna uma marca pelo brand_key
      * @param $brandKey
-     * @return array|bool
+     * @return CatalogProductBrand|bool
      */
-    public static function getBrandByKey($brandKey): array|bool
+    public static function getBrandByKey($brandKey): ?CatalogProductBrand
     {
-        $query = self::getData();
 
-        $query->where(
-            column: 'brand_key',
-            operator: '=',
-            value: $brandKey
-        );
+        $query = self::getData()
+            ->where(
+                column: 'brand_key',
+                operator: '=',
+                value: $brandKey
+            );
 
-        if ($query->first())
-            return $query->get()->first()->toArray();
+        if ($query->exists())
+            return $query->first();
 
-        return false;
+        return null;
 
     }
 
