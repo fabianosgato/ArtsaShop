@@ -16,6 +16,7 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
+
 namespace Modules\Sales\Livewire\Grid;
 
 use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
@@ -26,13 +27,43 @@ use Filament\Actions\ActionGroup;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Idea\Framework\Admin\Grids\Grid;
-use Idea\Framework\Admin\SystemConfig;
 use Idea\Framework\Repository\Sales\SalesOrderRepository;
 use Idea\Framework\Utils;
 use Illuminate\Support\Facades\Cache;
 
 class SalesOrderGrid extends Grid
 {
+
+    /**
+     * Metodo responsavel retornar a cor da linha do pedido
+     * @param $record
+     * @return string|void
+     */
+    protected static function setColorOrder($record)
+    {
+
+        // Classe CSS padrao para retorno
+        $cssClass = 'adm-bg-shipped';
+
+        if ($record->status == 'shipped') {
+
+            switch ($record->descricao_status) {
+                case 'Pedido Cancelado':
+                case 'Produto Devolvido':
+                case 'Produto Devolvido com Avaria':
+                case 'Produto Não Devolvido':
+                case 'Produto Em Resgate':
+                case 'Pedido Reembolsado':
+                    $cssClass = 'adm-bg-red-50';
+                    break;
+
+            }
+
+            return $cssClass;
+
+        }
+
+    }
 
     public function table(Tables\Table $table): Tables\Table
     {
@@ -160,7 +191,7 @@ class SalesOrderGrid extends Grid
             ->recordClasses(fn(SalesOrder $record) => match ($record->status) {
                 'complete' => 'adm-bg-complete',
                 'approved' => 'adm-bg-approved',
-                'shipped' => SystemConfig::setColorOrder($record),
+                'shipped' => $this->setColorOrder($record),
                 'returned' => 'adm-bg-returned',
                 'refunded' => 'adm-bg-refunded',
                 'canceled_marketplace' => 'adm-bg-red-50',

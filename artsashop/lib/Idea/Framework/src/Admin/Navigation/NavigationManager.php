@@ -23,7 +23,6 @@ use App\Models\SysModulesMenu;
 use Idea\Framework\Admin\Permissions;
 use Illuminate\Support\Facades\Route;
 
-
 class NavigationManager
 {
 

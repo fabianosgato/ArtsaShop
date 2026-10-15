@@ -25,17 +25,22 @@ use Illuminate\Database\Eloquent\Model;
 if (! function_exists('getConfigData')) {
 
     /**
-     * Retorna uma configuração do sistema
+     * Retorna uma configuração do e-commerce pelo $path
+     * A configuração do e-commerce é diferente da configuração do laravel
+     *
      * @param $path
      * @return mixed|null
      */
     function getConfigData($path): mixed
     {
 
+        // Retorna as configurações gerais do e-commerce
         $configs = SysConfigRespository::getConfigs();
+
         if (isset($configs[$path])) {
             return $configs[$path];
         }
+
         return null;
 
     }
