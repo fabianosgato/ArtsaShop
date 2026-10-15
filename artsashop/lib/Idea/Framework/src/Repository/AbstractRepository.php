@@ -49,7 +49,10 @@ abstract class AbstractRepository implements RepositoryInterface
 
     public static function create(array $attributes = [], array $values = []): Model|null
     {
-        return self::loadModel()::query()->firstOrCreate($attributes);
+        return self::loadModel()::query()->firstOrCreate(
+            attributes: $attributes,
+            values:$values
+        );
     }
 
     public static function delete(int $id): int
