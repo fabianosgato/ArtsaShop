@@ -22,6 +22,7 @@ namespace Feature\Idea\Repository;
 
 use App\Models\User;
 use Idea\Framework\Repository\AbstractRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Tests\TestCase;
 
@@ -50,9 +51,28 @@ class AbstractRepositoryTest extends TestCase
 
     }
 
-    public function testAll()
+    public function testAll(): void
     {
+        $repository = new class extends AbstractRepository {
+            protected static $model = User::class;
+        };
 
+        $models = $repository::all();
+
+        $this->assertInstanceOf(
+            Collection::class,
+            $models
+        );
+
+        $this->assertCount(
+            User::query()->count(),
+            $models
+        );
+
+        $this->assertEquals(
+            User::query()->pluck('user_id')->sort()->values()->all(),
+            $models->pluck('user_id')->sort()->values()->all()
+        );
 
     }
 

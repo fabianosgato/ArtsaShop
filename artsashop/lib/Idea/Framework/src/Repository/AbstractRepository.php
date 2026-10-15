@@ -55,14 +55,14 @@ abstract class AbstractRepository implements RepositoryInterface
         );
     }
 
-    public static function delete(int $id): int
-    {
-        return self::loadModel()::query()->where(['id' => $id])->delete();
-    }
-
     public static function update(int $id, array $attributes = []): int
     {
         return self::loadModel()::query()->where(['entity_id' => $id])->update($attributes);
+    }
+
+    public static function delete(int $id): int
+    {
+        return self::loadModel()::destroy($id);
     }
 
 }
