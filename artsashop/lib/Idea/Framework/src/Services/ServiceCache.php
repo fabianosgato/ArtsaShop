@@ -39,7 +39,4 @@ class ServiceCache
             ->remember($cacheKey, $this->expireIn(), $closure);
     }
 
-
-
-
 }

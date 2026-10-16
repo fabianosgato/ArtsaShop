@@ -18,13 +18,12 @@
  */
 namespace Idea\Framework\Seo\Traits;
 
+use Idea\Framework\Contracts\Seo\SeoAware;
 use Idea\Framework\Repository\Seo\SeoPageRepository;
-use Idea\Framework\Seo\Contracts\SeoAware;
 use Idea\Framework\Seo\Data\SeoPageData;
 use Idea\Framework\Seo\Factories\SeoPageDataFactory;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
-
 
 trait HasSeoResponse
 {
@@ -39,7 +38,7 @@ trait HasSeoResponse
 
     /**
      * Retorna as metatags SEO de um produto
-     * @param \Idea\Framework\Seo\Contracts\SeoAware|null $entity
+     * @param \Idea\Framework\Contracts\Seo\SeoAware|null $entity
      * @return void
      */
     public function getSeoMetaTags(?SeoAware $entity = null): void

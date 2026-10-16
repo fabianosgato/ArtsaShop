@@ -5,9 +5,11 @@
         </div>
         <div class="category-products">
             <div class="products-grid grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                @foreach($products->items() as $product)
+                @forelse ($products->items() as $product)
                     <x-catalog::frontend.product-item-component :catalogProduct="$product" />
-                @endforeach
+                @empty
+                    <p>Não existem produtos nesta Categoria</p>
+                @endforelse
             </div>
             <div class="toolbar-bottom">
                 <div class="toolbar">

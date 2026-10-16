@@ -21,8 +21,8 @@ declare(strict_types=1);
 namespace Idea\Framework\Repository\Seo;
 
 use App\Models\SeoPage;
+use Idea\Framework\Contracts\Seo\SeoAware;
 use Idea\Framework\Repository\AbstractRepository;
-use Idea\Framework\Seo\Contracts\SeoAware;
 
 class SeoPageRepository extends AbstractRepository
 {

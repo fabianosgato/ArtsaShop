@@ -18,7 +18,7 @@
  */
 namespace Idea\Framework\Services;
 
-use Idea\Framework\Interfaces\ServiceInterface;
+use Idea\Framework\Contracts\ServiceInterface;
 
 abstract class AbstractService implements ServiceInterface
 {

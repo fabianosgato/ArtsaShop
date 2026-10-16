@@ -18,7 +18,7 @@
  */
 namespace Idea\Framework\Seo\Collections;
 
-use Idea\Framework\Seo\Contracts\SeoTagContract;
+use Idea\Framework\Contracts\Seo\SeoTagContract;
 use Idea\Framework\Seo\Data\SeoPageData;
 
 class TagCollection

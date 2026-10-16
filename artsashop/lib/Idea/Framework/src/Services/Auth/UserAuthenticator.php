@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace Idea\Framework\Services\Auth;
 
-use Idea\Framework\Interfaces\Auth\UserAuthenticatorInterface;
+use Idea\Framework\Contracts\Auth\UserAuthenticatorInterface;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;

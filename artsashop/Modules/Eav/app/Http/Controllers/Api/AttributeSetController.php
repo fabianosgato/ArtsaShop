@@ -19,7 +19,6 @@
 namespace Modules\Eav\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Idea\Framework\Concerns\PaginatesApiResponse;
 use Idea\Framework\Concerns\ResultApiResponse;
 use Idea\Framework\Repository\Eav\EavAttributeSetRepository;
 use Illuminate\Http\Request;
@@ -30,7 +29,6 @@ use Modules\Eav\Transformers\EavAttributeSetResource;
 class AttributeSetController extends Controller
 {
 
-    use PaginatesApiResponse;
     use ResultApiResponse;
 
     /**

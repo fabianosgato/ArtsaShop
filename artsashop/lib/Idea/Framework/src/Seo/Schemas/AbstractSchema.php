@@ -18,7 +18,7 @@
  */
 namespace Idea\Framework\Seo\Schemas;
 
-use Idea\Framework\Seo\Contracts\SeoSchemaContract;
+use Idea\Framework\Contracts\Seo\SeoSchemaContract;
 
 abstract class AbstractSchema implements SeoSchemaContract
 {

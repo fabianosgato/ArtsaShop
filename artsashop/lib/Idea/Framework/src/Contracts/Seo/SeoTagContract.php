@@ -16,10 +16,24 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
-namespace Idea\Framework\Seo\Contracts;
+namespace Idea\Framework\Contracts\Seo;
 
-interface SeoAware
+use Idea\Framework\Seo\Data\SeoPageData;
+
+interface SeoTagContract
 {
-    public function getSeoObject(): string;
-    public function getSeoObjectId(): string|int;
+    /**
+     * Inicializa a tag com os dados da página.
+     */
+    public function initialize(SeoPageData $data): void;
+
+    /**
+     * Retorna o HTML final da tag.
+     */
+    public function render(): string;
+
+    /**
+     * Define se a tag deve ser renderizada.
+     */
+    public function shouldRender(): bool;
 }

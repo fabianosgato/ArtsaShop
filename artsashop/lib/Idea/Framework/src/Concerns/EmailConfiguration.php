@@ -16,23 +16,22 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
-namespace Idea\Framework\Concerns;
 
-use Idea\Framework\Repository\System\SysConfigRespository;
+namespace Idea\Framework\Concerns;
 
 trait EmailConfiguration
 {
 
     public function addressSend(): mixed
     {
-        return app(SysConfigRespository::class)->getConfig(
+        return getConfigData(
             path: 'trans_email/ident_general/email'
         );
     }
 
     public function addressName(): mixed
     {
-        return app(SysConfigRespository::class)->getConfig(
+        return getConfigData(
             path: 'trans_email/ident_general/name'
         );
     }
@@ -40,10 +39,9 @@ trait EmailConfiguration
     public function getEmails(): array
     {
         return match (config('app.env')) {
-            'production' => [
-                'fabianogattoti@gmail.com',
-            ],
-
+            'production' => getConfigData(
+                path: 'trans_email/ident_general/name'
+            ),
             default => [
                 'fabianogattoti@gmail.com',
             ],

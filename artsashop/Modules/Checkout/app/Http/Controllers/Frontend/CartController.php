@@ -19,8 +19,8 @@
 namespace Modules\Checkout\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use Idea\Framework\Contracts\Seo\SeoStaticPage;
 use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
-use Idea\Framework\Seo\Contracts\SeoStaticPage;
 use Idea\Framework\Seo\Traits\HasSeoResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;

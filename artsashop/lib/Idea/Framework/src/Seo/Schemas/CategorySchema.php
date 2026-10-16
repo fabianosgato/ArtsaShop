@@ -19,9 +19,9 @@ class CategorySchema extends AbstractSchema
             'name' => $this->data->title,
             'description' => $this->data->description,
             'url' => $this->data->canonicalUrl,
-
             'itemListElement' => $this->buildItems(),
         ];
+
     }
 
     protected function buildItems(): array

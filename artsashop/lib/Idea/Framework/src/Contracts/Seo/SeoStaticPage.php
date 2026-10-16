@@ -1,6 +1,6 @@
 <?php
 
-namespace Idea\Framework\Seo\Contracts;
+namespace Idea\Framework\Contracts\Seo;
 
 class SeoStaticPage implements SeoAware
 {

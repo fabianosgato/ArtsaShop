@@ -6,7 +6,7 @@
 
 namespace App\Models;
 
-use Idea\Framework\Seo\Contracts\SeoAware;
+use Idea\Framework\Contracts\Seo\SeoAware;
 use Illuminate\Database\Eloquent\Model;
 
 /**

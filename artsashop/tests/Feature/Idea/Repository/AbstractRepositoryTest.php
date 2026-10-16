@@ -18,7 +18,7 @@
  */
 declare(strict_types=1);
 
-namespace Feature\Idea\Repository;
+namespace Tests\Feature\Idea\Repository;
 
 use App\Models\User;
 use Idea\Framework\Repository\AbstractRepository;

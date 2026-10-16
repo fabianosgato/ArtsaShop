@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Services\Auth;
 
 use App\Models\User;
-use Idea\Framework\Interfaces\Auth\AccessTokenIssuerInterface;
-use Idea\Framework\Interfaces\Auth\UserAuthenticatorInterface;
+use Idea\Framework\Contracts\Auth\AccessTokenIssuerInterface;
+use Idea\Framework\Contracts\Auth\UserAuthenticatorInterface;
 use Idea\Framework\Services\Auth\SanctumAccessTokenIssuer;
 use Idea\Framework\Services\Auth\TokenService;
 use Idea\Framework\Services\Auth\UserAuthenticator;

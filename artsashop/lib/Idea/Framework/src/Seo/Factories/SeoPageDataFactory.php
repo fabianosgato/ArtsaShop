@@ -23,6 +23,7 @@ use Idea\Framework\Seo\Data\SeoPageData;
 
 class SeoPageDataFactory
 {
+
     /**
      * Cria SeoPageData a partir de array (ex: repository).
      */

@@ -24,7 +24,7 @@
  */
 declare(strict_types=1);
 
-namespace Idea\Framework\Interfaces\Auth;
+namespace Idea\Framework\Contracts\Auth;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 

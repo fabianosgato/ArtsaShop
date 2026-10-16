@@ -19,7 +19,6 @@
 namespace Modules\Brands\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Idea\Framework\Concerns\PaginatesApiResponse;
 use Idea\Framework\Concerns\ResultApiResponse;
 use Idea\Framework\Repository\Brand\CatalogProductBrandRepository;
 use Illuminate\Http\Request;
@@ -28,7 +27,6 @@ use Modules\Brands\Services\CatalogProductBrandService;
 class CatalogBrandController extends Controller
 {
 
-    use PaginatesApiResponse;
     use ResultApiResponse;
 
     /**

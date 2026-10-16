@@ -19,7 +19,7 @@
 
 namespace Idea\Framework\Seo\Collections;
 
-use Idea\Framework\Seo\Contracts\SeoSchemaContract;
+use Idea\Framework\Contracts\Seo\SeoSchemaContract;
 
 class SchemaCollection
 {

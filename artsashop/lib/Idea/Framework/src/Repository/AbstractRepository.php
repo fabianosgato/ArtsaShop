@@ -18,7 +18,7 @@
  */
 namespace Idea\Framework\Repository;
 
-use Idea\Framework\Interfaces\RepositoryInterface;
+use Idea\Framework\Contracts\RepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 

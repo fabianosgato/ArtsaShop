@@ -122,5 +122,7 @@ class SeoPageData
         $directives[] = $this->noFollow ? 'nofollow' : 'follow';
 
         return implode(',', $directives);
+
     }
+
 }

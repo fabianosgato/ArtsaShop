@@ -18,12 +18,13 @@
  */
 namespace Idea\Framework\Services;
 
+use Idea\Framework\Contracts\ServiceInterface;
 use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
 use Modules\Catalog\Services\CatalogProductMediaService;
 use Modules\Catalog\Tasks\ReindexProductImagesTask;
 use Spatie\Async\Pool;
 
-class IndexerService
+class IndexerService implements ServiceInterface
 {
     public function __construct(
         protected CatalogProductsRepository $catalogProductsRepository

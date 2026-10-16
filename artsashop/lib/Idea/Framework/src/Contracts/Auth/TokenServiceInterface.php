@@ -16,9 +16,24 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
-namespace Idea\Framework\Interfaces;
+declare(strict_types=1);
 
-interface ServiceInterface
+namespace Idea\Framework\Contracts\Auth;
+
+use Idea\Framework\Contracts\ServiceInterface;
+
+interface TokenServiceInterface extends ServiceInterface
 {
+    /**
+     * Authenticate the user and issue an access token.
+     *
+     * @throws \Illuminate\Auth\AuthenticationException
+     */
+    public function issueToken(
+        string $email,
+        string $password,
+        string $deviceName
+    ): string;
 
 }
+

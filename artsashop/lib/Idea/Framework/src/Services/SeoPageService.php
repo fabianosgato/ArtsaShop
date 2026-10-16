@@ -18,11 +18,12 @@
  */
 namespace Idea\Framework\Services;
 
+use Idea\Framework\Contracts\ServiceInterface;
 use Idea\Framework\Repository\Seo\SeoMetaTagRepository;
 use Idea\Framework\Repository\Seo\SeoPageMetaTagRepository;
 use Idea\Framework\Repository\Seo\SeoPageRepository;
 
-class SeoPageService
+class SeoPageService implements ServiceInterface
 {
 
     public function __construct(
@@ -69,7 +70,7 @@ class SeoPageService
 
     }
 
-    public static function saveSeoData(int $objectId, string $object, array $seoPageData)
+    public static function saveSeoData(int $objectId, string $object, array $seoPageData): void
     {
 
         // Salva as informacoes do SEO da Página

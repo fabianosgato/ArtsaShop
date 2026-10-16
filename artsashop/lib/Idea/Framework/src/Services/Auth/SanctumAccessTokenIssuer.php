@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace Idea\Framework\Services\Auth;
 
-use Idea\Framework\Interfaces\Auth\AccessTokenIssuerInterface;
+use Idea\Framework\Contracts\Auth\AccessTokenIssuerInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
 use LogicException;
 

@@ -19,9 +19,9 @@
 namespace Modules\Checkout\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use Idea\Framework\Contracts\Seo\SeoStaticPage;
 use Idea\Framework\Repository\Sales\SalesOrderPaymentRepository;
 use Idea\Framework\Repository\Sales\SalesOrderRepository;
-use Idea\Framework\Seo\Contracts\SeoStaticPage;
 use Idea\Framework\Seo\Traits\HasSeoResponse;
 use Illuminate\Support\Facades\Auth;
 use Modules\Checkout\Services\CheckoutCartService;

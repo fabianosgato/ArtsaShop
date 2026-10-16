@@ -16,24 +16,9 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
-namespace Idea\Framework\Concerns;
+namespace Idea\Framework\Contracts;
 
-use Idea\Framework\Repository\System\SysConfigRespository;
-
-trait SysConfigApplication
+interface ServiceInterface
 {
-
-    public function getConfig(string $path)
-    {
-
-        // Retorna todas as configurações do sistema
-        $sysConfig = SysConfigRespository::getConfigs();
-
-        if (!empty($sysConfig[$path]))
-            return $sysConfig[$path];
-
-        return null;
-
-    }
 
 }

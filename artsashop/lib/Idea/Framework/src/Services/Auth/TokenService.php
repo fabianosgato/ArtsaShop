@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace Idea\Framework\Services\Auth;
 
-use Idea\Framework\Interfaces\Auth\TokenServiceInterface;
+use Idea\Framework\Contracts\Auth\TokenServiceInterface;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class TokenService implements TokenServiceInterface

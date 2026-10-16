@@ -18,9 +18,8 @@
  */
 namespace Idea\Framework\Seo\Traits;
 
+use Idea\Framework\Contracts\Seo\SeoAware;
 use Idea\Framework\Repository\Seo\SeoPageRepository;
-use Idea\Framework\Seo\Contracts\SeoAware;
-
 
 trait HasApiSeoResponse
 {

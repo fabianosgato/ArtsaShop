@@ -20,10 +20,10 @@
 namespace Modules\Customers\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use Idea\Framework\Contracts\Seo\SeoStaticPage;
 use Idea\Framework\Repository\Customer\CustomerAddressRepository;
 use Idea\Framework\Repository\Customer\CustomerEntityRepository;
 use Idea\Framework\Repository\System\SysAddressStateRepository;
-use Idea\Framework\Seo\Contracts\SeoStaticPage;
 use Idea\Framework\Seo\Traits\HasSeoResponse;
 use Illuminate\Support\Facades\Auth;
 
