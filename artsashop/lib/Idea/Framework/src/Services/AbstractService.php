@@ -20,7 +20,7 @@ namespace Idea\Framework\Services;
 
 use Idea\Framework\Interfaces\ServiceInterface;
 
-class RepositoryServices implements ServiceInterface
+abstract class AbstractService implements ServiceInterface
 {
 
     public function __construct(

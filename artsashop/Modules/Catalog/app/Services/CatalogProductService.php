@@ -33,7 +33,7 @@ use Idea\Framework\Repository\Eav\EavAttributesRepository;
 use Idea\Framework\Repository\Seo\SeoPageRepository;
 use Idea\Framework\Repository\System\SysStoreRepository;
 use Idea\Framework\Repository\System\SysUrlRewriteRepository;
-use Idea\Framework\Services\RepositoryServices;
+use Idea\Framework\Services\AbstractService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -42,7 +42,7 @@ use Modules\Brands\Services\CatalogProductBrandService;
 use Modules\Catalog\Jobs\ProcessCatalogProductQueue;
 use Modules\Eav\Services\EavAttributeSetService;
 
-class CatalogProductService extends RepositoryServices
+class CatalogProductService extends AbstractService
 {
 
     /**
@@ -66,25 +66,23 @@ class CatalogProductService extends RepositoryServices
 
     /**
      * Metodo responsavel por retornar produtos de um grupo de atributos específico no frontend
-     * @param $eavAttributeSetId
+     * @param int $eavAttributeSetId
      * @param int $limit
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public static function getCategoryProductBlock($eavAttributeSetId, int $limit = 4): Collection
+    public function getCategoryProductBlock(int $eavAttributeSetId, int $limit = 4): Collection
     {
 
-        $cacheKey = "catalog:product-block:set:$eavAttributeSetId:limit:$limit";
-
-        return Cache::remember(
-            $cacheKey,
-            now()->addHours(6),
-            function () use ($eavAttributeSetId, $limit) {
+        return $this->serviceCache->remember(
+            cacheKey: "catalog:product-block:set:$eavAttributeSetId:limit:$limit",
+            closure: function () use ($eavAttributeSetId, $limit) {
                 return CatalogProductsRepository::getProductsBlock(
                     limit: $limit,
                     eavAttributeId: $eavAttributeSetId
                 );
             }
         );
+
     }
 
     private static function getProductStatusId(int $productQuantity)
