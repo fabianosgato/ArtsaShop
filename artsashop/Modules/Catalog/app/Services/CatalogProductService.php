@@ -33,6 +33,7 @@ use Idea\Framework\Repository\Eav\EavAttributesRepository;
 use Idea\Framework\Repository\Seo\SeoPageRepository;
 use Idea\Framework\Repository\System\SysStoreRepository;
 use Idea\Framework\Repository\System\SysUrlRewriteRepository;
+use Idea\Framework\Services\RepositoryServices;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +42,7 @@ use Modules\Brands\Services\CatalogProductBrandService;
 use Modules\Catalog\Jobs\ProcessCatalogProductQueue;
 use Modules\Eav\Services\EavAttributeSetService;
 
-class CatalogProductService
+class CatalogProductService extends RepositoryServices
 {
 
     /**
@@ -49,15 +50,12 @@ class CatalogProductService
      * @param int $limit
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public static function getNewProducts(int $limit = 10): Collection
+    public function getNewProducts(int $limit = 10): Collection
     {
 
-        $cacheKey = "catalog:product-block:newProducts:limit:$limit";
-
-        return Cache::remember(
-            $cacheKey,
-            now()->addHours(6),
-            function () use ($limit) {
+        return $this->serviceCache->remember(
+            cacheKey: "catalog:product-block:newProducts:limit:$limit",
+            closure: function () use ($limit) {
                 return CatalogProductsRepository::getNewProducts(
                     limit: $limit
                 );

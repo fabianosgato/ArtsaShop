@@ -20,7 +20,6 @@ declare(strict_types=1);
 
 namespace Idea\Framework\Repository\Eav;
 
-use App\Models\EavAttributeOptionsValue;
 use App\Models\EavEntityAttributeOption;
 use Idea\Framework\Repository\AbstractRepository;
 
@@ -46,14 +45,14 @@ class EavAttributeOptionValueRepository extends AbstractRepository
             'eav_entity_attribute_options.sort_order',
             'eav_entity_attribute_options.is_default',
         ])->join(
-            table:'eav_attributes',
-            first:'eav_attributes.attribute_id',
-            operator:'=',
-            second:'eav_entity_attribute_options.attribute_id'
+            table: 'eav_attributes',
+            first: 'eav_attributes.attribute_id',
+            operator: '=',
+            second: 'eav_entity_attribute_options.attribute_id'
         )->where(
             column: 'eav_attributes.attribute_code',
             operator: '=',
-            value:$attributeCode
+            value: $attributeCode
         )->groupBy([
             'eav_entity_attribute_options.option_value'
         ]);

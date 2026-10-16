@@ -26,15 +26,4 @@ class CmsBlockRepository extends AbstractRepository
 
     protected static $model = CmsBlock::class;
 
-    public static function updateOrCreate(?int $id, array $values = []): CmsBlock
-    {
-        return self::getData()->updateOrCreate(
-            attributes: [
-                'block_id' => $id
-            ],
-            values: $values
-        );
-    }
-
-
 }

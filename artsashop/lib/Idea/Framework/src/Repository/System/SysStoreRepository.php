@@ -23,7 +23,6 @@ namespace Idea\Framework\Repository\System;
 use App\Models\SysStore;
 use Idea\Framework\Repository\AbstractRepository;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class SysStoreRepository extends AbstractRepository
@@ -31,12 +30,6 @@ class SysStoreRepository extends AbstractRepository
 
     // Model da classe
     protected static $model = SysStore::class;
-
-    public static function create(array $attributes = []): Model|null
-    {
-        return self::loadModel()::query()->create($attributes);
-    }
-
 
     /**
      * Retorna a LOJA padrao

@@ -100,7 +100,7 @@ class EavAttributeSetRepository extends AbstractRepository
         $query->when(
             $search,
             fn(Builder $query) => $query
-                ->where('attribute_set_name', 'like', "%{$search}%")
+                ->where('attribute_set_name', 'like', "%$search%")
         );
 
         $attributeSets = $query->groupBy('eav_attributes_set.attribute_set_id')
@@ -181,7 +181,7 @@ class EavAttributeSetRepository extends AbstractRepository
     /**
      * Retorna o Grupo de Atributos pelo ID
      * @param int $attributeSetId
-     * @return mixed[]
+     * @return array
      */
     public static function getAttributeSet(int $attributeSetId): array
     {
@@ -192,7 +192,7 @@ class EavAttributeSetRepository extends AbstractRepository
     }
 
     /**
-     * Metodo que retorna um array com os grupos de atributos usado para filtros
+     * Metodo que retorna um array com os grupos de atributos para os filtros
      * @param bool $withAttributes
      * @return array
      */

@@ -28,14 +28,4 @@ class CmsBannerRepository extends AbstractRepository
 
     protected static $model = CmsBanner::class;
 
-    public static function updateOrCreate(?int $id, array $values = []): CmsBanner
-    {
-        return self::getData()->updateOrCreate(
-            attributes: [
-                'banner_id' => $id
-            ],
-            values: $values
-        );
-    }
-
 }

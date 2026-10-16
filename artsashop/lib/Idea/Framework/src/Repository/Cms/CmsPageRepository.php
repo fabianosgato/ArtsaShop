@@ -28,16 +28,6 @@ class CmsPageRepository extends AbstractRepository
 
     protected static $model = CmsPage::class;
 
-    public static function updateOrCreate(?int $id, array $values = []): CmsPage
-    {
-        return self::getData()->updateOrCreate(
-            attributes: [
-                'page_id' => $id
-            ],
-            values: $values
-        );
-    }
-
     public static function getPage($pageId): ?CmsPage
     {
         return self::getData()->find($pageId);

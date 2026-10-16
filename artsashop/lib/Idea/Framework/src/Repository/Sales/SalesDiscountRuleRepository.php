@@ -60,19 +60,4 @@ class SalesDiscountRuleRepository extends AbstractRepository
         return self::loadModel()::query()->find($ruleId);
     }
 
-    /**
-     * Insere/Atualiza uma categoria
-     * @param $data
-     * @return \App\Models\SalesDiscountRule
-     */
-    public static function updateOrCreate($data): SalesDiscountRule
-    {
-        return self::getData()->updateOrCreate(
-            attributes: [
-                'rule_id' => $data['rule_id']
-            ],
-            values: $data
-        );
-    }
-
 }

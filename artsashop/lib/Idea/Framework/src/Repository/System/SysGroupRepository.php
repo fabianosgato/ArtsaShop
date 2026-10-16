@@ -25,12 +25,8 @@ use Idea\Framework\Repository\AbstractRepository;
 
 class SysGroupRepository extends AbstractRepository
 {
-    protected static $model = SysGroup::class;
 
-    public static function update(int $id, array $attributes = []): int
-    {
-        return self::loadModel()::query()->where(['group_id' => $id])->update($attributes);
-    }
+    protected static $model = SysGroup::class;
 
     /**
      * Retorna os grupos de usuarios do sistema

@@ -22,26 +22,11 @@ namespace Idea\Framework\Repository\System;
 
 use App\Models\SysConfigDatum;
 use Idea\Framework\Repository\AbstractRepository;
-use Illuminate\Support\Facades\Cache;
 
 class SysConfigRespository extends AbstractRepository
 {
 
     protected static $model = SysConfigDatum::class;
-
-    /**
-     * Retorna uma configuração especifica
-     * @param $path
-     * @return mixed|null
-     */
-    public function getConfig($path)
-    {
-        $configs = self::getConfigs();
-        if (in_array($path, $configs)) {
-            return $configs[$path];
-        }
-        return null;
-    }
 
     /**
      * Retorna as configurações gerais do sistema
@@ -50,20 +35,15 @@ class SysConfigRespository extends AbstractRepository
     public static function getConfigs(): array
     {
 
-        // Retorna a configuração do sistema que está no cache
-        return Cache::rememberForever('idea.sysconfig', function () {
+        // Inicializa o array de configuração do sistema
+        $systemConfigs = [];
 
-            // Inicializa o array de configuração do sistema
-            $systemConfigs = [];
+        // Cria o array com as configurações gerais do sistema
+        foreach (self::loadModel()::all() as $config) {
+            $systemConfigs[$config->path] = $config->value;
+        }
 
-            // Cria o array com as configurações gerais do sistema
-            foreach (self::loadModel()::all() as $config) {
-                $systemConfigs[$config->path] = $config->value;
-            }
-
-            return $systemConfigs;
-
-        });
+        return $systemConfigs;
 
     }
 

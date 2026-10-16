@@ -26,7 +26,6 @@ use App\Models\CatalogProductPrice;
 use Idea\Framework\Repository\AbstractRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -53,7 +52,7 @@ class CatalogProductsRepository extends AbstractRepository
     }
 
     /**
-     * Retorna as informaçções base do produto
+     * Retorna as informações do produto
      * @param $productSku
      * @return \App\Models\CatalogProduct|null
      */
@@ -770,39 +769,34 @@ class CatalogProductsRepository extends AbstractRepository
      */
     public static function getNewProducts(int $limit)
     {
-        $cacheKey = "catalog:products-block:v2:limit={$limit}";
 
-        return Cache::remember($cacheKey, now()->addHour(), function () use ($limit) {
+        // QUERY BASE SIMPLES (SEM getProducts)
+        $baseQuery = DB::table('catalog_product')
+            ->select([
+                'catalog_product.product_id',
+                'catalog_product.attribute_set_id',
+                'catalog_product.created_at'
+            ])
+            ->where('catalog_product.status_id', 1)
+            ->where('catalog_product.qty', '>', 0);
 
-            // QUERY BASE SIMPLES (SEM getProducts)
-            $baseQuery = DB::table('catalog_product')
-                ->select([
-                    'catalog_product.product_id',
-                    'catalog_product.attribute_set_id',
-                    'catalog_product.created_at'
-                ])
-                ->where('catalog_product.status_id', 1)
-                ->where('catalog_product.qty', '>', 0);
+        // ROW_NUMBER sem poluir select
+        $sub = $baseQuery->selectRaw('
+            ROW_NUMBER() OVER (
+                PARTITION BY catalog_product.attribute_set_id
+                ORDER BY catalog_product.created_at DESC
+            ) as rn'
+        );
 
-            // ROW_NUMBER sem poluir select
-            $sub = $baseQuery->selectRaw('
-                ROW_NUMBER() OVER (
-                    PARTITION BY catalog_product.attribute_set_id
-                    ORDER BY catalog_product.created_at DESC
-                ) as rn'
-            );
+        //
+        $query = self::getProducts()
+            ->joinSub($sub, 'filtered', function ($join) {
+                $join->on('catalog_product.product_id', '=', 'filtered.product_id');
+            })
+            ->where('filtered.rn', 1)
+            ->limit($limit);
 
-            //
-            $query = self::getProducts()
-                ->joinSub($sub, 'filtered', function ($join) {
-                    $join->on('catalog_product.product_id', '=', 'filtered.product_id');
-                })
-                ->where('filtered.rn', 1)
-                ->limit($limit);
-
-            return $query->get();
-
-        });
+        return $query->get();
 
     }
 

@@ -44,7 +44,7 @@ class IndexController extends Controller
             );
 
             return view('frontend.page.home', [
-                'newProducts' => CatalogProductService::getNewProducts(12),
+                'newProducts' => app(CatalogProductService::class)->getNewProducts(12),
                 'featuredTwo' => CatalogProductService::getCategoryProductBlock(383, 8),
                 'featuredThree' => CatalogProductService::getCategoryProductBlock(480, 20),
                 'featuredFour' => CatalogProductService::getCategoryProductBlock(399, 20),

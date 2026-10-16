@@ -16,6 +16,7 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
+
 namespace Idea\Framework\Repository\System;
 
 use App\Models\SysModulesMenu;
@@ -24,22 +25,6 @@ use Idea\Framework\Repository\AbstractRepository;
 class SysModuleMenuRepository extends AbstractRepository
 {
     protected static $model = SysModulesMenu::class;
-
-    /**
-     * Insere/Atualiza um Menu de acesso ao Sistema
-     * @param int|null $id
-     * @param array $values
-     * @return \App\Models\SysModulesMenu
-     */
-    public static function updateOrCreate(?int $id, array $values = []): SysModulesMenu
-    {
-        return self::getData()->updateOrCreate(
-            attributes: [
-                'module_menu_id' => $id
-            ],
-            values: $values
-        );
-    }
 
     public static function getMenusByModuleId(int $moduleId): ?\Illuminate\Database\Eloquent\Collection
     {

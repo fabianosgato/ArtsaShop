@@ -232,8 +232,6 @@ class CatalogCategoryRepository extends AbstractRepository
 
         }
 
-        return $catalogCategory;
-
     }
 
     /**
@@ -250,52 +248,50 @@ class CatalogCategoryRepository extends AbstractRepository
 
     /**
      * Retorna a árvore de Categorias do sistema
-     * @param $level
-     * @param $parentId
+     * @param int $level
+     * @param int $parentId
      * @return array
      */
-    public static function getCategoriesTree($level = 0, $parentId = 0): array
+    public static function getCategoriesTree(int $level = 0, int $parentId = 0): array
     {
 
         // Inicializa a Query
-        $query = self::loadModel()::query();
+        $query = self::loadModel()::query()
+            ->select([
+                'entity_id',
+                'parent_id',
+                'level',
+                'slug_key',
+                'category_path',
+                'category'
+            ])
+            ->where(
+                column: 'level',
+                operator: '=',
+                value: $level
+            )
+            ->where(
+                column: 'parent_id',
+                operator: '=',
+                value: $parentId
+            )
+            ->orderBy('category');
 
-        $query->select([
-            'entity_id',
-            'parent_id',
-            'level',
-            'slug_key',
-            'category_path',
-            'category'
-        ]);
-
-        $query->where(
-            column: 'level',
-            operator: '=',
-            value: $level
-        );
-
-        $query->where(
-            column: 'parent_id',
-            operator: '=',
-            value: $parentId
-        );
-
-        $query->orderBy('category');
-
-        if ($query->get()) {
+        if ($query->exists()) {
             return $query->get()->toArray();
         }
 
         return [];
 
-    }    /**
+    }
+
+    /**
      * Retorna a árvore de Categorias do sistema
-     * @param $level
-     * @param $parentId
+     * @param int $level
+     * @param int $parentId
      * @return array
      */
-    public static function getCategoriesSearch($level = 0, $parentId = 0): array
+    public static function getCategoriesSearch(int $level = 0, int $parentId = 0): array
     {
 
         // Inicializa a Query

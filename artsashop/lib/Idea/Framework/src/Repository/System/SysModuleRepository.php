@@ -63,23 +63,4 @@ class SysModuleRepository extends AbstractRepository
 
     }
 
-    /**
-     * Atualiza os dados do módulo
-     * @param int|null $id
-     * @param array $values
-     * @return SysModule
-     */
-    public static function updateOrCreate(?int $id, array $values = []): SysModule
-    {
-
-        return self::getData()->updateOrCreate(
-            attributes: [
-                'module_id' => $id
-            ],
-            values: $values
-        );
-
-    }
-
-
 }
