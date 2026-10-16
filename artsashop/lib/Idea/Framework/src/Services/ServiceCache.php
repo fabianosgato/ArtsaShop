@@ -33,10 +33,13 @@ class ServiceCache
         ));
     }
 
-    public function remember($cacheKey, Closure $closure)
+    public function remember(string $cacheKey, array $tags, Closure $closure)
     {
-        return Cache::remember($cacheKey, $this->expireIn(), $closure);
+        return Cache::tags($tags)
+            ->remember($cacheKey, $this->expireIn(), $closure);
     }
+
+
 
 
 }

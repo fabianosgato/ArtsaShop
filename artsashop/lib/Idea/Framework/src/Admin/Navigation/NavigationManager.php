@@ -18,9 +18,9 @@
  */
 namespace Idea\Framework\Admin\Navigation;
 
-use App\Models\SysModule;
 use App\Models\SysModulesMenu;
 use Idea\Framework\Admin\Permissions;
+use Idea\Framework\Repository\System\SysModuleRepository;
 use Illuminate\Support\Facades\Route;
 
 class NavigationManager
@@ -73,9 +73,7 @@ class NavigationManager
         $menuData = [];
 
         // Seleciona todos os modulos do sistema que estao ativos
-        $modules = SysModule::all()
-            ->where('status', true)
-            ->sortBy('module_order');
+        $modules = SysModuleRepository::getModules();
 
         foreach ($modules as $module) {
 
@@ -96,8 +94,8 @@ class NavigationManager
 
             foreach ($menus as $menu) {
 
-                // Retorna os dados do usuario
-                $permission = Permissions::checkPermissions(
+                // Valida a permissão do usuário
+                $permission = app(Permissions::class)->checkPermissions(
                     moduleMenuId: $menu['module_menu_id'],
                     action:'view'
                 );

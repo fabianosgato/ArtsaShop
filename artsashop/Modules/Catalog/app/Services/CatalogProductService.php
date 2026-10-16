@@ -55,6 +55,10 @@ class CatalogProductService extends AbstractService
 
         return $this->serviceCache->remember(
             cacheKey: "catalog:product-block:newProducts:limit:$limit",
+            tags: [
+                'homepage',
+                'catalog_products'
+            ],
             closure: function () use ($limit) {
                 return CatalogProductsRepository::getNewProducts(
                     limit: $limit
@@ -75,6 +79,10 @@ class CatalogProductService extends AbstractService
 
         return $this->serviceCache->remember(
             cacheKey: "catalog:product-block:set:$eavAttributeSetId:limit:$limit",
+            tags: [
+                'homepage',
+                'catalog_products'
+            ],
             closure: function () use ($eavAttributeSetId, $limit) {
                 return CatalogProductsRepository::getProductsBlock(
                     limit: $limit,

@@ -29,17 +29,28 @@ class SysModuleRepository extends AbstractRepository
     protected static $model = SysModule::class;
 
     /**
-     * Retorna os modulos do sistema
+     * Retorna os modulos ativos do sistema
      * @return \Illuminate\Database\Eloquent\Collection|null
      */
     public static function getModules(): ?\Illuminate\Database\Eloquent\Collection
     {
 
         // Realiza a query para retornar os Modulos do sistema
-        $modules = self::loadModel()::query()->select([
-            'module_id',
-            'module_name'
-        ]);
+        $modules = self::loadModel()::query()
+            ->select([
+                'module_id',
+                'module_name',
+                'module_order',
+                'icon',
+                'route_prefix',
+                'status'
+            ])
+            ->where(
+                column: 'status',
+                operator: '=',
+                value: true
+            )
+            ->orderBy('module_order');
 
         if ($modules->exists())
             return $modules->get();
@@ -47,7 +58,6 @@ class SysModuleRepository extends AbstractRepository
         return null;
 
     }
-
 
     public static function getOptionsValues(): array
     {

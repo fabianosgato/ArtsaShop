@@ -27,49 +27,36 @@ class Permissions
 
     /**
      * Retorna o nome do grupo do sistema
+     * @return array
      */
-    public static function getUserData(): array
+    public function getUserData(): array
     {
-
         // Retorna os dados do Usuario do sistema
         return SysUserRepository::getUserById(
             userId: Auth::user()->getAuthIdentifier()
         );
-
     }
 
     /**
      * Método que verifica o acesso aos módulos
      *
      */
-    public static function checkPermissions(int $moduleMenuId, string $action): bool
+    public function checkPermissions(int $moduleMenuId, string $action): bool
     {
 
         // Retorna os dados do usuario
         $userData = self::getUserData();
 
-        // Inicializa o repositorio
-        $sysGroupProfile = SysGroupProfileRepository::getData();
-
-        // Filta pelo Usuario
-        $sysGroupProfile->where(
-            column: 'group_id',
-            operator: '=',
-            value:$userData['group_id']
+        // Valida se o usuário possui permissão pelo grupo
+        $sysGroupProfile = SysGroupProfileRepository::getPermission(
+            groupId: $userData['group_id'],
+            moduleMenuId: $moduleMenuId,
+            action: $action
         );
 
-        $sysGroupProfile->where(
-            column: 'module_menu_id',
-            operator: '=',
-            value:$moduleMenuId
-        );
-
-        if ($sysGroupProfile->exists()) {
-            // Retorna as permissoes do usuario
-            $permissions = $sysGroupProfile->first()->toArray();
-
-            if (isset($permissions[$action]))
-                return $permissions[$action];
+        if (count($sysGroupProfile) > 0) {
+            if (isset($sysGroupProfile[$action]))
+                return $sysGroupProfile[$action];
 
         }
 

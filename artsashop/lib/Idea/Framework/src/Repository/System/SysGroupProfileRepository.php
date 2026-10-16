@@ -61,7 +61,14 @@ class SysGroupProfileRepository extends AbstractRepository
 
     }
 
-    public static function getPermission(int $groupId, int $moduleMenuId, string $action): bool
+    /**
+     * Retorna a permissão do usuário pelo grupo
+     * @param int $groupId
+     * @param int $moduleMenuId
+     * @param string $action
+     * @return array
+     */
+    public static function getPermission(int $groupId, int $moduleMenuId, string $action): array
     {
 
         $profiles = self::loadModel()::query()
@@ -82,9 +89,9 @@ class SysGroupProfileRepository extends AbstractRepository
             );
 
         if ($profiles->exists())
-            return true;
+            return $profiles->first()->toArray();
 
-        return false;
+        return [];
 
     }
 
