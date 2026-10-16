@@ -33,6 +33,7 @@ target/
 
 # JetBrains IDE
 .idea/
+.phpstorm.meta.php
 
 # Unit test reports
 TEST*.xml
@@ -55,4 +56,26 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+*.npmrc
 
+# Arquivos do projeto
+.env
+.env.backup
+.env.production
+.env.testing
+.phpactor.json
+.phpunit.result.cache
+.codex
+.cursor
+.phpunit.cache
+.vscode
+.zed
+
+# Pastas do projeto
+auth.json
+node_modules
+artsashop/public/fonts-manifest.dev.json
+artsashop/public/hot
+artsashop/public/storage
+artsashop/storage/*.key
+artsashop/storage/pail
