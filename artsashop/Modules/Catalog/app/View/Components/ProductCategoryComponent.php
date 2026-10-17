@@ -18,9 +18,9 @@
  */
 namespace Modules\Catalog\View\Components;
 
-use Idea\Framework\Repository\Eav\EavAttributesCategoryRepository;
 use Illuminate\View\Component;
 use Illuminate\View\View;
+use Modules\Catalog\Services\CatalogCategoryProductService;
 
 class ProductCategoryComponent extends Component
 {
@@ -35,7 +35,7 @@ class ProductCategoryComponent extends Component
 
         if (empty($product['category_name']) && empty($product['category_slug_key'])) {
             // Retorna a categoria do Grupo de Atributos
-            $category = EavAttributesCategoryRepository::getCategoryByAttributeSetId(
+            $category = CatalogCategoryProductService::getCategoryByAttributeSetId(
                 attributeSetId:$product['attribute_set_id']
             );
 

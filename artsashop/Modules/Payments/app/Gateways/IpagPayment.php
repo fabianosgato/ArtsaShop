@@ -16,13 +16,13 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
+
 namespace Modules\Payments\Gateways;
 
 use App\Models\SalesOrder;
 use Idea\Framework\Repository\Sales\SalesOrderHistoryRespository;
 use Idea\Framework\Repository\Sales\SalesOrderRepository;
 use Idea\Framework\Repository\Sales\SalesOrderStatusRepository;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Modules\Payments\Concerns\CreditCard;
@@ -356,8 +356,8 @@ class IpagPayment implements PaymentGatewayInterface
             );
 
             // Extrai status
-            $statusPayment  = $response->getParsedPath('attributes.status.code');
-            $statusGateway  = $response->getParsedPath('attributes.gateway.code');
+            $statusPayment = $response->getParsedPath('attributes.status.code');
+            $statusGateway = $response->getParsedPath('attributes.gateway.code');
             $statusAcquirer = $response->getParsedPath('attributes.acquirer.code');
 
             // Extrai a URL de autenticação para cartões 3ds
@@ -487,8 +487,8 @@ class IpagPayment implements PaymentGatewayInterface
             $response = $this->ipagClient->payment()->create($paymentTransaction);
 
             // Extrai as informaçções do boleto
-            $statusPayment  = $response->getParsedPath('attributes.status.code');
-            $statusGateway  = $response->getParsedPath('attributes.gateway.code');
+            $statusPayment = $response->getParsedPath('attributes.status.code');
+            $statusGateway = $response->getParsedPath('attributes.gateway.code');
             $statusAcquirer = $response->getParsedPath('attributes.acquirer.code');
 
             // Retorna a linha digitável do boleto
@@ -532,6 +532,42 @@ class IpagPayment implements PaymentGatewayInterface
 
     }
 
+    public function getInstallmentsFromApi($amountCents, $apiId, $apiKey): array
+    {
+
+        try {
+            // Chamada GET com Basic Auth, timeout e tentativas
+            $response = Http::withBasicAuth($apiId, $apiKey)
+                ->retry(3, 1000)   // até 3 tentativas, 1s de delay
+                ->timeout(5)       // timeout de 5s
+                ->get('https://api.ipag.com.br/service/v2/checkout/installments', [
+                    'amount' => $amountCents
+                ]);
+        } catch (\Throwable $e) {
+            Log::error("IPag installments error: {$e->getMessage()}");
+            return [];
+        }
+
+        if (!$response->successful()) {
+            Log::error("IPag installments response not OK: HTTP " . $response->status());
+            return [];
+        }
+
+        $data = $response->json();
+
+        $list = [];
+        foreach ($data ?? [] as $item) {
+
+            $list[] = [
+                'value' => (int)$item['installment'],  // número de parcelas
+                'label' => $item['description'],       // Descrição das parcelas
+                'amount' => (int)$item['amount'],      // valor por parcela (centavos)
+                'interest' => (int)$item['interest'],  // juros (centavos ou reais dependendo da API)
+            ];
+        }
+        return $list;
+    }
+
     /**
      * Metodo responsavel por retornar o parcelamento
      * @param int $amountCents
@@ -540,53 +576,20 @@ class IpagPayment implements PaymentGatewayInterface
     public function getInstallments(int $amountCents): array
     {
 
-        // Chaves (API_ID, API_KEY) armazenadas em config ou .env
-        $apiId = config('services.ipag.api_id');
-        $apiKey = config('services.ipag.api_key');
-        $cacheKey = "ipag_installments_{$amountCents}";
-
         // Tenta recuperar do cache por 5 minutos
-        $installments = Cache::remember($cacheKey, now()->addMinutes(5), function() use ($amountCents, $apiId, $apiKey) {
-            try {
-                // Chamada GET com Basic Auth, timeout e tentativas
-                $response = Http::withBasicAuth($apiId, $apiKey)
-                    ->retry(3, 1000)   // até 3 tentativas, 1s de delay
-                    ->timeout(5)       // timeout de 5s
-                    ->get('https://api.ipag.com.br/service/v2/checkout/installments', [
-                        'amount' => $amountCents
-                    ]);
-            } catch (\Throwable $e) {
-                Log::error("IPag installments error: {$e->getMessage()}");
-                return [];
-            }
-
-            if (!$response->successful()) {
-                Log::error("IPag installments response not OK: HTTP " . $response->status());
-                return [];
-            }
-
-            $data = $response->json();
-
-            $list = [];
-            foreach ($data ?? [] as $item) {
-
-                $list[] = [
-                    'value'    => (int) $item['installment'],   // número de parcelas
-                    'label'    => $item['description'],         // Descrição das parcelas
-                    'amount'   => (int) $item['amount'],        // valor por parcela (centavos)
-                    'interest' => (int) $item['interest'],                 // juros (centavos ou reais dependendo da API)
-                ];
-            }
-            return $list;
-        });
+        $installments = $this->getInstallmentsFromApi(
+            amountCents: $amountCents,
+            apiId: getConfigData('payments/ipag/sandbox_ipag_id'),
+            apiKey: getConfigData('payments/ipag/sandbox_ipag_key')
+        );
 
         // Se a API não retornar nada, forneça parcelamento padrão 1x sem juros
         if (empty($installments)) {
             return [[
-                'value'    => 1,
-                'label'    => '1x de R$ ' . number_format($amountCents, 2, ',', '.'),
-                'amount'   => $amountCents,
-                'total'    => $amountCents,
+                'value' => 1,
+                'label' => '1x de R$ ' . number_format($amountCents, 2, ',', '.'),
+                'amount' => $amountCents,
+                'total' => $amountCents,
                 'interest' => 0,
             ]];
         }

@@ -21,7 +21,6 @@ namespace Modules\Catalog\Services;
 use Idea\Framework\Repository\Catalog\CatalogProductCategoryRepository;
 use Idea\Framework\Repository\Catalog\CatalogProductQueueRepository;
 use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
-use Idea\Framework\Repository\Eav\EavAttributesCategoryRepository;
 
 class CatalogProductQueueService
 {
@@ -66,7 +65,7 @@ class CatalogProductQueueService
             );
 
             // Retorna a ultima categoria do produto
-            $eavAttributesCategory = EavAttributesCategoryRepository::getCategoryByAttributeSetId(
+            $eavAttributesCategory = CatalogCategoryProductService::getCategoryByAttributeSetId(
                 attributeSetId: $catalogProduct->attribute_set_id
             );
 

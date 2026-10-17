@@ -19,7 +19,7 @@
 namespace Modules\Cms\View\Components\Frontend;
 
 use Idea\Framework\Repository\Cms\CmsBannerRepository;
-use Illuminate\Support\Facades\Cache;
+use Idea\Framework\Services\ServiceCache;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
@@ -46,10 +46,11 @@ class CmsBannerComponent extends Component
         $request = request()->route()->getName();
 
         if (($request == 'index.home') && ($bannerLocal == 'banner_main_top')) {
-            $this->banners = Cache::rememberForever(
-                key:"banner_home_{$bannerLocal}",
-                callback: function () use ($bannerLocal, $limit) {
 
+            $this->banners = app(ServiceCache::class)->remember(
+                cacheKey: "banner_home_{$bannerLocal}",
+                tags:['homepage'],
+                closure:function () use ($bannerLocal, $limit) {
                     return CmsBannerRepository::getData()
                         ->where('is_active', '=', 1)
                         ->where('banner_type', '=', 'banner_home')
@@ -58,8 +59,8 @@ class CmsBannerComponent extends Component
                         ->orderBy('banner_order')
                         ->limit($limit)
                         ->get();
-
-                });
+                }
+            );
 
         }
 

@@ -16,6 +16,7 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
+
 namespace Idea\Framework\Providers;
 
 use App\Models\SysConfigDatum;
@@ -23,7 +24,6 @@ use Idea\Framework\Admin\Components\GridsTitlesCompoments;
 use Idea\Framework\Admin\Components\MenuBuilderComponent;
 use Idea\Framework\View\Front\Breadcrumbs\BreadcrumbsManager;
 use Idea\Framework\View\Front\Breadcrumbs\Generator;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
 use Livewire\Livewire;
@@ -57,8 +57,8 @@ class IdeaFrameworkServiceProvider extends ServiceProvider
             namespace: 'idea-components'
         );
 
-        // Retona as configuracoes de cada modulo do Sistema
-        $this->getConfigModules();
+        // Read das configuraçoes dos módulos e salva nas configurações gerais
+        $this->setupConfigModules();
 
         // Load the routes/breadcrumbs.php file
         $this->registerBreadcrumbs();
@@ -145,61 +145,54 @@ class IdeaFrameworkServiceProvider extends ServiceProvider
 
     }
 
-
-    protected function getConfigModules(): void
+    protected function setupConfigModules(): void
     {
 
-        Cache::rememberForever('modules.sysconfig.bootstrap', function () {
+        // 1. Lista módulos
+        $modules = Module::allEnabled();
 
-            // 1. Lista módulos
-            $modules = Module::allEnabled();
+        // 2. Carrega todos os paths existentes no banco (evita N+1)
+        $existingConfigs = SysConfigDatum::query()
+            ->pluck('path')
+            ->toArray();
 
-            // 2. Carrega todos os paths existentes no banco (evita N+1)
-            $existingConfigs = SysConfigDatum::query()
-                ->pluck('path')
-                ->toArray();
+        $existingConfigs = array_flip($existingConfigs);
 
-            $existingConfigs = array_flip($existingConfigs);
+        foreach ($modules as $module) {
 
-            foreach ($modules as $module) {
+            $moduleName = strtolower($module->getName());
 
-                $moduleName = strtolower($module->getName());
+            // Merge config do módulo
+            $this->mergeConfigFrom(
+                module_path($module->getName(), 'config/config.php'),
+                $moduleName
+            );
 
-                // Merge config do módulo
-                $this->mergeConfigFrom(
-                    module_path($module->getName(), 'config/config.php'),
-                    $moduleName
-                );
+            $sysConfigs = config("$moduleName.sysconfig");
 
-                $sysConfigs = config("$moduleName.sysconfig");
+            if (!$sysConfigs) {
+                continue;
+            }
 
-                if (!$sysConfigs) {
-                    continue;
-                }
+            $insertData = [];
 
-                $insertData = [];
+            foreach ($sysConfigs as $path => $sysConfig) {
 
-                foreach ($sysConfigs as $path => $sysConfig) {
+                if (!isset($existingConfigs[$path])) {
 
-                    if (!isset($existingConfigs[$path])) {
-
-                        $insertData[] = [
-                            'label' => $sysConfig['label'],
-                            'path' => $path,
-                            'value' => $sysConfig['value'],
-                        ];
-                    }
-                }
-
-                // Insert em batch (muito mais performático)
-                if (!empty($insertData)) {
-                    SysConfigDatum::query()->insert($insertData);
+                    $insertData[] = [
+                        'label' => $sysConfig['label'],
+                        'path' => $path,
+                        'value' => $sysConfig['value'],
+                    ];
                 }
             }
 
-            return true; // obrigatório pro cache
-
-        });
+            // Insert em batch (muito mais performático)
+            if (!empty($insertData)) {
+                SysConfigDatum::query()->insert($insertData);
+            }
+        }
 
     }
 

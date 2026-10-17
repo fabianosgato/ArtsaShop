@@ -29,7 +29,6 @@ use Filament\Tables\Columns\TextColumn;
 use Idea\Framework\Admin\Grids\Grid;
 use Idea\Framework\Repository\Sales\SalesOrderRepository;
 use Idea\Framework\Utils;
-use Illuminate\Support\Facades\Cache;
 
 class SalesOrderGrid extends Grid
 {
@@ -151,12 +150,10 @@ class SalesOrderGrid extends Grid
                 Tables\Filters\SelectFilter::make('sales_orders.status_id')
                     ->label('Status do Pedido')
                     ->options(
-                        Cache::remember("admin_filter_sales_order_status", (3600 * 24), function () {
-                            return SalesOrderStatus::query()
-                                ->where('is_enabled', '=', true)
-                                ->orderBy('ordination')
-                                ->pluck('label', 'status_id');
-                        })
+                        SalesOrderStatus::query()
+                            ->where('is_enabled', '=', true)
+                            ->orderBy('ordination')
+                            ->pluck('label', 'status_id')
                     )
                     ->searchable()
                     ->preload()

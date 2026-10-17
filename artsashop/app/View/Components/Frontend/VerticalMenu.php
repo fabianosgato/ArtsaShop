@@ -19,6 +19,7 @@
 namespace App\View\Components\Frontend;
 
 use Idea\Framework\Repository\Catalog\CatalogCategoryRepository;
+use Idea\Framework\Services\ServiceCache;
 use Illuminate\View\Component;
 
 class VerticalMenu extends Component
@@ -34,16 +35,14 @@ class VerticalMenu extends Component
     {
         $this->activeCategoryId = null;
 
-        // Cache de Categorias
-//        $this->categories = Cache::remember(
-//            'catalog:categories:tree',
-//            now()->addHours(24),
-//            function () {
-//                return CatalogCategoryRepository::getMenuCategories();
-//            }
-//        );
-
-        $this->categories = CatalogCategoryRepository::getMenuCategories();
+        // Retorna o menu de categorias
+        $this->categories = app(ServiceCache::class)->remember(
+            cacheKey: 'catalog:categories:vertical-menu',
+            tags: ['catalog_category'],
+            closure: function () {
+                return CatalogCategoryRepository::getMenuCategories();
+            }
+        );
 
         // resolve slug atual
         $slug = trim(request()->path(), '/');

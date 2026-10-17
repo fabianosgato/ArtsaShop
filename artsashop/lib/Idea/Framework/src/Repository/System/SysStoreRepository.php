@@ -22,8 +22,8 @@ namespace Idea\Framework\Repository\System;
 
 use App\Models\SysStore;
 use Idea\Framework\Repository\AbstractRepository;
+use Idea\Framework\Services\ServiceCache;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Cache;
 
 class SysStoreRepository extends AbstractRepository
 {
@@ -96,30 +96,30 @@ class SysStoreRepository extends AbstractRepository
     public static function getStoreByCode($code): ?SysStore
     {
 
-        // Key do cache
-        $cacheKey = 'store_host_code:' . md5($code);
+        return app(ServiceCache::class)->remember(
+            cacheKey: 'store_host_code:' . md5($code),
+            tags: ['store_host'],
+            closure: function () use ($code) {
+                // Inicializa a query
+                $store = self::getData()->where(
+                    column: 'code',
+                    operator:'=',
+                    value: $code
+                );
 
-        // Retorna o cache da loja especifica
-        return Cache::rememberForever($cacheKey, function () use ($code) {
-            // Inicializa a query
-            $store = self::getData()->where(
-                column: 'code',
-                operator:'=',
-                value: $code
-            );
+                // Se existir irá retornar a loja
+                if ($store->exists())
+                    return $store->first();
 
-            // Se existir irá retornar a loja
-            if ($store->exists())
-                return $store->first();
+                // Se nao existir irá retornar a loja padrao
+                return self::getData()->where(
+                    column: 'code',
+                    operator:'=',
+                    value: 'default'
+                )->first();
 
-            // Se nao existir irá retornar a loja padrao
-            return self::getData()->where(
-                column: 'code',
-                operator:'=',
-                value: 'default'
-            )->first();
-
-        });
+            }
+        );
 
     }
 

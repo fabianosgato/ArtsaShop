@@ -20,9 +20,9 @@ declare(strict_types=1);
 
 namespace Idea\Framework\Services;
 
-use _PHPStan_cb3b7e994\Nette\Neon\Exception;
 use Closure;
 use Illuminate\Support\Facades\Cache;
+use InvalidArgumentException;
 
 class ServiceCache
 {
@@ -34,7 +34,7 @@ class ServiceCache
         ));
     }
 
-    public function getCacheExpireIn($tags): int
+    public function getCacheExpireIn(array $tags): int
     {
 
         // Retorna a configuração padrao
@@ -44,6 +44,11 @@ class ServiceCache
         $cacheTypes = config('idea.cache.types');
 
         foreach ($cacheTypes as $key => $cacheType) {
+            // Quando o valor de expire_in for zero, o cache é eterno
+            if($cacheType['expire_in'] == 0){
+                return 0;
+            }
+
             if (in_array($key, $tags)) {
                 if ($expireIn < $cacheType['expire_in']) {
                     $expireIn = $cacheType['expire_in'];
@@ -55,15 +60,34 @@ class ServiceCache
 
     }
 
-    public function remember(string $cacheKey, array $tags, Closure $closure)
-    {
+    public function remember(
+        string $cacheKey,
+        array $tags,
+        Closure $closure
+    ) {
 
-        if (!empty(array_diff($tags, array_keys(config('idea.cache.types')))))
-            throw new Exception('Tag informada não consta na configuração');
+        $invalidTags = array_diff(
+            $tags,
+            array_keys(config('idea.cache.types'))
+        );
+
+        if (!empty($invalidTags)) {
+            throw new InvalidArgumentException(
+                "Tag `{$invalidTags[0]}` informada não consta na configuração"
+            );
+        }
+
+        // Quando o valor de expire_in for zero, o cache é eterno
+        if ($this->getCacheExpireIn($tags) == 0)
+            return Cache::tags($tags)
+                ->rememberForever(
+                    key: $cacheKey,
+                    callback: $closure
+                );
 
         return Cache::tags($tags)
             ->remember(
-                key:$cacheKey,
+                key: $cacheKey,
                 ttl: $this->getCacheExpireIn($tags),
                 callback: $closure
             );

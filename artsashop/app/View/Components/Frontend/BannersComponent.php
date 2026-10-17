@@ -20,8 +20,8 @@ namespace App\View\Components\Frontend;
 
 use Closure;
 use Idea\Framework\Repository\Cms\CmsBannerRepository;
+use Idea\Framework\Services\ServiceCache;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\View\Component;
 
 class BannersComponent extends Component
@@ -41,18 +41,18 @@ class BannersComponent extends Component
 
         if ($request === 'index.home') {
 
-            $cacheKey = "banners_home_{$bannerLocal}";
-
-            $this->banners = Cache::rememberForever($cacheKey, function () use ($bannerLocal) {
-
-                return CmsBannerRepository::getData()
-                    ->where('is_active', 1)
-                    ->where('banner_type', 'banner_home')
-                    ->where('banner_local', $bannerLocal)
-                    ->orderBy('banner_order')
-                    ->get();
-
-            });
+            $this->banners = app(ServiceCache::class)->remember(
+                cacheKey: "banners_home_{$bannerLocal}",
+                tags:['banners'],
+                closure: function () use ($bannerLocal) {
+                    return CmsBannerRepository::getData()
+                        ->where('is_active', 1)
+                        ->where('banner_type', 'banner_home')
+                        ->where('banner_local', $bannerLocal)
+                        ->orderBy('banner_order')
+                        ->get();
+                }
+            );
 
         }
 

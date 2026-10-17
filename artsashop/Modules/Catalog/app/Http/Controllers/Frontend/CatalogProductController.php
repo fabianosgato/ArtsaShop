@@ -21,7 +21,7 @@ namespace Modules\Catalog\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
 use Idea\Framework\Seo\Traits\HasSeoResponse;
-use Illuminate\Support\Facades\Cache;
+use Idea\Framework\Services\ServiceCache;
 
 class CatalogProductController extends Controller
 {
@@ -31,10 +31,13 @@ class CatalogProductController extends Controller
     public function index(int $productId)
     {
 
-        // Retorna os dados do produto
-        $catalogProduct = Cache::remember("product_page_{$productId}", 2600, function () use ($productId) {
-            return CatalogProductsRepository::getProductById($productId);
-        });
+        $catalogProduct =  app(ServiceCache::class)->remember(
+            cacheKey: "product_page_{$productId}",
+            tags:['catalog_products'],
+            closure: function () use ($productId) {
+                return CatalogProductsRepository::getProductById($productId);
+            }
+        );
 
         if (empty($catalogProduct)) {
             abort(404);

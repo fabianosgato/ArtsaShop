@@ -27,7 +27,6 @@ use Idea\Framework\Repository\Catalog\CatalogProductCategoryRepository;
 use Idea\Framework\Repository\Catalog\CatalogProductPricesRepository;
 use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
 use Idea\Framework\Repository\Catalog\CatalogProductStoreRepository;
-use Idea\Framework\Repository\Eav\EavAttributesCategoryRepository;
 use Idea\Framework\Repository\Eav\EavAttributeSetRepository;
 use Idea\Framework\Repository\Eav\EavAttributesRepository;
 use Idea\Framework\Repository\Seo\SeoPageRepository;
@@ -374,7 +373,7 @@ class CatalogProductService extends AbstractService
             );
 
             // Retorna a ultima categoria do produto
-            $eavAttributesCategory = EavAttributesCategoryRepository::getCategoryByAttributeSetId(
+            $eavAttributesCategory = CatalogCategoryProductService::getCategoryByAttributeSetId(
                 attributeSetId: $attributeSet->attribute_set_id
             );
 

@@ -20,10 +20,25 @@ namespace Modules\Catalog\Services;
 
 use Idea\Framework\Repository\Catalog\CatalogCategoryProductRepository;
 use Idea\Framework\Repository\Catalog\CatalogCategoryRepository;
+use Idea\Framework\Repository\Eav\EavAttributesCategoryRepository;
+use Idea\Framework\Services\ServiceCache;
 use Illuminate\Support\Str;
 
 class CatalogCategoryProductService
 {
+
+    public static function getCategoryByAttributeSetId($attributeSetId)
+    {
+        return app(ServiceCache::class)->remember(
+            cacheKey: "catalog-category:category-by-attributeset:attributeSetId:{$attributeSetId}",
+            tags: ['catalog_category'],
+            closure: function () use ($attributeSetId) {
+                return EavAttributesCategoryRepository::getCategoryByAttributeSet(
+                    $attributeSetId
+                );
+            }
+        );
+    }
 
     public static function saveProductCategories(int $productId, string $path, string $productSlug, ?string $parentSlug = null): void
     {

@@ -21,7 +21,6 @@ namespace Idea\Framework\Repository\Eav;
 use App\Models\CatalogCategoryEntity;
 use App\Models\EavAttributesCategory;
 use Idea\Framework\Repository\AbstractRepository;
-use Illuminate\Support\Facades\Cache;
 
 class EavAttributesCategoryRepository extends AbstractRepository
 {
@@ -66,28 +65,6 @@ class EavAttributesCategoryRepository extends AbstractRepository
             return $query->first();
 
         return null;
-
-    }
-
-    /**
-     * Retorna a categoria de acordo com o Grupo de Atributos
-     * @param $attributeSetId
-     * @return mixed
-     */
-    public static function getCategoryByAttributeSetId($attributeSetId)
-    {
-
-        $cacheKey = "catalog-category:category-by-attributett:attributeSetId:{$attributeSetId}";
-
-        return Cache::remember(
-            $cacheKey,
-            now()->addHours(6),
-            function () use ($attributeSetId) {
-                return self::getCategoryByAttributeSet(
-                    $attributeSetId
-                );
-            }
-        );
 
     }
 

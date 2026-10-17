@@ -7,6 +7,9 @@ return [
     ],
     'cache' => [
         'types' => [
+            'store_host' => [
+                'expire_in' => 0
+            ],
             'catalog_products' => [
                 'expire_in' => 3600
             ],
@@ -21,6 +24,9 @@ return [
             ],
             'homepage' => [
                 'expire_in' => 3600
+            ],
+            'banners' => [
+                'expire_in' => 0
             ],
         ]
     ]
