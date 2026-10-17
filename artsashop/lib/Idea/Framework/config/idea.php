@@ -7,6 +7,9 @@ return [
     ],
     'cache' => [
         'types' => [
+            'seo-meta' => [
+                'expire_in' => 3200
+            ],
             'store_host' => [
                 'expire_in' => 0
             ],
