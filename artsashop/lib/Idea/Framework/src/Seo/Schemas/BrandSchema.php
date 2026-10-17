@@ -16,7 +16,6 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
-
 namespace Idea\Framework\Seo\Schemas;
 
 use Idea\Framework\Seo\Data\SeoPageData;

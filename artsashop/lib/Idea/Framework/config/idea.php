@@ -1,21 +1,27 @@
 <?php
 return [
     'breadcrumbs' => [
-        /*
-        |--------------------------------------------------------------------------
-        | Breadcrumbs File(s)
-        |--------------------------------------------------------------------------
-        |
-        | The file(s) where breadcrumbs are defined. e.g.
-        |
-        | - base_path('routes/breadcrumbs.php')
-        | - glob(base_path('breadcrumbs/*.php'))
-        |
-        */
         'files' => base_path('routes/breadcrumbs.php'),
-        // Manager
         'manager-class' => Idea\Framework\View\Front\Breadcrumbs\BreadcrumbsManager::class,
-        // Generator
         'generator-class' => Idea\Framework\View\Front\Breadcrumbs\Generator::class,
+    ],
+    'cache' => [
+        'types' => [
+            'catalog_products' => [
+                'expire_in' => 3600
+            ],
+            'catalog_category' => [
+                'expire_in' => 3600
+            ],
+            'attributes_set' => [
+                'expire_in' => 3600
+            ],
+            'cms' => [
+                'expire_in' => 3600
+            ],
+            'homepage' => [
+                'expire_in' => 3600
+            ],
+        ]
     ]
 ];

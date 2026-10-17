@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Idea\Framework\Services;
 
+use _PHPStan_cb3b7e994\Nette\Neon\Exception;
 use Closure;
 use Illuminate\Support\Facades\Cache;
 
@@ -33,10 +34,39 @@ class ServiceCache
         ));
     }
 
+    public function getCacheExpireIn($tags): int
+    {
+
+        // Retorna a configuração padrao
+        $expireIn = $this->expireIn();
+
+        // Retorna os tipos de cache
+        $cacheTypes = config('idea.cache.types');
+
+        foreach ($cacheTypes as $key => $cacheType) {
+            if (in_array($key, $tags)) {
+                if ($expireIn < $cacheType['expire_in']) {
+                    $expireIn = $cacheType['expire_in'];
+                }
+            }
+        }
+
+        return $expireIn;
+
+    }
+
     public function remember(string $cacheKey, array $tags, Closure $closure)
     {
+
+        if (!empty(array_diff($tags, array_keys(config('idea.cache.types')))))
+            throw new Exception('Tag informada não consta na configuração');
+
         return Cache::tags($tags)
-            ->remember($cacheKey, $this->expireIn(), $closure);
+            ->remember(
+                key:$cacheKey,
+                ttl: $this->getCacheExpireIn($tags),
+                callback: $closure
+            );
     }
 
 }
