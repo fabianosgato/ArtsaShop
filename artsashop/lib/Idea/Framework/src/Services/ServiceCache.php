@@ -53,35 +53,39 @@ class ServiceCache
 
     public function getCacheExpireIn(array $tags): int
     {
-
-        // Retorna a configuração padrao
+        // Retorna a configuração padrão
         $expireIn = $this->defaultExpireIn();
 
         // Retorna os tipos de cache
         $cacheTypes = config('idea.cache.types');
 
         foreach ($cacheTypes as $key => $cacheType) {
+
+            // Ignora configurações que não participam deste cache
+            if (!in_array($key, $tags)) {
+                continue;
+            }
+
             // Quando o valor de expire_in for zero, o cache é eterno
-            if($cacheType['expire_in'] == 0){
+            if ($cacheType['expire_in'] == 0) {
                 return 0;
             }
 
-            if (in_array($key, $tags)) {
-                if ($expireIn < $cacheType['expire_in']) {
-                    $expireIn = $cacheType['expire_in'];
-                }
+            // Utiliza o maior TTL entre as tags
+            if ($expireIn < $cacheType['expire_in']) {
+                $expireIn = $cacheType['expire_in'];
             }
         }
 
         return $expireIn;
-
     }
 
     public function remember(
-        string $cacheKey,
-        array $tags,
+        string  $cacheKey,
+        array   $tags,
         Closure $closure
-    ) {
+    )
+    {
 
         // Valida as tags configuradas no sistema
         $tags = $this->checkTags($tags);

@@ -18,7 +18,7 @@
  */
 declare(strict_types=1);
 
-namespace Feature\Idea\Services;
+namespace Tests\Feature\Idea\Services;
 
 use Idea\Framework\Repository\Cms\CmsBannerRepository;
 use Idea\Framework\Services\ServiceCache;
@@ -27,6 +27,30 @@ use Tests\TestCase;
 
 class ServiceCacheTest extends TestCase
 {
+
+    public function testGetCacheExpireInReturnsDefaultWhenTagIsNotConfiguredWithZero(): void
+    {
+        $tags = [
+            'catalog_products',
+        ];
+
+        $expireIn = app(ServiceCache::class)->getCacheExpireIn($tags);
+
+        $this->assertSame(3600, $expireIn);
+    }
+
+    public function testGetCacheExpireInReturnsZeroWhenOneOfTheTagsIsForever(): void
+    {
+        $tags = [
+            'catalog_products',
+            'banners',
+        ];
+
+        $expireIn = app(ServiceCache::class)->getCacheExpireIn($tags);
+
+        $this->assertSame(0, $expireIn);
+    }
+
 
     public function testExpireInIntVal(): void
     {
@@ -62,7 +86,7 @@ class ServiceCacheTest extends TestCase
         // Act: Cria o cache
         app(ServiceCache::class)->remember(
             cacheKey: $cacheKey,
-            tags:$tags,
+            tags: $tags,
             closure: function () use ($bannerLocal) {
                 return CmsBannerRepository::getData()
                     ->where('is_active', 1)
@@ -93,7 +117,7 @@ class ServiceCacheTest extends TestCase
         // Arrange: Cria o cache
         app(ServiceCache::class)->remember(
             cacheKey: $cacheKey,
-            tags:$tags,
+            tags: $tags,
             closure: function () use ($bannerLocal) {
                 return CmsBannerRepository::getData()
                     ->where('is_active', 1)
@@ -127,7 +151,7 @@ class ServiceCacheTest extends TestCase
         // Act: Cria o cache
         app(ServiceCache::class)->remember(
             cacheKey: $cacheKey,
-            tags:$tags,
+            tags: $tags,
             closure: function () use ($bannerLocal) {
                 return CmsBannerRepository::getData()
                     ->where('is_active', 1)
