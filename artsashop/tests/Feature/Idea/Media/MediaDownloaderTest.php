@@ -61,7 +61,38 @@ class MediaDownloaderTest extends TestCase
     public function testCreateDispersedPath(): void
     {
 
+        // Arrange: SKU de teste de um produto qualquer
+        $productSku = 'B6766ks-3';
 
+        // Act: Cria o diretório do produto
+        $dispersedPath = MediaDownloader::createDispersedPath($productSku);
+
+        // Asset: Valida se retornou uma string
+        $this->assertIsString($dispersedPath);
+
+        // Asset: Valida se retornou uma string
+        $this->assertDirectoryExists(
+            $dispersedPath
+        );
+
+    }
+
+    public function testCreateDispersedPathIsFalse(): void
+    {
+
+        // Arrange: SKU de teste de um produto qualquer
+        $productSku = ';/%-%&';
+
+        // Act: Cria o diretório do produto
+        $dispersedPath = MediaDownloader::createDispersedPath($productSku);
+
+        // Asset: Valida se retornou uma string
+        $this->assertIsNotString($dispersedPath);
+
+        // Asset: Valida se retornou uma string
+        $this->assertIsBool(
+            $dispersedPath
+        );
 
     }
 

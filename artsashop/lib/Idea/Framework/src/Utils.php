@@ -112,7 +112,7 @@ class Utils
 
     /**
      * Limpa o SKU do produto removendo caracteres que não pode ser enviados
-     * @param $asin
+     * @param $productSku
      * @return string
      */
     public static function clearSku($productSku): string

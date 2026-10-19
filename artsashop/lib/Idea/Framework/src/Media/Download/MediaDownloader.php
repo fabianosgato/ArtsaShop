@@ -73,37 +73,30 @@ class MediaDownloader
         // Caminho completo das imagens do catálogo
         $dirImages = Storage::disk('public')->path('media');
 
+        // Remove do SKU os caracteres indevidos
+        $productSku = Utils::clearSku($productSku);
+
         // Valida se o SKU do produto não esteja vazio
         if ($productSku != '') {
 
-            // Remove do SKU os caracteres indevidos
-            $productSku = Utils::clearSku($productSku);
+            // Retorna a primeira letra do ASIN para a criação do diretório
+            $fistLetter = substr($productSku, 0, 5);
 
-            if ($productSku) {
-
-                // Retorna a primeira letra do ASIN para a criação do diretório
-                $fistLetter = substr($productSku, 0, 5);
-
-                // Cria o diretorio de imagens
-                if (!is_dir($dirImages . DIRECTORY_SEPARATOR . $fistLetter)) {
-                    mkdir($dirImages . DIRECTORY_SEPARATOR . $fistLetter, 0777, true);
-                }
-
-                // Retorna a primeira letra do ASIN para a criação do diretório
-                $secondLetter = substr($productSku, 5, 2);
-
-                // Cria o diretorio de imagens
-                if (!is_dir($dirImages . DIRECTORY_SEPARATOR . $fistLetter . DIRECTORY_SEPARATOR . $secondLetter)) {
-                    mkdir($dirImages . DIRECTORY_SEPARATOR . $fistLetter . DIRECTORY_SEPARATOR . $secondLetter, 0777, true);
-                }
-
-                // Retorna o caminho completo do diretorio
-                return $dirImages . DIRECTORY_SEPARATOR . $fistLetter . DIRECTORY_SEPARATOR . $secondLetter . DIRECTORY_SEPARATOR;
-
-            } else {
-                return false;
-
+            // Cria o diretorio de imagens
+            if (!is_dir($dirImages . DIRECTORY_SEPARATOR . $fistLetter)) {
+                mkdir($dirImages . DIRECTORY_SEPARATOR . $fistLetter, 0777, true);
             }
+
+            // Retorna a primeira letra do ASIN para a criação do diretório
+            $secondLetter = substr($productSku, 5, 2);
+
+            // Cria o diretorio de imagens
+            if (!is_dir($dirImages . DIRECTORY_SEPARATOR . $fistLetter . DIRECTORY_SEPARATOR . $secondLetter)) {
+                mkdir($dirImages . DIRECTORY_SEPARATOR . $fistLetter . DIRECTORY_SEPARATOR . $secondLetter, 0777, true);
+            }
+
+            // Retorna o caminho completo do diretorio
+            return $dirImages . DIRECTORY_SEPARATOR . $fistLetter . DIRECTORY_SEPARATOR . $secondLetter . DIRECTORY_SEPARATOR;
 
         } else {
             return false;
@@ -126,7 +119,7 @@ class MediaDownloader
     }
 
     /**
-     * Método que apenas retorna a imagem do sistema
+     * Método que retorna a imagem do produto
      * @param $imageUrl
      * @param $productSku
      * @param $idx
