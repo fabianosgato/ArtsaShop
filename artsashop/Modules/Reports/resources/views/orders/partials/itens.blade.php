@@ -9,7 +9,6 @@
             <thead class="border-b">
                 <tr>
                     <th class="py-2 px-2"></th>
-                    <th class="py-2 px-2 text-sm text-left">ASIN</th>
                     <th class="py-2 px-2 text-sm text-left">SKU</th>
                     <th class="py-2 px-2 text-sm text-left">Produto</th>
                     <th class="py-2 px-2 text-sm text-left">Qty</th>
@@ -23,9 +22,6 @@
                     <tr class="hover:bg-gray-200">
                         <td class="py-2 px-2">
                             <img src="{{$product['image']}}" width="80">
-                        </td>
-                        <td class="py-2 px-2 text-gray-700 text-sm">
-                            <a href="{{ route('products.edit', ['id' => $product['product_id']]) }}"><span class="text-blumine-500">{{$product['asin']}}</span></a>
                         </td>
                         <td class="py-2 px-2 text-gray-700 text-sm">
                             {{$product['product_sku']}}

@@ -17,13 +17,6 @@
         </div>
         <dl class="divide-y divide-gray-100">
             <div class="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">ASIN</dt>
-                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    <strong>{{$catalogProduct['asin']}}</strong><br />
-                    <a target="_blank" class="card-link" href="{{env('PROVIDER_URL')}}html/{{ substr($catalogProduct['asin'], 0, 4) }}/{{$catalogProduct['asin']}}.html">Ver Pagina Capturada</a>
-                </dd>
-            </div>
-            <div class="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">SKU</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><strong>{{ $catalogProduct['sku']}}</strong></dd>
             </div>

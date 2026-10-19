@@ -27,7 +27,7 @@ class MediaDownloader
     /**
      * Realiza o download da Imagem do Produto
      */
-    private static function grabImage(string $url): bool|string
+    private static function downloadImage(string $url): bool|string
     {
 
         $ch = curl_init($url);
@@ -63,7 +63,7 @@ class MediaDownloader
     }
 
     /**
-     * Metodo que cria o diretório pelo ASIN
+     * Metodo que cria o diretório pelo SKU do produto
      * @param $productSku
      * @return bool|string
      */
@@ -73,9 +73,10 @@ class MediaDownloader
         // Caminho completo das imagens do catálogo
         $dirImages = Storage::disk('public')->path('media');
 
+        // Valida se o SKU do produto não esteja vazio
         if ($productSku != '') {
 
-            // Remove do ASIN os caracteres que não podem subir
+            // Remove do SKU os caracteres indevidos
             $productSku = Utils::clearSku($productSku);
 
             if ($productSku) {
@@ -145,7 +146,7 @@ class MediaDownloader
                 $remoteImageRaw = Storage::disk('public')->get($imageUrl);
             } else {
                 // Retorna o conteúdo da imagem vinda de URL
-                $remoteImageRaw = self::grabImage($imageUrl);
+                $remoteImageRaw = self::downloadImage($imageUrl);
             }
 
             // Retorna a imagem

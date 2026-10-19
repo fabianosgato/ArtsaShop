@@ -22,6 +22,7 @@ use App\Models\CatalogProduct;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
+use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
 use Idea\Framework\Utils;
 
 class ProductsImporter extends Importer
@@ -35,19 +36,19 @@ class ProductsImporter extends Importer
     public static function getColumns(): array
     {
         return [
-            ImportColumn::make('asin')
-                ->label('ASIN')
+            ImportColumn::make('product_sku')
+                ->label('Sku do produto')
                 ->requiredMapping(),
         ];
     }
 
     /**
-     * Importa os Asins
+     * Importa os SKUs dos produtos
      */
     public function resolveRecord(): ?CatalogProduct
     {
-        return CatalogProduct::firstOrNew([
-            'asin' => Utils::clearAsin($this->data['asin']),
+        return CatalogProductsRepository::firstOrNew([
+            'asin' => Utils::clearSku($this->data['product_sku']),
         ]);
     }
 

@@ -27,7 +27,6 @@ use Idea\Framework\Repository\AbstractRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class CatalogProductsRepository extends AbstractRepository
 {
@@ -1029,55 +1028,6 @@ class CatalogProductsRepository extends AbstractRepository
                     'qty' => $qty
                 ]);
         }
-
-    }
-
-    /**
-     * Metodo usado para Atualizar os pesos de produtos
-     * @param array $data
-     * @return false|mixed
-     */
-    public static function updateWeights(array $data)
-    {
-
-        if (!empty($data['item_code'])) {
-
-            // Inicializa a query do produto
-            $query = CatalogProduct::query();
-
-            # Busca o produto
-            $catalogProduct = $query->where(
-                'asin', '=', str_replace("LA", "", $data['item_code'])
-            );
-
-            # Valida se o produto existe na base
-            if ($catalogProduct->exists()) {
-
-                try {
-
-                    $attributes = [
-                        'weight' => floatval(str_replace(",", ".", $data['weight']))
-                    ];
-
-                    // Inicializa a query do produto
-                    self::loadModel()::query()->where([
-                        'product_id' => $catalogProduct->first()->product_id
-                    ])->update($attributes);
-
-                    return $catalogProduct;
-
-                } catch (\Exception $exception) {
-
-                    Log::error("[{$catalogProduct->asin}] {" . print_r($attributes, true) . "}}");
-                    Log::error("[{$catalogProduct->asin}] {" . $exception->getMessage() . "}}");
-
-                }
-
-            }
-
-        }
-
-        return false;
 
     }
 

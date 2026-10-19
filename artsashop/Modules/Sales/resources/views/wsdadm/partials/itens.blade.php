@@ -9,7 +9,6 @@
             <thead class="border-b">
                 <tr>
                     <th class="py-2 px-2"></th>
-                    <th class="py-2 px-2 text-sm text-left">ASIN</th>
                     <th class="py-2 px-2 text-sm text-left">SKU</th>
                     <th class="py-2 px-2 text-sm text-left">Produto</th>
                     <th class="py-2 px-2 text-sm text-left">Qty</th>

@@ -56,7 +56,11 @@ trait PasswordTokenValidator
 
         // Remove da tabela o email do cliente
         DB::table('sys_password_reset_tokens')
-            ->where('email', '=', $email)
+            ->where(
+                column: 'email',
+                operator: '=',
+                value: $email
+            )
             ->delete();
 
     }
