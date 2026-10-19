@@ -20,7 +20,9 @@ declare(strict_types=1);
 
 namespace Feature\Idea\Services;
 
+use Idea\Framework\Repository\Cms\CmsBannerRepository;
 use Idea\Framework\Services\ServiceCache;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class ServiceCacheTest extends TestCase
@@ -38,10 +40,106 @@ class ServiceCacheTest extends TestCase
 
         $this->assertSame(
             intval(getConfigData(
-                path:'cache/config/expire_in'
+                path: 'cache/config/expire_in'
             )),
             $expireIn
         );
+
+    }
+
+    public function testRemember(): void
+    {
+
+        // Arrange: Key do cache
+        $cacheKey = 'banners_home_topo';
+        // Arrange: local do banner
+        $bannerLocal = 'banner_main_top';
+        // Arrange: Array de tags
+        $tags = [
+            'banners',
+        ];
+
+        // Act: Cria o cache
+        app(ServiceCache::class)->remember(
+            cacheKey: $cacheKey,
+            tags:$tags,
+            closure: function () use ($bannerLocal) {
+                return CmsBannerRepository::getData()
+                    ->where('is_active', 1)
+                    ->where('banner_type', 'banner_home')
+                    ->where('banner_local', $bannerLocal)
+                    ->orderBy('banner_order')
+                    ->get();
+            }
+        );
+
+        // Assert: Valida se o cache ainda existe
+        $this->assertTrue(Cache::tags($tags)->has($cacheKey));
+
+
+    }
+
+    public function testForgetByTags()
+    {
+
+        // Arrange: Key do cache
+        $cacheKey = 'banners_home_topo';
+        // Arrange: local do banner
+        $bannerLocal = 'banner_main_top';
+        // Arrange: Array de tags
+        $tags = [
+            'banners',
+        ];
+        // Arrange: Cria o cache
+        app(ServiceCache::class)->remember(
+            cacheKey: $cacheKey,
+            tags:$tags,
+            closure: function () use ($bannerLocal) {
+                return CmsBannerRepository::getData()
+                    ->where('is_active', 1)
+                    ->where('banner_type', 'banner_home')
+                    ->where('banner_local', $bannerLocal)
+                    ->orderBy('banner_order')
+                    ->get();
+            }
+        );
+
+        // Act: Limpa o cache pelas tags
+        app(ServiceCache::class)->forgetByTags($tags);
+
+        // Assert: Valida se o cache ainda existe
+        $this->assertFalse(Cache::tags($tags)->has($cacheKey));
+
+    }
+
+    public function testForgetByKey()
+    {
+
+        // Arrange: Key do cache
+        $cacheKey = 'banners_home_topo';
+        // Arrange: local do banner
+        $bannerLocal = 'banner_main_top';
+        // Arrange: Array de tags
+        $tags = [
+            'banners',
+        ];
+
+        // Act: Cria o cache
+        app(ServiceCache::class)->remember(
+            cacheKey: $cacheKey,
+            tags:$tags,
+            closure: function () use ($bannerLocal) {
+                return CmsBannerRepository::getData()
+                    ->where('is_active', 1)
+                    ->where('banner_type', 'banner_home')
+                    ->where('banner_local', $bannerLocal)
+                    ->orderBy('banner_order')
+                    ->get();
+            }
+        );
+
+        // Assert: Valida se o cache ainda existe
+        $this->assertFalse(Cache::has($cacheKey));
 
     }
 

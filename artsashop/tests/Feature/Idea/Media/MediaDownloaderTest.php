@@ -64,7 +64,7 @@ class MediaDownloaderTest extends TestCase
         // Arrange: SKU de teste de um produto qualquer
         $productSku = 'B6766ks-3';
 
-        // Act: Cria o diretório do produto
+        // Act: Chama o metodo para criar o diretório do produto
         $dispersedPath = MediaDownloader::createDispersedPath($productSku);
 
         // Asset: Valida se retornou uma string

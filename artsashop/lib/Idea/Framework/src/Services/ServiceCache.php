@@ -27,6 +27,23 @@ use InvalidArgumentException;
 class ServiceCache
 {
 
+    private function checkTags($tags)
+    {
+        $invalidTags = array_diff(
+            $tags,
+            array_keys(config('idea.cache.types'))
+        );
+
+        if (!empty($invalidTags)) {
+            throw new InvalidArgumentException(
+                "Tag `{$invalidTags[0]}` informada não consta na configuração"
+            );
+        }
+
+        return $tags;
+
+    }
+
     public function defaultExpireIn(): int
     {
         return intval(getConfigData(
@@ -66,16 +83,8 @@ class ServiceCache
         Closure $closure
     ) {
 
-        $invalidTags = array_diff(
-            $tags,
-            array_keys(config('idea.cache.types'))
-        );
-
-        if (!empty($invalidTags)) {
-            throw new InvalidArgumentException(
-                "Tag `{$invalidTags[0]}` informada não consta na configuração"
-            );
-        }
+        // Valida as tags configuradas no sistema
+        $tags = $this->checkTags($tags);
 
         // Quando o valor de expire_in for zero, o cache é eterno
         if ($this->getCacheExpireIn($tags) == 0)
@@ -91,6 +100,23 @@ class ServiceCache
                 ttl: $this->getCacheExpireIn($tags),
                 callback: $closure
             );
+    }
+
+    public function forgetByTags(array $tags)
+    {
+
+        // Valida as tags configuradas no sistema
+        $tags = $this->checkTags($tags);
+
+        // Realiza o flush do cache
+        Cache::tags($tags)->flush();
+
+    }
+
+    public function forgetByKey(string $key): void
+    {
+        // Realiza o flush do cache
+        Cache::forget($key);
     }
 
 }
