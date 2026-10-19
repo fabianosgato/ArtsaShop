@@ -27,7 +27,7 @@ use InvalidArgumentException;
 class ServiceCache
 {
 
-    public function expireIn(): int
+    public function defaultExpireIn(): int
     {
         return intval(getConfigData(
             path: 'cache/config/expire_in'
@@ -38,7 +38,7 @@ class ServiceCache
     {
 
         // Retorna a configuração padrao
-        $expireIn = $this->expireIn();
+        $expireIn = $this->defaultExpireIn();
 
         // Retorna os tipos de cache
         $cacheTypes = config('idea.cache.types');

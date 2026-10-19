@@ -31,7 +31,7 @@ class ServiceCacheTest extends TestCase
 
         // Arrange: Instancia a classe de Cache
         $serviceCache = new ServiceCache();
-        $expireIn = $serviceCache->expireIn();
+        $expireIn = $serviceCache->defaultExpireIn();
 
         // Valida se o resultado é um inteiro
         $this->assertIsInt($expireIn);

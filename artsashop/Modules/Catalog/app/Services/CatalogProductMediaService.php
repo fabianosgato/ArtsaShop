@@ -176,7 +176,7 @@ class CatalogProductMediaService
             foreach ($dataPost['product']['images'] as $idx => $image) {
 
                 // Diretório criado UMA ÚNICA VEZ
-                $targetDir = MediaDownloader::createDir($catalogProduct->sku);
+                $targetDir = MediaDownloader::createDispersedPath($catalogProduct->sku);
 
                 // Realiza o download da Imagem
                 $originalPath = MediaDownloader::getImage(

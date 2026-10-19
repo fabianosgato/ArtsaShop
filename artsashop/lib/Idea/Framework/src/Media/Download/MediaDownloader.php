@@ -27,7 +27,7 @@ class MediaDownloader
     /**
      * Realiza o download da Imagem do Produto
      */
-    private static function downloadImage(string $url): bool|string
+    public static function downloadRawImage(string $url): bool|string
     {
 
         $ch = curl_init($url);
@@ -67,7 +67,7 @@ class MediaDownloader
      * @param $productSku
      * @return bool|string
      */
-    public static function createDir($productSku): bool|string
+    public static function createDispersedPath($productSku): bool|string
     {
 
         // Caminho completo das imagens do catálogo
@@ -146,14 +146,14 @@ class MediaDownloader
                 $remoteImageRaw = Storage::disk('public')->get($imageUrl);
             } else {
                 // Retorna o conteúdo da imagem vinda de URL
-                $remoteImageRaw = self::downloadImage($imageUrl);
+                $remoteImageRaw = self::downloadRawImage($imageUrl);
             }
 
             // Retorna a imagem
             if ($remoteImageRaw) {
 
                 // Cria o diretório da imagem atual da imagem
-                $imageDir = self::createDir($productSku);
+                $imageDir = self::createDispersedPath($productSku);
 
                 // Valida se o diretório foi criado com sucesso
                 if ($imageDir) {
