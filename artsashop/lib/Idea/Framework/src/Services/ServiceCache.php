@@ -30,9 +30,9 @@ class ServiceCache
     /**
      * Valida se as tags estão listadas no sistema
      * @param $tags
-     * @return mixed
+     * @return array
      */
-    private function checkTags($tags)
+    private function checkTags($tags): array
     {
         $invalidTags = array_diff(
             $tags,
@@ -41,7 +41,7 @@ class ServiceCache
 
         if (!empty($invalidTags)) {
             throw new InvalidArgumentException(
-                "Tag `{$invalidTags[0]}` informada não consta na configuração"
+                "Tag `$invalidTags[0]` informada não consta na configuração"
             );
         }
 
@@ -105,7 +105,7 @@ class ServiceCache
         string  $cacheKey,
         array   $tags,
         Closure $closure
-    )
+    ): mixed
     {
 
         // Valida as tags configuradas no sistema
@@ -130,9 +130,9 @@ class ServiceCache
     /**
      * Limpa o cache de tags
      * @param array $tags
-     * @return void
+     * @return \Idea\Framework\Services\ServiceCache
      */
-    public function forgetByTags(array $tags)
+    public function forgetByTags(array $tags): static
     {
 
         // Valida as tags configuradas no sistema
@@ -141,30 +141,38 @@ class ServiceCache
         // Realiza o flush do cache
         Cache::tags($tags)->flush();
 
+        return $this;
+
     }
 
     /**
      * Limpa o cache de uma Key
      * @param string $key
-     * @return void
+     * @return \Idea\Framework\Services\ServiceCache
      */
-    public function forgetByKey(string $key): void
+    public function forgetByKey(string $key): static
     {
         // Realiza o flush do cache
         Cache::forget($key);
+
+        return $this;
     }
 
     /**
      * Limpa o cache uma lista de keys
      * @param array $keys
-     * @return void
+     * @return \Idea\Framework\Services\ServiceCache
      */
-    public function forgetByKeyList(array $keys): void
+    public function forgetByKeyList(array $keys): static
     {
         foreach ($keys as $key) {
             // Realiza o flush do cache
             Cache::forget($key);
+
         }
+
+        return $this;
+
     }
 
 }

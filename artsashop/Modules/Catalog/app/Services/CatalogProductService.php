@@ -431,8 +431,7 @@ class CatalogProductService extends AbstractService
                 ->forgetByKeyList([
                     "product_page_$product->product_id",
                     "product_images_component_$product->product_id"
-                ]);
-            app(ServiceCache::class)
+                ])
                 ->forgetByTags([
                     'catalog_category'
                 ]);
