@@ -33,8 +33,8 @@ use Idea\Framework\Repository\Seo\SeoPageRepository;
 use Idea\Framework\Repository\System\SysStoreRepository;
 use Idea\Framework\Repository\System\SysUrlRewriteRepository;
 use Idea\Framework\Services\AbstractService;
+use Idea\Framework\Services\ServiceCache;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Brands\Services\CatalogProductBrandService;
@@ -426,9 +426,16 @@ class CatalogProductService extends AbstractService
             // Dispatch do Queue
             ProcessCatalogProductQueue::dispatch();
 
-            // Limpa o cache do produto
-            Cache::forget("product_page_$product->product_id");
-            Cache::forget("product_images_component_$product->product_id");
+            // Limpa o cache relativo a produtos e categorias
+            app(ServiceCache::class)
+                ->forgetByKeyList([
+                    "product_page_$product->product_id",
+                    "product_images_component_$product->product_id"
+                ]);
+            app(ServiceCache::class)
+                ->forgetByTags([
+                    'catalog_category'
+                ]);
 
             return CatalogProductsRepository::getProductById($product->product_id);
 

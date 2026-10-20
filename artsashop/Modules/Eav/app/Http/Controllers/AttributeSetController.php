@@ -25,10 +25,10 @@ use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
 use Idea\Framework\Repository\Eav\EavAttributesCategoryRepository;
 use Idea\Framework\Repository\Eav\EavAttributeSetRepository;
 use Idea\Framework\Repository\Eav\EavAttributesRepository;
+use Idea\Framework\Services\ServiceCache;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 class AttributeSetController extends AdminController
@@ -141,9 +141,8 @@ class AttributeSetController extends AdminController
             // Remove o grupo de atributos
             EavAttributeSetRepository::delete($eavAttributeSet['attribute_set_id']);
 
-            // Exclui o cache do menu do site
-            Cache::delete('catalog:categories:tree');
-            Cache::delete("catalog-category:category-by-attributett:attributeSetId:{$eavAttributeSet['attribute_set_id']}");
+            // Exclui o cache das categorias do site
+            app(ServiceCache::class)->forgetByTags(['catalog_category']);
 
             Session::flash('success', "Grupo de Atributos: {$eavAttributeSet['attribute_set_name']} Excluído com Sucesso!");
 

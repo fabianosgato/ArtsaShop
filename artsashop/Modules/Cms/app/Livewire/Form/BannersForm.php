@@ -28,9 +28,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Utilities\Get;
 use Idea\Framework\Repository\Cms\CmsBannerRepository;
+use Idea\Framework\Services\ServiceCache;
 use Idea\Framework\View\Wsdadm\Components\FormComponent;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 class BannersForm extends FormComponent
@@ -77,8 +77,10 @@ class BannersForm extends FormComponent
             values: $data
         );
 
-        // Limpa o cache do sistema
-        Cache::forget("{$cmsBanner->banner_type}_{$cmsBanner->banner_local}");
+        // Limpa o cache de banners
+        app(ServiceCache::class)->forgetByKey(
+            key: "{$cmsBanner->banner_type}_{$cmsBanner->banner_local}"
+        );
 
         if (!empty($postData['banner_id'])) {
             Session::flash('success', 'Banner Atualizado com sucesso!');

@@ -27,6 +27,11 @@ use InvalidArgumentException;
 class ServiceCache
 {
 
+    /**
+     * Valida se as tags estão listadas no sistema
+     * @param $tags
+     * @return mixed
+     */
     private function checkTags($tags)
     {
         $invalidTags = array_diff(
@@ -44,6 +49,10 @@ class ServiceCache
 
     }
 
+    /**
+     * Retorna o tempo de expiração padrão do sistema
+     * @return int
+     */
     public function defaultExpireIn(): int
     {
         return intval(getConfigData(
@@ -51,6 +60,11 @@ class ServiceCache
         ));
     }
 
+    /**
+     * Retorna o tempo de expiração de um cache
+     * @param array $tags
+     * @return int
+     */
     public function getCacheExpireIn(array $tags): int
     {
         // Retorna a configuração padrão
@@ -80,6 +94,13 @@ class ServiceCache
         return $expireIn;
     }
 
+    /**
+     * Cria caches no sistema
+     * @param string $cacheKey
+     * @param array $tags
+     * @param \Closure $closure
+     * @return mixed
+     */
     public function remember(
         string  $cacheKey,
         array   $tags,
@@ -106,6 +127,11 @@ class ServiceCache
             );
     }
 
+    /**
+     * Limpa o cache de tags
+     * @param array $tags
+     * @return void
+     */
     public function forgetByTags(array $tags)
     {
 
@@ -117,10 +143,28 @@ class ServiceCache
 
     }
 
+    /**
+     * Limpa o cache de uma Key
+     * @param string $key
+     * @return void
+     */
     public function forgetByKey(string $key): void
     {
         // Realiza o flush do cache
         Cache::forget($key);
+    }
+
+    /**
+     * Limpa o cache uma lista de keys
+     * @param array $keys
+     * @return void
+     */
+    public function forgetByKeyList(array $keys): void
+    {
+        foreach ($keys as $key) {
+            // Realiza o flush do cache
+            Cache::forget($key);
+        }
     }
 
 }

@@ -27,8 +27,8 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Idea\Framework\Repository\System\SysConfigRespository;
+use Idea\Framework\Services\ServiceCache;
 use Idea\Framework\View\Wsdadm\Components\FormComponent;
-use Illuminate\Support\Facades\Cache;
 
 class SysConfigForm extends FormComponent
 {
@@ -356,8 +356,8 @@ class SysConfigForm extends FormComponent
 
         }
 
-        // Limpa o cache da configuração do sistema
-        Cache::forget('idea.sysconfig');
+        // Limpa o cache da configuração
+        app(ServiceCache::class)->forgetByKey('idea.sysconfig');
 
         return $sysConfig;
 
