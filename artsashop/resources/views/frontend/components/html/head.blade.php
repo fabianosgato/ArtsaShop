@@ -34,8 +34,11 @@
 {{--    gtag('config', 'G-5915NS7C5H', {page_path: window.location.pathname,});--}}
 {{--</script>--}}
 
+@viteReactRefresh
 @vite([
     'resources/css/frontend/app.css',
+    'resources/js/frontend/app.js',
+    'resources/js/frontend/react.jsx',
 ])
 
 @livewireStyles
