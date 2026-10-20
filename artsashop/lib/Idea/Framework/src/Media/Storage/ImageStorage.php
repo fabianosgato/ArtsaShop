@@ -18,12 +18,27 @@
  */
 namespace Idea\Framework\Media\Storage;
 
+use Idea\Framework\Media\DTO\ImageListDTO;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Image;
 use RuntimeException;
 
 class ImageStorage
 {
+
+    /**
+     * Converte path absoluto em path público relativo
+     */
+    private static function toPublicPath(string $absolutePath): string
+    {
+        $publicRoot = Storage::disk('public')->path('');
+
+        return ltrim(
+            str_replace($publicRoot, '', $absolutePath),
+            DIRECTORY_SEPARATOR
+        );
+    }
+
     /**
      * Salva as imagens redimensionadas no diretório já criado
      *
@@ -67,26 +82,15 @@ class ImageStorage
             // Converte para path público relativo
             $relativePath = self::toPublicPath($absolutePath);
 
-            $savedImages[$size] = [
-                'path'          => $absolutePath,
-                'relative_path' => $relativePath,
-                'url'           => $disk->url($relativePath),
-            ];
+            $savedImages[$size] = new ImageListDTO(
+                $absolutePath,
+                $relativePath,
+                $disk->url($relativePath)
+            );
         }
 
         return $savedImages;
     }
 
-    /**
-     * Converte path absoluto em path público relativo
-     */
-    public static function toPublicPath(string $absolutePath): string
-    {
-        $publicRoot = Storage::disk('public')->path('');
 
-        return ltrim(
-            str_replace($publicRoot, '', $absolutePath),
-            DIRECTORY_SEPARATOR
-        );
-    }
 }

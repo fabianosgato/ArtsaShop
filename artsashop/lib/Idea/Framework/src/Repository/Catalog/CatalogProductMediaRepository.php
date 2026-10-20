@@ -102,6 +102,12 @@ class CatalogProductMediaRepository extends AbstractRepository
 
     /**
      * Retorna as imagens do produto
+     *      product_main: Imagem padrão do produto
+     *      product_page: Imagem na página do produto
+     *      product_sharing: Imagem de compartilhamento (WhatsApp)
+     *      product_listing: Listagem do produto
+     *      product_thumbnail: Thumbnail do produto
+     *
      * @param \App\Models\CatalogProduct $product
      * @return mixed
      */
@@ -131,18 +137,12 @@ class CatalogProductMediaRepository extends AbstractRepository
                     $shortName = Str::words($product->name, 5, '');
                     $altText = "{$shortName}{$suffix}";
 
-                    // '1000x1000': Imagem grande do produto
-                    // '454x454': Imagem padrao do produto (página e WhatsApp)
-                    // '300x300': Imagem de compartilhamento
-                    // '255x255': Listagens do produtos
-                    // '80x80': Thubnails do produto
-
                     $imageData = [
-                        'image' => $productImage['media_url'],
-                        '454x454' => str_replace('1000x1000', '454x454', $productImage['media_url']),
-                        '300x300' => str_replace('1000x1000', '300x300', $productImage['media_url']),
-                        '255x255' => str_replace('1000x1000', '255x255', $productImage['media_url']),
-                        '80x80' => str_replace('1000x1000', '80x80', $productImage['media_url']),
+                        'product_main' => $productImage['media_url'],
+                        'product_page' => str_replace('1000x1000', '454x454', $productImage['media_url']),
+                        'product_sharing' => str_replace('1000x1000', '300x300', $productImage['media_url']),
+                        'product_listing' => str_replace('1000x1000', '255x255', $productImage['media_url']),
+                        'product_thumbnail' => str_replace('1000x1000', '80x80', $productImage['media_url']),
                         'alt' => Str::limit($altText, 125)
                     ];
 

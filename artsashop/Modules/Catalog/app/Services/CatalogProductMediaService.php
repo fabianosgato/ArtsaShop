@@ -75,9 +75,7 @@ class CatalogProductMediaService
 
         return $productImages;
 
-
     }
-
 
     /**
      * Processa e atualiza todos os arquivos de imagem de um produto
@@ -125,8 +123,8 @@ class CatalogProductMediaService
                                 'media_id' => $catalogProductImage->media_id,
                                 'product_id' => $catalogProduct->product_id,
                                 'media_type' => $path['extension'],
-                                'media_file' => $stored['1000x1000']['relative_path'],
-                                'media_url' => $stored['1000x1000']['url'],
+                                'media_file' => $stored['product_main']['relative_path'],
+                                'media_url' => $stored['product_main']['url'],
                                 'sort_order' => $idx
                             ]);
 
@@ -137,8 +135,8 @@ class CatalogProductMediaService
                                 CatalogProductsRepository::updateImageProduct(
                                     $catalogProduct->product_id,
                                     [
-                                        'image' => $stored['255x255']['url'],
-                                        'thumbnail' => $stored['80x80']['url']
+                                        'image' => $stored['product_page']['url'],
+                                        'thumbnail' => $stored['product_thumbnail']['url']
                                     ]
                                 );
 

@@ -23,16 +23,6 @@ use Intervention\Image\ImageManager;
 
 class ImageResizer
 {
-    /**
-     * Tamanhos padrão das imagens
-     */
-    private const SIZES = [
-        '1000x1000' => [1000, 1000],    // Imagem grande do produto
-        '454x454' => [383, 383],      // Imagem na página do produto
-        '300x300' => [300, 300],      // Imagem de compartilhamento (WhatsApp)
-        '255x255' => [215, 215],      // Listagem do produtos
-        '80x80' => [80, 80],        // Thubnails do produto
-    ];
 
     /**
      * Gera as imagens redimensionadas e retorna um array com cada uma
@@ -49,7 +39,7 @@ class ImageResizer
         $manager = new ImageManager(new Driver());
         $generatedImages = [];
 
-        foreach (self::SIZES as $label => [$width, $height]) {
+        foreach (config('idea.images.images_sizes') as $label => [$width, $height]) {
 
             $image = $manager->read($originalImagePath);
 
@@ -71,6 +61,7 @@ class ImageResizer
         }
 
         return $generatedImages;
+
     }
 
 }

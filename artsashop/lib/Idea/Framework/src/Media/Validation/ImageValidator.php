@@ -20,19 +20,9 @@ namespace Idea\Framework\Media\Validation;
 
 class ImageValidator
 {
-    /**
-     * MIME types permitidos
-     */
-    private const ALLOWED_MIME_TYPES = [
-        'image/jpeg',
-        'image/png',
-        'image/webp',
-        'image/gif',
-    ];
 
     /**
      * Valida se o arquivo é uma imagem válida
-     *
      * @param string $filePath
      * @return bool
      */
@@ -57,7 +47,7 @@ class ImageValidator
         // MIME real detectado pelo PHP
         $mimeType = $imageInfo['mime'] ?? null;
 
-        if (!$mimeType || !in_array($mimeType, self::ALLOWED_MIME_TYPES, true)) {
+        if (!$mimeType || !in_array($mimeType, config('idea.images.allowed_type_mimes'), true)) {
             return false;
         }
 
