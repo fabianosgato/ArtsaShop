@@ -22,6 +22,7 @@ namespace Tests\Feature\Idea\Media;
 
 use Idea\Framework\Media\Download\MediaDownloader;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -30,6 +31,7 @@ class MediaDownloaderTest extends TestCase
 
     public function testDownloadImageIsRaw(): void
     {
+
         // Arrange: cria uma imagem JPEG em memória
         $image = imagecreatetruecolor(10, 10);
 
@@ -141,13 +143,105 @@ class MediaDownloaderTest extends TestCase
         // Act: Cria o diretório do produto
         $dispersedPath = MediaDownloader::createDispersedPath($productSku);
 
-        // Asset: Valida se retornou uma string
+        // Asset: Valida se não retornou uma string
         $this->assertIsNotString($dispersedPath);
 
-        // Asset: Valida se retornou uma string
+        // Asset: Valida se retornou um bool
         $this->assertIsBool(
             $dispersedPath
         );
+
+    }
+
+    public function testSuccessGetImageFromLocalDir()
+    {
+
+        // Arrange: SKU de teste de um produto qualquer
+        $imageUrl = 'imports/ATSA80NG23I00B_0.jpg';
+        $productSku = 'ATSA80NG23I00B';
+
+        // Act
+        $imagePath = MediaDownloader::getImageDownloadedPath(
+            imageLocation: $imageUrl,
+            productSku: $productSku,
+            idx: 0
+        );
+
+        // Assert: o método deve retornar o caminho do arquivo criado.
+        $this->assertIsString($imagePath);
+
+        // Assert: Valida se a imagem foi criada no diretorio
+        $this->assertTrue(File::exists($imagePath));
+
+        // Assert: Valida se a imagem foi criada corretamente
+        $this->assertStringEndsWith(
+            'ATSA80NG23I00B_0.jpg',
+            $imagePath
+        );
+
+        // Assert: Valida se a imagem é realmente uma imagem verdadeira
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->file($imagePath);
+        $this->assertStringStartsWith('image/', $mimeType);
+
+        // Assert: valida a extensão da imagem
+        $this->assertSame(
+            'jpg',
+            pathinfo($imagePath, PATHINFO_EXTENSION)
+        );
+
+    }
+
+    public function testErrorGetImageFromLocalDir()
+    {
+
+        // Arrange: Arquivo inexistente no storage
+        $imageUrl = 'imports/ATSA80NG23I00B_1.jpg';
+        // Sku do produto a ser testado
+        $productSku = 'ATSA80NG23I00B';
+
+        // Act: Retorna o caminho da imagem
+        $imagePath = MediaDownloader::getImageDownloadedPath(
+            imageLocation: $imageUrl,
+            productSku: $productSku,
+            idx: 0
+        );
+
+        // Assert: o método deve retornar False quando a imagem não existe
+        $this->assertFalse($imagePath);
+
+        // Assert: o método não deve retornar o caminho do arquivo criado.
+        $this->assertIsNotString($imagePath);
+
+    }
+
+    public function testGetImagePermissionFile()
+    {
+
+    }
+
+    public function testSuccessGetImageFromRemote()
+    {
+
+    }
+
+    public function testErrorGetImageFromRemote()
+    {
+
+    }
+
+    public function testGetImageWithEmptyUrl()
+    {
+
+    }
+
+    public function testErrorGetImageWhenFileCannotBeWritten()
+    {
+
+    }
+
+    public function testGetImageReplaceExistingFile()
+    {
 
     }
 

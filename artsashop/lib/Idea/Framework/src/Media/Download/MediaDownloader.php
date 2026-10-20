@@ -21,6 +21,7 @@ namespace Idea\Framework\Media\Download;
 use Idea\Framework\Utils;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MediaDownloader
 {
@@ -117,26 +118,33 @@ class MediaDownloader
 
     /**
      * Método que retorna a imagem do produto
-     * @param $imageUrl
-     * @param $productSku
-     * @param $idx
-     * @param string $tmpDir
-     * @param int $attempt
-     * @param int $maxAttempts
+     * @param string $imageLocation
+     * @param string $productSku
+     * @param int $idx
      * @return bool|string
-     * @throws \Exception
      */
-    public static function getImage($imageUrl, $productSku, $idx, string $tmpDir = 'import', int $attempt = 1, int $maxAttempts = 3): bool|string
+    public static function getImageDownloadedPath(
+        string $imageLocation,
+        string $productSku,
+        int    $idx): bool|string
     {
 
-        if ($imageUrl != '') {
 
-            if (Storage::disk('public')->exists($imageUrl)) {
-                // Retorna o conteúdo da imagem vindo localmente
-                $remoteImageRaw = Storage::disk('public')->get($imageUrl);
-            } else {
+        if ($imageLocation != '') {
+
+            // Valida se o local da imagem é uma URL
+            if (Str::isUrl($imageLocation)) {
                 // Retorna o conteúdo da imagem vinda de URL
-                $remoteImageRaw = self::downloadRawImage($imageUrl);
+                $remoteImageRaw = self::downloadRawImage($imageLocation);
+
+            } else if (Storage::disk('public')->exists($imageLocation)) {
+                // Retorna o conteúdo da imagem vindo localmente
+                $remoteImageRaw = Storage::disk('public')->get($imageLocation);
+
+            } else {
+                // Inicializa a variável
+                $remoteImageRaw = false;
+
             }
 
             // Retorna a imagem
@@ -149,7 +157,7 @@ class MediaDownloader
                 if ($imageDir) {
 
                     // Extensao da imagem
-                    $extension = self::getExtension($imageUrl);
+                    $extension = self::getExtension($imageLocation);
 
                     // Caminho da imagem a ser criada
                     $imagemMedia = $imageDir . "{$productSku}_$idx.$extension";
@@ -174,10 +182,6 @@ class MediaDownloader
                 }
 
             } else {
-                if ($attempt < $maxAttempts) {
-                    return self::getImage($imageUrl, $productSku, $idx, $tmpDir, $attempt + 1, $maxAttempts);
-                }
-
                 return false;
 
             }

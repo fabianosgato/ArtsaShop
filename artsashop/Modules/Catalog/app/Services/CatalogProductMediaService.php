@@ -179,7 +179,7 @@ class CatalogProductMediaService
                 $targetDir = MediaDownloader::createDispersedPath($catalogProduct->sku);
 
                 // Realiza o download da Imagem
-                $originalPath = MediaDownloader::getImage(
+                $originalPath = MediaDownloader::getImageDownloadedPath(
                     $image,
                     $catalogProduct->sku,
                     $idx
