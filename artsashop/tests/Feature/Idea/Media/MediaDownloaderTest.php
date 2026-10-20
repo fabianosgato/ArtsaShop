@@ -21,6 +21,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Idea\Media;
 
 use Idea\Framework\Media\Download\MediaDownloader;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class MediaDownloaderTest extends TestCase
@@ -28,33 +30,86 @@ class MediaDownloaderTest extends TestCase
 
     public function testDownloadImageIsRaw(): void
     {
+        // Arrange: cria uma imagem JPEG em memória
+        $image = imagecreatetruecolor(10, 10);
 
-        // Arrange: Url de teste para download da imagem
-        $image ="https://fastly.picsum.photos/id/448/200/300.jpg?hmac=9a1pqR60H2xWN80jPWfmdVkRII-wEQZceiSHpJSZnE4";
+        ob_start();
+        imagejpeg($image);
+        $imageContent = ob_get_clean();
 
-        // Act:
-        $rawImage = MediaDownloader::downloadRawImage($image);
+        imagedestroy($image);
 
-        // Cria um buffer de informações de arquivo
+        // Arrange: cria uma resposta HTTP falsa
+        Http::fake([
+            'https://example.com/*' => Http::response(
+                $imageContent,
+                200,
+                ['Content-Type' => 'image/jpeg']
+            ),
+        ]);
+
+        // Act
+        $rawImage = MediaDownloader::downloadRawImage(
+            'https://example.com/test.jpg'
+        );
+
+        // Assert
+        $this->assertNotFalse($rawImage);
+
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->buffer($rawImage);
 
-        // Asset: Valida se o MIME type começa com 'image/' (ex: image/jpeg, image/png)
         $this->assertStringStartsWith('image/', $mimeType);
 
     }
 
     public function testDownloadImageIsFalse(): void
     {
+        Http::fake([
+            'https://example.com/*' => Http::response('', 404),
+        ]);
 
-        // Arrange: Url incorreta para o download da imagem
-        $image ="https://fastly.picsum.photos/id/448/200/3003.jpg?hmac=9a1pqR60H2xWN80jPWfmdVkRII-wEQZceiSHpJSZnE4";
+        $rawImage = MediaDownloader::downloadRawImage(
+            'https://example.com/test.jpg'
+        );
 
-        // Act:
-        $rawImage = MediaDownloader::downloadRawImage($image);
+        $this->assertFalse($rawImage);
+    }
 
-        // Asset: Valida se o MIME type começa com 'image/' (ex: image/jpeg, image/png)
-        $this->assertIsBool($rawImage);
+    public function testDownloadImageSendsBrowserHeaders(): void
+    {
+        // Arrange: cria uma imagem JPEG em memória
+        $image = imagecreatetruecolor(10, 10);
+
+        ob_start();
+        imagejpeg($image);
+        $imageContent = ob_get_clean();
+
+        imagedestroy($image);
+
+        Http::fake([
+            'https://example.com/*' => Http::response(
+                $imageContent,
+                200,
+                ['Content-Type' => 'image/jpeg']
+            ),
+        ]);
+
+        // Act
+        MediaDownloader::downloadRawImage(
+            'https://example.com/test.jpg'
+        );
+
+        // Assert
+        Http::assertSent(function (Request $request) {
+            return $request->hasHeader(
+                'User-Agent',
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36'
+            ) && $request->hasHeader(
+                'accept',
+                'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+            );
+        });
 
     }
 
@@ -95,7 +150,6 @@ class MediaDownloaderTest extends TestCase
         );
 
     }
-
 
 
 }

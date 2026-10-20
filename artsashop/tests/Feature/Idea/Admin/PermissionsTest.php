@@ -76,7 +76,8 @@ class PermissionsTest extends TestCase
             action:'view'
         );
 
-        $this->assertIsBool(true, $permissionIsAvaliable);
+        // Asert: Testa se o retorno é verdadeiro
+        $this->assertTrue($permissionIsAvaliable);
 
     }
 
@@ -88,13 +89,13 @@ class PermissionsTest extends TestCase
         $this->actingAs($user);
 
         // Act: Retorna uma permissao do usuário
-        $permissionIsAvaliable = app(Permissions::class)->checkPermissions(
+        $permissionIsAvailable = app(Permissions::class)->checkPermissions(
             moduleMenuId: 1, // Modulo de Grupos em Configuração
             action:'view'
         );
 
-        // Asert
-        $this->assertIsBool(true, $permissionIsAvaliable);
+        // Asert: Testa se o retorno é falso
+        $this->assertFalse($permissionIsAvailable);
 
     }
 

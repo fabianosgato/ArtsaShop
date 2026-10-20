@@ -19,47 +19,44 @@
 namespace Idea\Framework\Media\Download;
 
 use Idea\Framework\Utils;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class MediaDownloader
 {
 
     /**
-     * Realiza o download da Imagem do Produto
+     * Realiza o download da Imagem de um Produto
      */
     public static function downloadRawImage(string $url): bool|string
     {
-
-        $ch = curl_init($url);
-
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 3600);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
-
-        // Retorna a Imagem
-        $raw = curl_exec($ch);
-
-        // Valida se houve erro ao buscar a imagem
-        $errno = curl_errno($ch);
-        curl_close($ch);
-
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+        $response = Http::withHeaders([
+            'user-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36',
+            'dnt' => '1',
+            'upgrade-insecure-requests' => '1',
+            'accept' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+            'sec-fetch-site' => 'same-origin',
+            'sec-fetch-mode' => 'navigate',
+            'sec-fetch-user' => '?1',
+            'sec-fetch-dest' => 'document',
+            'referer' => 'https://google.com/'
+        ])
+            ->timeout(30)
+            ->retry(3, 100, throw: false)
+            ->get($url);
 
         if (
-            $errno ||
-            $httpCode !== 200 ||
-            empty($raw) ||
-            strpos($contentType, 'image/') !== 0
+            ! $response->successful() ||
+            empty($response->body()) ||
+            ! str_starts_with(
+                strtolower($response->header('Content-Type') ?? ''),
+                'image/'
+            )
         ) {
-            curl_close($ch);
             return false;
         }
 
-        return $raw;
-
+        return $response->body();
     }
 
     /**
