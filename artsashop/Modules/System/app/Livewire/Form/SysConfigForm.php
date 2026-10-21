@@ -172,6 +172,28 @@ class SysConfigForm extends FormComponent
 
                 ]),
 
+                Tab::make('Google')->schema([
+
+                    Fieldset::make('Google Analytics')->schema([
+
+                        Radio::make('google/gtag/enable')
+                            ->label('Habilitar Google Analytics')
+                            ->helperText('Habilita o Google Analytics no site')
+                            ->boolean()
+                            ->options([
+                                true => 'Habilitado',
+                                false => 'Desabilitado'
+                            ]),
+
+                        TextInput::make('google/gtag/config_id')
+                            ->label('Código Google Analytics')
+                            ->helperText('Código de rastreamento do Google Analytics'),
+
+
+                    ])
+
+                ]),
+
                 Tab::make('Catálogo')->schema([
 
                     Fieldset::make('Opções de Busca')->schema([

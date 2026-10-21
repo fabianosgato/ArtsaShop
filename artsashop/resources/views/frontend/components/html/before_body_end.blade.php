@@ -1,4 +1,3 @@
-@dd('Estou aqui!!!')
 @livewireScripts(['defer' => true])
 {{--@include('cookie-consent::index')--}}
 @vite([
