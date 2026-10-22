@@ -2,7 +2,7 @@
     id="sns_menu"
     x-data="{
         open: false,
-        activeDepartment: null,
+        activeDepartment: {{ ($firstDepartment = collect($categories)->first(fn ($category) => $category['has_products']))['entity_id'] ?? 'null' }},
         mobileDetail: false,
 
         selectDepartment(id) {
@@ -13,39 +13,30 @@
             }
         },
 
-        openMenu() {
-            this.open = true;
-            this.mobileDetail = false;
-        },
-
         closeMenu() {
             this.open = false;
             this.mobileDetail = false;
         }
     }"
     @keydown.escape.window="closeMenu()"
-    @click.outside="closeMenu()"
+    @click.outside="closeMenu"
 >
-    @php
-        $firstDepartment = collect($categories)
-            ->first(fn ($category) => $category['has_products']);
-    @endphp
-
     <div class="inner">
         <div class="container">
 
-            <nav class="menu" aria-label="Navegação de departamentos">
+            <ul class="menu" aria-label="Navegação de departamentos">
 
-                <button
-                    type="button"
-                    class="departments-trigger"
-                    @mouseenter="openMenu()"
-                    @click="open = !open; mobileDetail = false"
-                    :aria-expanded="open"
-                >
-                    <span class="departments-trigger-icon" aria-hidden="true">☰</span>
-                    <span>Departamentos</span>
-                </button>
+                <li class="departments-menu-item">
+                    <button
+                        type="button"
+                        class="departments-trigger"
+                        @click="open = !open; mobileDetail = false"
+                        :aria-expanded="open"
+                    >
+                        <span class="departments-trigger-icon" aria-hidden="true">☰</span>
+                        <span>Departamentos</span>
+                    </button>
+                </li>
 
                 @foreach($categories as $category)
                     @if($category['has_products'])
@@ -67,7 +58,7 @@
                     @endif
                 @endforeach
 
-            </nav>
+            </ul>
 
             <div
                 class="departments-panel"
@@ -107,63 +98,7 @@
 
                 <div
                     class="departments-content"
-                    x-show="!mobileDetail"
-                >
-                    @foreach($categories as $category)
-                        @if($category['has_products'])
-
-                            <section
-                                class="department-content"
-                                x-show="activeDepartment === {{ $category['entity_id'] }}"
-                            >
-
-                                <div class="department-content-header">
-
-                                    <a
-                                        href="{{ url($category['slug_key']) }}"
-                                        class="department-title"
-                                    >
-                                        {{ $category['category'] }}
-                                    </a>
-
-                                    <a
-                                        href="{{ url($category['slug_key']) }}"
-                                        class="department-see-all"
-                                    >
-                                        Ver departamento
-                                    </a>
-
-                                </div>
-
-                                @if($category['has_children'])
-                                    <div class="department-children">
-
-                                        @foreach($category['children'] as $child)
-                                            <a
-                                                href="{{ url($child['slug_key']) }}"
-                                                class="department-child-link"
-                                            >
-                                                {{ $child['category'] }}
-                                            </a>
-                                        @endforeach
-
-                                    </div>
-                                @else
-                                    <p class="department-empty">
-                                        Confira os produtos deste departamento.
-                                    </p>
-                                @endif
-
-                            </section>
-
-                        @endif
-                    @endforeach
-                </div>
-
-                <div
-                    class="departments-mobile-content"
-                    x-show="mobileDetail"
-                    x-cloak
+                    :class="{ 'is-mobile-detail': mobileDetail }"
                 >
                     <button
                         type="button"
