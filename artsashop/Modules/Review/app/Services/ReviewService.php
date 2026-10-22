@@ -16,7 +16,7 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
-namespace Modules\Review\Providers;
+namespace Modules\Review\Services;
 
 use Idea\Framework\Services\AbstractService;
 
