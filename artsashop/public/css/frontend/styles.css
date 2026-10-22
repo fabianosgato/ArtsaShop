@@ -87,7 +87,7 @@ body p {
 #top_header ul.links li.contact-us-now{margin-left:0;margin-right:0;padding-left:28px;background:url(./images/ico-contactusnow.png) no-repeat left -1px}
 
 /** Wrap: .header **/
-.header{position:relative;z-index:10;width:100%;padding:24px 0;background-color:#fff;margin:0 auto;clear:both}
+.header{position:relative;width:100%;padding:24px 0;background-color:#fff;margin:0 auto;clear:both}
 .header .header-content{display:grid;grid-template-columns:150px minmax(300px,1fr) auto;align-items:center;column-gap:40px}
 .header #logo{display:flex;align-items:center}
 .header #logo .logo{display:block;margin:0}
@@ -144,7 +144,6 @@ body p {
     position: relative;
     width: 100%;
     background-color: #ff8400;
-    z-index: 20;
 }
 
 #sns_menu .inner {

@@ -17,10 +17,10 @@
 
                 <div class="flex flex-col lg:flex-row gap-8">
 
-                    <div class="product-img-box lg:w-5/12 w-full">
+                    <div class="product-img-box lg:w-9/12 w-full">
                         <x-catalog::product-image-component :product="$product" />
                     </div>
-                    <div class="product-shop lg:w-7/12 w-full">
+                    <div class="product-shop lg:w-3/12 w-full">
                         <div class="short-description">
                             {!! $product['short_description'] !!}
                         </div>

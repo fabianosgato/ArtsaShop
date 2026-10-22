@@ -32,6 +32,7 @@ class UrlRewriteController extends Controller
     /**
      * Este método resolve as URLs vindas do sistema de rewrite.
      * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|never|null
      */
     public function resolve(Request $request)
     {
@@ -73,7 +74,10 @@ class UrlRewriteController extends Controller
                 'cms' => app(CmsPagesController::class)->index($id),
                 default => abort(404),
             };
+
         }
+
+        return abort(404);
 
     }
 
