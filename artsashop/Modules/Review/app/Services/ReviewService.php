@@ -18,17 +18,32 @@
  */
 namespace Modules\Review\Services;
 
+use Idea\Framework\Repository\Reviews\ReviewRepository;
 use Idea\Framework\Services\AbstractService;
 
 class ReviewService extends AbstractService
 {
 
-    public function getReviewsFrom()
+    public function createReview($data)
     {
-
+        return ReviewRepository::create(
+            attributes:[
+                'entity_id' => $data['entity_id'], // product
+                'entity_pk_value' => $data['entity_pk_value'], // Scoter Elétrica
+                'customer_id' => $data['customer_id'],
+                'store_id' => $data['store_id'],
+            ],
+            values:[
+                'nickname' => $data['nickname'],
+                'title' => $data['title'],
+                'detail' => $data['detail'],
+                'rating' => $data['rating'],
+                'likes_count'=> $data['likes_count']
+            ]
+        );
     }
 
-    public function saveReview()
+    public function getReviewsFrom()
     {
 
     }

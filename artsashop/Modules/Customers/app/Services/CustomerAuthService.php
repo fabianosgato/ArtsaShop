@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Hash;
 
 class CustomerAuthService
 {
+
     /**
      * Realiza login do cliente
      */
@@ -62,7 +63,7 @@ class CustomerAuthService
      * @param array $data
      * @return \App\Models\CustomerEntity
      */
-    public function findOrCreateSocialUser(array $data)
+    public function findOrCreateSocialUser(array $data): CustomerEntity
     {
 
         // Verifica se o cliente existe na base

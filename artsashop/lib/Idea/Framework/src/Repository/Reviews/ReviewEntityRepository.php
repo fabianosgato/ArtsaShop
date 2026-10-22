@@ -24,5 +24,23 @@ use Idea\Framework\Repository\AbstractRepository;
 
 class ReviewEntityRepository extends AbstractRepository
 {
+
     protected static $model = ReviewEntity::class;
+
+    public static function getEntity(string $entity): ?ReviewEntity
+    {
+        $reviewEntity = self::getData()->where(
+            column: 'entity_code',
+            operator: '=',
+            value: $entity
+        );
+
+        if ($reviewEntity->exists()) {
+            return $reviewEntity->first();
+        }
+
+        return null;
+
+    }
+
 }
