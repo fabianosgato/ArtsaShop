@@ -16,7 +16,6 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
-
 namespace Modules\Review\Providers;
 
 use Idea\Framework\Services\AbstractService;
@@ -27,7 +26,10 @@ class ReviewService extends AbstractService
     public function getReviewsFrom()
     {
 
+    }
 
+    public function saveReview()
+    {
 
     }
 
