@@ -1,6 +1,6 @@
 <div id="top_header">
     <div class="container">
-        <div class="row-fluid">
+        <div class="md:px-2">
             <div class="topheader-left">
                 <ul class="links">
                     @if(Auth::guard('customer')->check())

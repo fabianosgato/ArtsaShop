@@ -1,0 +1,25 @@
+@media (max-width: 768px) {
+    .header .header-content {
+        grid-template-columns:1fr auto;
+        row-gap: 16px
+    }
+
+    .header .header-search {
+        grid-column: 1 / -1;
+        grid-row: 2
+    }
+
+    .header .top-cart-label {
+        display: none;
+    }
+
+    .header .top-cart-icon svg {
+        width: 26px;
+        height: 26px;
+    }
+
+    .header .top-cart-content {
+        width: 340px;
+        max-width: calc(100vw - 30px);
+    }
+}

@@ -1,6 +1,6 @@
 <div class="header">
     <div class="container">
-        <div class="header-content">
+        <div class="header-content md:px-2">
 
             {{-- Logo --}}
             <div id="logo">

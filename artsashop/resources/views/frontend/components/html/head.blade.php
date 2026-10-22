@@ -40,9 +40,6 @@
 
 @livewireStyles
 
-{{--<link rel='stylesheet' id='{{app('currentStore')->code}}-shop-styles' href='{{ asset('css/frontend/theme/assets/bootstrap/css/bootstrap.css') }}' type='text/css' media='all' />--}}
-{{--<link rel='stylesheet' id='{{app('currentStore')->code}}-shop-styles' href='{{ asset('css/frontend/theme/assets/bootstrap/css/responsive.css') }}' type='text/css' media='all' />--}}
 <link rel='stylesheet' id='{{app('currentStore')->code}}-shop-styles' href='{{ asset('css/frontend/styles.css') }}' type='text/css' media='all' />
-<link rel='stylesheet' id='{{app('currentStore')->code}}-shop-theme' href='{{ asset('css/frontend/theme/theme-orange.css') }}' type='text/css' media='all' />
+<link rel='stylesheet' id='{{app('currentStore')->code}}-shop-styles' href='{{ asset('css/frontend/responsive.css') }}' type='text/css' media='all' />
 <link rel='stylesheet' id='{{app('currentStore')->code}}-shop-theme' href='{{ asset('css/frontend/theme/buttons.css') }}' type='text/css' media='all' />
-{{--<link rel='stylesheet' id='{{app('currentStore')->code}}-shop-theme' href='{{ asset('css/frontend/theme/sns-responsive.css') }}' type='text/css' media='all' />--}}

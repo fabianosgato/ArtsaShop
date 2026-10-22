@@ -1,15 +1,12 @@
-<div class="footer-container bg-gray-100">
-    <div class="container mx-auto px-4">
-        <div class="footer py-12">
-
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
-
+<div class="footer-container">
+    <div class="container">
+        <div class="footer pt-4 pb-8 px-4 md:px-2">
+            <div class="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-10">
                 {{-- Informações --}}
-                <div class="md:col-span-3">
+                <div class="md:col-span-3 lg:col-span-3">
                     <div class="footer-title">
                         <h5 class="text-lg font-semibold">Informações</h5>
                     </div>
-
                     <div class="content-block-footer">
                         <ul class="links">
                             <li><a href="{{ url('quem-somos') }}">Quem Somos</a></li>
@@ -21,7 +18,7 @@
                 </div>
 
                 {{-- Minha Conta --}}
-                <div class="md:col-span-3">
+                <div class="md:col-span-3 lg:col-span-3">
                     <div class="footer-title mb-4">
                         <h5 class="text-lg font-semibold">Minha Conta</h5>
                     </div>
@@ -38,7 +35,7 @@
 
 
                 {{-- Sobre --}}
-                <div class="md:col-span-6">
+                <div class="md:col-span-6 lg:col-span-6">
                     <div class="footer-title">
                         <h5 class="text-lg font-semibold">Sobre o ArtsaShop</h5>
                     </div>
@@ -84,10 +81,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
-
         </div>
     </div>
 </div>
