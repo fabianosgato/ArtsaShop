@@ -14,6 +14,42 @@
     font-display: swap;
 }
 
+/* SOLID (fa-solid) */
+@font-face {
+    font-family: "Font Awesome 7 Solid Free";
+    src: url("fonts/fa-solid-900.woff2") format("woff2");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* REGULAR (fa-regular) */
+@font-face {
+    font-family: "Font Awesome 7 regular Free";
+    src: url("fonts/fa-regular-400.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* BRANDS (fa-brands) */
+@font-face {
+    font-family: "Font Awesome brands 6 Brands";
+    src: url("fonts/fa-brands-400.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* V4 COMPAT (caso use ícones antigos) */
+@font-face {
+    font-family: "FontAwesome";
+    src: url("fonts/fa-v4compatibility.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 body {
     font-family: "Noto Sans", sans-serif;
     font-size: 0.9em;
@@ -35,7 +71,9 @@ body p {
 /*--- Wrap: #top_header ---*/
 #top_header{display:flex;border-top:5px solid #ff8400;border-bottom:1px solid #ff8400;position:relative;font-size:.4em;padding:2px 0}
 #top_header .topheader-left{float:left}
+#top_header .topheader-left .account-top-menu{display:none}
 #top_header .topheader-right{float:right}
+#top_header ul.links.topheader-mobile-trigger{display:none}
 #top_header ul.links{list-style:none;line-height:36px}
 #top_header ul.links li{display:inline-block;font-size:2.2em}
 #top_header ul.links li a{color:#909090;font-weight:400}

@@ -1,8 +1,26 @@
 <div id="top_header">
     <div class="container">
         <div class="md:px-2">
-            <div class="topheader-left">
-                <ul class="links">
+
+            <div
+                class="topheader-left"
+                x-data="{ open: false }"
+                @click.outside="open = false"
+            >
+                <button
+                    class="account-top-menu"
+                    type="button"
+                    @click="open = !open"
+                    :aria-expanded="open"
+                    aria-label="Abrir menu da conta"
+                >
+                    Minha conta
+                </button>
+
+                <ul
+                    class="links topheader-mobile-trigger"
+                    :class="{ 'is-open': open }"
+                >
                     @if(Auth::guard('customer')->check())
                         <li class="wellcome"><a class="customer-loggedin" href="{{ route('account.index') }}">Olá, {{ Auth::guard('customer')->user()->customer_name }}</a></li>
                         <li class="link"><a class="customer-loggedin" href="{{ route('account.index') }}">Minha Conta</a></li>
@@ -25,3 +43,5 @@
         </div>
     </div>
 </div>
+
+

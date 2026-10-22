@@ -1,4 +1,87 @@
 @media (max-width: 768px) {
+
+    #top_header .topheader-left {
+        position: relative;
+    }
+
+    #top_header .topheader-left .account-top-menu {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        background: transparent;
+        color: #666;
+        cursor: pointer;
+    }
+
+    #top_header .topheader-left .account-top-menu svg {
+        display: block;
+        width: 23px;
+        height: 23px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    #top_header .topheader-mobile-trigger {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 100;
+        min-width: 180px;
+        margin: 0;
+        padding: 8px 0;
+        background-color: #fff;
+        border: 1px solid #e1e1e1;
+        box-shadow: 0 6px 16px #0000001f;
+    }
+
+    #top_header .topheader-mobile-trigger.is-open {
+        display: block;
+    }
+
+    #top_header .topheader-mobile-trigger li {
+        display: block;
+        float: none;
+        margin: 0;
+        padding: 0 14px;
+        font-size: 14px;
+        line-height: 32px;
+    }
+
+    #top_header .topheader-mobile-trigger li.wellcome {
+        float: none;
+        padding-bottom: 4px;
+        line-height: 28px;
+    }
+
+    #top_header .topheader-mobile-trigger li.wellcome:after {
+        display: none;
+    }
+
+    #top_header .topheader-mobile-trigger li a {
+        display: block;
+        white-space: nowrap;
+    }
+
+    #top_header .topheader-mobile-trigger li.contact-us-now {
+        background: none;
+    }
+
+    #top_header .topheader-right {
+        float: right;
+    }
+}
+
+@media (max-width: 768px) {
+
     .header .header-content {
         grid-template-columns:1fr auto;
         row-gap: 16px
