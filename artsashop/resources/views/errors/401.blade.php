@@ -1,6 +1,9 @@
-{{--@extends('errors::minimal')--}}
-@extends('frontend.layouts.1column')
+<x-frontend.app-layout layout="1column">
 
-@section('title', __('Unauthorized'))
-@section('code', '401')
-@section('message', __('Unauthorized'))
+    @include('errors.error-content', [
+        'status' => 401,
+        'title' => 'Acesso não autorizado',
+        'message' => 'Você não tem autorização para acessar este recurso.',
+    ])
+
+</x-frontend.app-layout>
