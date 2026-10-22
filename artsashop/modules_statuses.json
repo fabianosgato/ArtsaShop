@@ -11,5 +11,6 @@
     "CatalogSearch": true,
     "Payments": true,
     "SalesRules": true,
-    "Site": false
+    "Site": false,
+    "Review": true
 }
