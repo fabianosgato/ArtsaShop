@@ -164,13 +164,10 @@
 
                             <div class="md:w-1/2">
                                 <div id="review-form" class="form-add">
-                                    <div class="page-title title-buttons">
-                                        <h3>Escrever uma avaliação</h3>
-                                    </div>
-                                    <p class="review-nologged">
-                                        Apenas usuarios registrados pode escrever reviews.
-                                        Por favor, <a href="{{ route('account.login') }}">Entre</a> ou <a href="{{ route('account.create') }}">Registre-se</a>
-                                    </p>
+
+                                    <div id="react-test"></div>
+
+
                                 </div>
                             </div>
 

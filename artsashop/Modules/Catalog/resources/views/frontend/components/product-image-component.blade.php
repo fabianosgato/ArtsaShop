@@ -4,9 +4,9 @@
 <div
     x-data="productGallery(@js(
         collect($productImages)->map(fn($img) => [
-            'large' => $img['454x454'],
-            'thumb' => $img['80x80'],
-            'full'  => $img['image'],
+            'large' => $img['product_page'],
+            'thumb' => $img['product_thumbnail'],
+            'full'  => $img['product_main'],
             'alt' => $img['alt']
         ])->values()
     ))"
@@ -36,7 +36,7 @@
 
             {{-- IMAGEM --}}
             <img
-                src="{{ $firstImage['454x454'] }}"
+                src="{{ $firstImage['product_page'] }}"
                 x-bind:src="activeImage.large"
                 class="w-full block select-none object-contain cursor-zoom-in"
                 draggable="false"

@@ -24,18 +24,22 @@
 {{--    window.csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;--}}
 {{--</script>--}}
 
-<!-- Google Analytics -->
-{{--<script async src="https://www.googletagmanager.com/gtag/js?id=G-5915NS7C5H"></script>--}}
-{{--<script> window.dataLayer = window.dataLayer || [];--}}
-{{--    function gtag() {--}}
-{{--        dataLayer.push(arguments);--}}
-{{--    }--}}
-{{--    gtag('js', new Date());--}}
-{{--    gtag('config', 'G-5915NS7C5H', {page_path: window.location.pathname,});--}}
-{{--</script>--}}
+@if(boolval(getConfigData('google/gtag/enable')))
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ getConfigData('google/gtag/config_id') }}"></script>
+    <script> window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', '{{ getConfigData('google/gtag/config_id') }}', {page_path: window.location.pathname,});
+    </script>
+@endif
 
+@viteReactRefresh
 @vite([
     'resources/css/frontend/app.css',
+    'resources/js/frontend/react.jsx',
 ])
 
 @livewireStyles
