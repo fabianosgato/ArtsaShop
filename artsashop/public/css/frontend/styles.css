@@ -447,6 +447,16 @@ label span.obs {
     background: #3498db;
 }
 
+/* Page Heading */
+.page-title{width:100%;overflow:hidden;margin:0 0 2px;position:relative}
+.page-title h1,.page-title h2{margin:0 0 10px;color:#666;font-size:200%;font-weight:400;display:flex;align-items:center;text-align:center;letter-spacing:.01em;line-height:normal}
+.page-title h2:before,.page-title h2:after{content:'';flex:1;border-bottom:3px solid #a8a4a4}
+.page-title h2:before{margin-right:15px}
+.page-title h2:after{margin-left:15px}
+.page-title .separator{margin:0 3px}
+.page-title .link-rss{float:right;margin:7px 0 0}
+.subtitle,.sub-title{clear:both;padding:15px 0 0;font-size:15px;font-weight:700;margin:0 0 6px;color:#e25203}
+
 /* Category Page ========================================================================= */
 .category-view {width: auto}
 .category-view .category-title { border:0; margin:0 0 7px; display: none;}
@@ -459,6 +469,16 @@ label span.obs {
 .category-view .category-products .toolbar .limiter { float:right; padding:20px 100px 20px 0;}
 .category-view .category-products .toolbar .pagerbreadcrumb{ padding:20px 10px;}
 .category-view .category-products .pager .pages{ margin:0;}
+
+/* layered navigation */
+#navigation_left .block .block-layered-nav{margin-top:10px;display:table;width:100%}
+#navigation_left .block .block-layered-nav .filter-head{display:block;width:100%;clear:both;float:left;border-bottom:1px solid #f8f8f8;padding:0 0 8px}
+#navigation_left .block .block-layered-nav .filter-head h2{float:left;font-size:1.2rem}
+#navigation_left .block .block-layered-nav .filter-head button{float:right}
+#navigation_left .block .block-layered-nav .filter-group{display:block;clear:both;float:left;width:100%;padding:8px 0 10px}
+#navigation_left .block .block-layered-nav .filter-group legend{margin:10px 0;padding:5px 0;border-bottom:1px solid #ff8400;color:#ff8400;font-size:1.2em;width:100%}
+#navigation_left .block .block-layered-nav .filter-group ol{margin:0 0 5px 2px}
+#navigation_left .block .block-layered-nav .filter-group ol li{font-size:.987em}
 
 /* Breadcrumb ========================================================================= */
 .breadcrumb-block{margin:0;background-color:#ffb86c;height:140px;position:relative}

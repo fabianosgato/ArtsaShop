@@ -14,7 +14,7 @@
         <div class="container">
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
                 {{-- MENU (renderizado uma única vez) --}}
-                <aside id="sns_left" class="lg:col-span-3">
+                <aside id="navigation_left" class="lg:col-span-3">
                     @include('frontend.components.catalog.navigation.left')
                 </aside>
                 {{-- Site MAIN --}}
