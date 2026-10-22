@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<CustomerEntity>
  */
-class CustomerFactory extends Factory
+class CustomerEntityFactory extends Factory
 {
 
     /**

@@ -18,6 +18,7 @@
  */
 namespace Modules\Review\Services;
 
+use App\Models\ReviewEntity;
 use Idea\Framework\Repository\Reviews\ReviewRepository;
 use Idea\Framework\Services\AbstractService;
 
@@ -34,6 +35,7 @@ class ReviewService extends AbstractService
                 'store_id' => $data['store_id'],
             ],
             values:[
+                'status_id' => $data['status_id'],
                 'nickname' => $data['nickname'],
                 'title' => $data['title'],
                 'detail' => $data['detail'],
@@ -43,8 +45,13 @@ class ReviewService extends AbstractService
         );
     }
 
-    public function getReviewsFrom()
+    public function getReviewsFrom(ReviewEntity $reviewEntity, int $entityIdValue): \Illuminate\Database\Eloquent\Collection
     {
+
+        return ReviewRepository::getReviewsFromEntity(
+            $reviewEntity,
+            $entityIdValue
+        );
 
     }
 

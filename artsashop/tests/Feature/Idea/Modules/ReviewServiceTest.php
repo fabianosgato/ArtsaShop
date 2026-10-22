@@ -18,10 +18,11 @@
  */
 namespace Tests\Feature\Idea\Modules;
 
+use App\Models\CustomerEntity;
 use App\Models\Review;
-use Database\Factories\CustomerFactory;
 use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
 use Idea\Framework\Repository\Reviews\ReviewEntityRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Hash;
 use Modules\Review\Enums\ReviewStatus;
 use Modules\Review\Services\ReviewService;
@@ -33,14 +34,11 @@ class ReviewServiceTest extends TestCase
     public function testCreateReview()
     {
 
-        // Arrange: cria um cliente real no banco de testes.
-        $user = CustomerFactory::factory()->create([
-            'name' => 'Usuário de Teste',
-            'status' => true,
-            'password' => Hash::make('mlr1234seew'),
+        // Cria um customer
+        $customer = CustomerEntity::factory()->create([
+            'customer_name' => 'Cliente de Teste',
+            'customer_passwd' => Hash::make('mlr1234seew'),
         ]);
-
-        dd($user);
 
         // Arrange: Retorna um produto pelo SKU
         $catalogProduct = CatalogProductsRepository::getProductBySku('ATSASSCC8RB90B');
@@ -48,13 +46,11 @@ class ReviewServiceTest extends TestCase
         // Arrange: Retorna a entidade do review
         $reviewEntity = ReviewEntityRepository::getEntity('product');
 
-        // Arrange: Retorna a entidade do review
-
         // Arrange
         $data = [
             'entity_id' => $reviewEntity->entity_id, // product
             'entity_pk_value' => $catalogProduct->product_id, // Scoter Elétrica
-            'customer_id' => 1,
+            'customer_id' => $customer->customer_id,
             'store_id' => 1,
             'status_id' => ReviewStatus::APPROVED,
             'nickname' => 'Gatto',
@@ -67,11 +63,38 @@ class ReviewServiceTest extends TestCase
         // Act: Cria o Review
         $review = app(ReviewService::class)->createReview($data);
 
-
         $this->assertInstanceOf(
             Review::class,
             $review
         );
+
+    }
+
+    public function testGetReviewsFrom()
+    {
+
+        // Arrange: Retorna a entidade "product"
+        $reviewEntity = ReviewEntityRepository::getEntity('product');
+
+        // Arrange: Retorna um produto pelo SKU
+        $catalogProduct = CatalogProductsRepository::getProductBySku('ATSASSCC8RB90B');
+
+        // Act: Retorna o review
+        $reviews = app(ReviewService::class)->getReviewsFrom(
+            $reviewEntity,
+            $catalogProduct->product_id,
+        );
+
+        $this->assertInstanceOf(
+            Collection::class,
+            $reviews
+        );
+
+        $this->assertCount(
+            Review::query()->where('entity_pk_value', '=', $catalogProduct->product_id)->count(),
+            $reviews
+        );
+
 
     }
 
