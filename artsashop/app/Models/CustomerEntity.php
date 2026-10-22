@@ -91,4 +91,15 @@ class CustomerEntity extends Authenticatable
 	{
 		return $this->hasMany(SalesOrderQuote::class, 'customer_id');
 	}
+
+    public function review_likes()
+    {
+        return $this->hasMany(ReviewLike::class, 'customer_id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'customer_id');
+    }
+
 }
