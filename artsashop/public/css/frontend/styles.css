@@ -166,6 +166,10 @@ body p {
     list-style: none;
 }
 
+#sns_menu .departments-menu-item {
+    position: relative;
+}
+
 #sns_menu .departments-trigger {
     display: inline-flex;
     align-items: center;
@@ -338,10 +342,6 @@ body p {
     font-size: 14px;
 }
 
-#sns_menu .departments-mobile-content {
-    display: none;
-}
-
 #sns_menu .departments-back {
     display: none;
 }
@@ -349,7 +349,6 @@ body p {
 #sns_menu [x-cloak] {
     display: none !important;
 }
-
 /*--- Wrap: .content ---*/
 .content {margin: 8px 0 4px; position: relative;z-index: 1;}
 
