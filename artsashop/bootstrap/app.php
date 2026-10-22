@@ -22,7 +22,6 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use Throwable;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -42,7 +41,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Redireciona para o login, usuários não autenticados
         $middleware->redirectGuestsTo(
-            fn (Request $request) => route('wsdadmin.login')
+            fn(Request $request) => route('wsdadmin.login')
         );
 
         // Proxy / Cloudflare
@@ -72,7 +71,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // APIs continuam retornando erros em JSON
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*'),
+            fn(Request $request) => $request->is('api/*'),
         );
 
         // Tratamento visual das exceções do frontend

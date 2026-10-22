@@ -16,6 +16,7 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
+
 namespace Tests\Feature\Idea\Modules;
 
 use App\Models\CustomerEntity;
@@ -57,7 +58,7 @@ class ReviewServiceTest extends TestCase
             'title' => 'Esse Patinete é Ótimo',
             'detail' => 'O Patinete é muito Elogiado pela sua exelente qualidade',
             'rating' => 5, // Nota de 1 a 5
-            'likes_count'=> 0
+            'likes_count' => 0
         ];
 
         // Act: Cria o Review
@@ -67,6 +68,26 @@ class ReviewServiceTest extends TestCase
             Review::class,
             $review
         );
+
+        // Assert: o Review foi realmente persistido
+        $this->assertModelExists($review);
+
+        // Assert: pertence ao customer informado
+        $this->assertSame(
+            $customer->customer_id,
+            $review->customer_id
+        );
+
+        // Assert: pertence ao produto informado
+        $this->assertSame(
+            $catalogProduct->product_id,
+            $review->entity_pk_value
+        );
+
+        // Assert: mantém os dados principais enviados
+        $this->assertSame('Gatto', $review->nickname);
+        $this->assertSame('Esse Patinete é Ótimo', $review->title);
+        $this->assertSame(5, $review->rating);
 
     }
 
