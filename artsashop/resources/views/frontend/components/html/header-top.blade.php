@@ -25,7 +25,7 @@
                         <li class="wellcome"><a class="customer-loggedin" href="{{ route('account.index') }}">Olá, {{ Auth::guard('customer')->user()->customer_name }}</a></li>
                         <li class="link"><a class="customer-loggedin" href="{{ route('account.index') }}">Minha Conta</a></li>
                         <li class="link"><a href="{{ route('account.index') }}" title="Meus Favoritos">Meus Favoritos</a></li>
-                        <li class="link"><a class="customer-loggedin" href="{{ route('account.logout') }}">Sair</a></li>
+                        <li class="link"><a href="{{ route('account.logout') }}">Sair</a></li>
                     @else
                         <li class="wellcome">Seja Bem-vindo</li>
                         <li><a href="{{ route('account.login') }}">Entre / Registre-se</a></li>

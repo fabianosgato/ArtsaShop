@@ -8,8 +8,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 32px;
-        height: 32px;
+        height: 38px;
         padding: 0;
         margin: 0;
         border: 0;
@@ -47,17 +46,17 @@
         display: block;
     }
 
-    #top_header .topheader-mobile-trigger li {
-        display: block;
-        float: none;
+    #top_header ul.links.topheader-mobile-trigger li {
+        float: left;
         margin: 0;
         padding: 0 14px;
-        font-size: 14px;
         line-height: 32px;
+        display: block;
+        width: 100%;
     }
 
     #top_header .topheader-mobile-trigger li.wellcome {
-        float: none;
+        float: left;
         padding-bottom: 4px;
         line-height: 28px;
     }
@@ -105,4 +104,11 @@
         width: 340px;
         max-width: calc(100vw - 30px);
     }
+}
+
+@media (max-width: 320px) {
+    #top_header .topheader-right .link {
+        display: none;
+    }
+
 }
