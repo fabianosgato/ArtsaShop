@@ -112,3 +112,126 @@
     }
 
 }
+
+
+/*--- sns_menu: responsive ---*/
+@media (max-width: 768px) {
+
+    #sns_menu .menu {
+        min-height: 48px;
+        gap: 0;
+    }
+
+    #sns_menu .departments-trigger {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 0 16px;
+    }
+
+    #sns_menu .menu-item {
+        display: none;
+    }
+
+    #sns_menu .departments-panel {
+        display: block;
+        min-height: 0;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+    }
+
+    #sns_menu .departments-list {
+        width: 100%;
+        border-right: 0;
+    }
+
+    #sns_menu .departments-list-header {
+        min-height: 46px;
+        padding: 0 16px;
+    }
+
+    #sns_menu .department-item {
+        min-height: 46px;
+        padding: 0 16px;
+        font-size: 15px;
+    }
+
+    #sns_menu .departments-content {
+        display: none;
+    }
+
+    #sns_menu .departments-panel:has(.departments-mobile-content[style*="display: block"]) .departments-list {
+        display: none;
+    }
+
+    #sns_menu .departments-mobile-content {
+        display: block;
+        padding: 0 16px 24px;
+    }
+
+    #sns_menu .departments-back {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+        min-height: 46px;
+        margin: 0 0 12px;
+        padding: 0;
+        border: 0;
+        border-bottom: 1px solid #eeeeee;
+        background: transparent;
+        color: #555;
+        font-family: inherit;
+        font-size: 14px;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    #sns_menu .departments-back span:first-child {
+        font-size: 22px;
+        line-height: 1;
+    }
+
+    #sns_menu .department-content-header {
+        display: block;
+        margin-bottom: 14px;
+    }
+
+    #sns_menu .department-title {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 19px;
+    }
+
+    #sns_menu .department-see-all {
+        display: inline-block;
+        font-size: 13px;
+    }
+
+    #sns_menu .department-children {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    #sns_menu .department-child-link {
+        padding: 11px 8px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+}
+
+@media (max-width: 360px) {
+
+    #sns_menu .departments-trigger {
+        padding: 0 12px;
+        font-size: 14px;
+    }
+
+    #sns_menu .department-item {
+        font-size: 14px;
+    }
+
+    #sns_menu .departments-content,
+    #sns_menu .departments-mobile-content {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
