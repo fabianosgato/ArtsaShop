@@ -8,8 +8,8 @@ async function authorize() {
             'Accept': 'application/json'        // Diz ao Laravel para responder em JSON
         },
         body: JSON.stringify({
-            "email": "fabiano.sgato@gmail.com",
-            "password": "CRT45lt29S001",
+            "email": "xxxxxxxxxxxx",
+            "password": "xxxxxxxxxxxxxxxxxxxxx",
             "device_name": "application/react"
         })
     });
