@@ -23,7 +23,7 @@ use App\Models\CustomerEntity;
 use App\Models\Review;
 use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
 use Idea\Framework\Repository\Reviews\ReviewEntityRepository;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
 use Modules\Review\Enums\ReviewStatus;
 use Modules\Review\Services\ReviewService;
@@ -102,17 +102,18 @@ class ReviewServiceTest extends TestCase
 
         // Act: Retorna o review
         $reviews = app(ReviewService::class)->getReviewsFrom(
-            $reviewEntity,
-            $catalogProduct->product_id,
+            reviewEntity: $reviewEntity,
+            entityIdValue: $catalogProduct->product_id,
+            perPage: 1
         );
 
         $this->assertInstanceOf(
-            Collection::class,
+            LengthAwarePaginator::class,
             $reviews
         );
 
         $this->assertCount(
-            Review::query()->where('entity_pk_value', '=', $catalogProduct->product_id)->count(),
+            1,
             $reviews
         );
 

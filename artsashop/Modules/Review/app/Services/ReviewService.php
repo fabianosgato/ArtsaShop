@@ -45,12 +45,16 @@ class ReviewService extends AbstractService
         );
     }
 
-    public function getReviewsFrom(ReviewEntity $reviewEntity, int $entityIdValue): \Illuminate\Database\Eloquent\Collection
+    public function getReviewsFrom(
+        ReviewEntity $reviewEntity,
+        int $entityIdValue,
+        int $perPage = 20): \Illuminate\Pagination\LengthAwarePaginator
     {
 
         return ReviewRepository::getReviewsFromEntity(
             $reviewEntity,
-            $entityIdValue
+            $entityIdValue,
+            $perPage
         );
 
     }

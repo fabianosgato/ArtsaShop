@@ -1,8 +1,28 @@
 <?php
+/**
+ * Fabiano Gato
+ *
+ * NOTICE OF LICENSE
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ *
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
+ *
+ */
 
 use Illuminate\Support\Facades\Route;
-use Modules\Review\Http\Controllers\ReviewController;
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('reviews', ReviewController::class)->names('review');
+
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+
+    Route::apiResource('reviews', \Modules\Review\Http\Controllers\Api\ReviewController::class)
+        ->names('review');
+
 });

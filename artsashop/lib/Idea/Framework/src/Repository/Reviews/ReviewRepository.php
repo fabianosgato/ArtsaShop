@@ -31,8 +31,9 @@ class ReviewRepository extends AbstractRepository
 
     public static function getReviewsFromEntity(
         ReviewEntity $reviewEntity,
-        int $entityIdValue
-    ): \Illuminate\Database\Eloquent\Collection
+        int $entityIdValue,
+        int $perPage
+    ): \Illuminate\Pagination\LengthAwarePaginator
     {
 
         $query = self::getData()
@@ -50,7 +51,13 @@ class ReviewRepository extends AbstractRepository
                 value: ReviewStatus::APPROVED
             );
 
-        return $query->get();
+        // Mostra os produtos sem estoque por último nas listagens
+        $query->orderBy(
+            'created_at',
+            'desc'
+        );
+
+        return $query->paginate($perPage);
 
     }
 
