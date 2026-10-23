@@ -31,6 +31,7 @@
         "filament/notifications": "^5.0",
         "filament/tables": "^5.0",
         "idea/framework": "@dev",
+        "inertiajs/inertia-laravel": "^3.5",
         "intervention/image": "^3.11",
         "laravel/framework": "^13.8",
         "laravel/sanctum": "^4.3",
