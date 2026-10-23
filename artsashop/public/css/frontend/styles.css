@@ -637,6 +637,7 @@ label span.obs {
 .products-grid .special-price .price .discount{font-size:.8rem;color:#648c5d}
 
 /* Product View ========================================================================== */
+.product-view .product-img-box{float:none;margin:0 auto}
 .product-view .product-name{margin:12px 0 25px}
 .product-view .product-name h1{margin:0;font-size:1.6em;color:#4f2900;font-weight:600}
 .product-view .ratings .rating-links a{color:#333}
@@ -666,9 +667,7 @@ label span.obs {
 .product-shop .add-to-cart .qty-container input.qty-decrease{background-position:left -32px}
 .product-shop .add-to-cart .qty-container input.qty-decrease:hover{background-color:#ff8400}
 .product-shop .add-to-cart .qty-container input.qty-increase:hover{background-color:#ff8400}
-.product-view .product-img-box{float:none;margin:0 auto}
-.product-shop .availability{color:#666;font-weight:700;margin:10px 0 5px}
-.product-shop .availability span{color:#909090;margin-left:5px}
+
 .product-view .product-tabs-content{padding:0}
 .product-view .product-tabs-content .product-collateral{margin-top:30px}
 .product-view .product-tabs-content .product-tabs{border-bottom:1px solid #ccc;display:flex}
@@ -676,6 +675,9 @@ label span.obs {
 .product-view .product-tabs-content .product-tabs button{background:#fff;color:#888;font-size:18px;border:none;padding:12px 20px 12px 0}
 .product-view .product-tabs-content .product-tabs button:hover{color:#ff8400}
 .product-view .product-tabs-content .product-tabs button.active{color:#ff8400}
+
+.product-shop .availability{color:#666;font-weight:700;margin:10px 0 5px}
+.product-shop .availability span{color:#909090;margin-left:5px}
 .product-shop #product-options-wrapper ul{list-style:none;margin:0 0 5px}
 .product-shop #product-options-wrapper .product-name h1{font-size:133.3%;color:#666;text-transform:uppercase;line-height:normal}
 .product-shop table.grouped-items-table{margin-bottom:20px}
@@ -699,4 +701,86 @@ label span.obs {
 .product-shop .email-friend a{-webkit-transition:all .2s ease-out;-moz-transition:all .2s ease-out;-o-transition:all .2s ease-out;transition:all .2s ease-out;display:inline-block;position:relative;text-transform:uppercase;padding:0 0 0 55px;height:44px;line-height:44px}
 .product-shop .email-friend a:before{background-image:url(./images/add-to-links.png);height:42px;width:42px;border:1px solid #dfdfdf;-webkit-border-radius:10px;-moz-border-radius:10px;border-radius:10px;background-repeat:no-repeat;background-position:0 -84px;position:absolute;content:"";left:0;top:0}
 .product-shop .email-friend a:hover{color:#ff8400;text-decoration:none;margin-left:15px}
+
+.box-reviews {margin-top: 12px;}
+.box-reviews h2 {
+    font-size: 2.3em;
+}
+
+.box-reviews .customer-reviews {
+    width: auto;
+    float: none;
+}
+.customer-reviews .review-heading {
+    padding: 10px 0 5px;
+}
+.customer-reviews .review-heading:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+.customer-reviews .review-heading .nickname {
+    clear: none;
+    float: left;
+    width: auto;
+}
+.customer-reviews .review-heading .like-in {
+    clear: none;
+    float: right;
+    width: auto;
+}
+.customer-reviews .review-heading .pager .count-container .limiter {
+    margin-bottom: 0;
+}
+.customer-reviews .review-heading .pager .count-container .limiter label {
+    font-size: 10px;
+    text-transform: uppercase;
+}
+.customer-reviews .review-heading .pager .amount {
+    display: none;
+}
+
+.box-reviews .form-review {
+
+}
+.box-reviews .form-review .fieldset {
+    padding-top: 25px;
+    width: 470px;
+}
+.box-reviews .form-review .fieldset h4 {
+    border-bottom: 1px solid #cccccc;
+    font-family: "Raleway", "Helvetica Neue", Verdana, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    padding-bottom: 5px;
+    text-transform: uppercase;
+}
+.box-reviews .form-review .fieldset .form-list {
+    font-size: 12px;
+    font-weight: normal;
+    margin: 10px 0;
+    width: 470px;
+}
+.box-reviews .form-review .fieldset .form-list .inline-label:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+.box-reviews .form-review .fieldset .form-list label {
+    font-size: 12px;
+    font-weight: normal;
+}
+.box-reviews .form-review .form-list textarea {
+    border: 1px solid #cccccc;
+    border-radius: 0;
+    min-width: 100%;
+    -webkit-appearance: none;
+}
+.box-reviews .form-review .form-list input {
+    border: 1px solid #cccccc;
+    border-radius: 0;
+}
+.box-reviews .form-review .fieldset .form-list input[type="text"] {
+    width: 100%;
+}
 

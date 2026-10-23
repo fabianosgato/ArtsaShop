@@ -91,7 +91,7 @@
             </form>
         </div>
 
-        @if($product['video_url'] != '')
+{{--        @if($product['video_url'] != '')
             <div class="embed-container mt-8">
                 <div class="aspect-video w-full">
                     <iframe
@@ -104,7 +104,13 @@
                     </iframe>
                 </div>
             </div>
-        @endif
+        @endif--}}
+
+        <div class="box-reviews">
+            <h2>Avaliações do produto</h2>
+            <div class="customer-reviews" id="reviews-list"></div>
+        </div>
+
 
         <div class="product-tabs-content" x-data="{ tab: 'description' }">
 
@@ -119,11 +125,6 @@
                     <button @click="tab='additional'"
                             :class="tab === 'additional' ? 'active' : ''">
                         Informações adicionais
-                    </button>
-
-                    <button @click="tab='reviews'"
-                            :class="tab === 'reviews' ? 'active' : ''">
-                        Reviews
                     </button>
                 </div>
 
@@ -151,28 +152,6 @@
                         </div>
 
                     @endforeach
-                </div>
-
-                {{-- REVIEWS --}}
-                <div x-show="tab === 'reviews'" x-cloak>
-                    <div class="box-collateral box-reviews" id="customer-reviews">
-
-                        <div class="flex flex-col md:flex-row gap-10">
-                            <div class="md:w-1/2">
-                                <h2>Opiniões do cliente</h2>
-                            </div>
-
-                            <div class="md:w-1/2">
-                                <div id="review-form" class="form-add">
-
-                                    <div id="react-test"></div>
-
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
                 </div>
 
             </div>

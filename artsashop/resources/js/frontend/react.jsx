@@ -1,8 +1,8 @@
 import {createRoot} from 'react-dom/client';
-import ReactTest from './components/ReactTest';
+import ReviewBlock from "./components/reviews/Review.jsx";
 
-const element = document.getElementById('react-test');
+const element = document.getElementById('reviews-list');
 
 const root = createRoot(element);
 
-root.render(<ReactTest />);
+root.render(<ReviewBlock />);
