@@ -36,9 +36,12 @@ class ReviewController extends Controller
     public function index(ReviewListRequest $request)
     {
 
+        // Retorna os valores específicos para maior segurança
+        $queryParams = $request->only(['entity', 'entityIdValue', 'perPage']);
+
         // Valida se a entidade está vindo corretamente
         $reviewEntity = ReviewEntityRepository::getEntity(
-            entity: $request->input('entity')
+            entity: $queryParams['entity']
         );
 
         if ($reviewEntity) {

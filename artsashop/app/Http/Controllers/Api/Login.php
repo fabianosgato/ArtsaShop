@@ -36,30 +36,20 @@ class Login extends Controller
     ): JsonResponse
     {
 
-        if ($request->isJson()) {
+        $validated = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+            'device_name' => ['required', 'string', 'max:255'],
+        ]);
 
-            $validated = $request->validate([
-                'email' => ['required', 'email'],
-                'password' => ['required', 'string'],
-                'device_name' => ['required', 'string', 'max:255'],
-            ]);
-
-            $token = $tokenService->issueToken(
-                $validated['email'],
-                $validated['password'],
-                $validated['device_name'],
-            );
-
-            return response()->json([
-                'token' => $token,
-            ]);
-
-        }
+        $token = $tokenService->issueToken(
+            $validated['email'],
+            $validated['password'],
+            $validated['device_name'],
+        );
 
         return response()->json([
-            $this->error(
-                'Request inválido para requisição'
-            )
+            'token' => $token,
         ]);
 
     }
