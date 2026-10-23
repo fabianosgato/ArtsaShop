@@ -1,3 +1,4 @@
+import {createInertiaApp} from '@inertiajs/react'
 // Importar Swiper
 import Swiper from 'swiper/bundle';
 
@@ -6,6 +7,10 @@ import 'swiper/css/bundle';
 import './plugins/masks'
 import './plugins/validators'
 import './scripts'
+
+
+createInertiaApp()
+
 
 // =============================
 // Slider Products
