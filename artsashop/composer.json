@@ -5,12 +5,23 @@
     "description": "The skeleton application for the Laravel framework.",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
+    "repositories": {
+        "idea/framework": {
+            "type": "path",
+            "url": "lib/Idea/Framework",
+            "options": {
+                "symlink": true
+            }
+        }
+    },
     "require": {
         "php": "^8.3",
         "inertiajs/inertia-laravel": "^3.5",
         "laravel/framework": "^13.17",
         "laravel/sanctum": "^4.3",
-        "laravel/tinker": "^3.0"
+        "laravel/tinker": "^3.0",
+        "nwidart/laravel-modules": "*",
+        "idea/framework": "@dev"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -80,7 +91,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "wikimedia/composer-merge-plugin": true
         }
     },
     "minimum-stability": "stable",

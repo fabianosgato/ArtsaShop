@@ -20,13 +20,9 @@
 namespace Idea\Framework\Providers;
 
 use App\Models\SysConfigDatum;
-use Idea\Framework\Admin\Components\GridsTitlesCompoments;
-use Idea\Framework\Admin\Components\MenuBuilderComponent;
 use Idea\Framework\View\Front\Breadcrumbs\BreadcrumbsManager;
 use Idea\Framework\View\Front\Breadcrumbs\Generator;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\View\Compilers\BladeCompiler;
-use Livewire\Livewire;
 use Nwidart\Modules\Facades\Module;
 
 class IdeaFrameworkServiceProvider extends ServiceProvider
@@ -88,8 +84,6 @@ class IdeaFrameworkServiceProvider extends ServiceProvider
             Generator::class,
             config('idea.breadcrumbs.generator-class')
         );
-
-        $this->registerLivewireComponents();
     }
 
     /**
@@ -98,15 +92,15 @@ class IdeaFrameworkServiceProvider extends ServiceProvider
     protected function registerLivewireComponents(): void
     {
 
-        // Registra o Componente dos títulos dos Grids
-        $this->callAfterResolving(BladeCompiler::class, function () {
-            Livewire::component('titles-component', GridsTitlesCompoments::class);
-        });
-
-        // Registra o Componente que monta o menu
-        $this->callAfterResolving(BladeCompiler::class, function () {
-            Livewire::component('menu-builder-component', MenuBuilderComponent::class);
-        });
+//        // Registra o Componente dos títulos dos Grids
+//        $this->callAfterResolving(BladeCompiler::class, function () {
+//            Livewire::component('titles-component', GridsTitlesCompoments::class);
+//        });
+//
+//        // Registra o Componente que monta o menu
+//        $this->callAfterResolving(BladeCompiler::class, function () {
+//            Livewire::component('menu-builder-component', MenuBuilderComponent::class);
+//        });
 
     }
 
