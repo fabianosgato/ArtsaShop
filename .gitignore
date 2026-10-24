@@ -4,6 +4,7 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
 # Node artifact files
+artsashop/package-lock.json
 artsashop/node_modules
 artsashop/dist
 artsashop/vendor
