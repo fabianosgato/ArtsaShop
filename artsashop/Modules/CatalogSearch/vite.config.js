@@ -1,24 +1,21 @@
-import {defineConfig} from 'vite';
-import laravel from 'laravel-vite-plugin';
-
-export default defineConfig({
-    build: {
-        outDir: '../../public/build-catalogsearch',
-        emptyOutDir: true,
-        manifest: true,
-    },
-    plugins: [
-        laravel({
-            publicDirectory: '../../public',
-            buildDirectory: 'build-catalogsearch',
-            input: [
-                __dirname + '/resources/assets/sass/app.scss',
-                __dirname + '/resources/assets/js/app.js'
-            ],
-            refresh: true,
-        }),
-    ],
-});
+// export default defineConfig({
+//     build: {
+//         outDir: '../../public/build-catalogsearch',
+//         emptyOutDir: true,
+//         manifest: true,
+//     },
+//     plugins: [
+//         laravel({
+//             publicDirectory: '../../public',
+//             buildDirectory: 'build-catalogsearch',
+//             input: [
+//                 __dirname + '/resources/assets/sass/app.scss',
+//                 __dirname + '/resources/assets/js/app.js'
+//             ],
+//             refresh: true,
+//         }),
+//     ],
+// });
 // Scen all resources for assets file. Return array
 //function getFilePaths(dir) {
 //    const filePaths = [];
@@ -45,7 +42,9 @@ export default defineConfig({
 //const __dirname = dirname(__filename);
 
 //const assetsDir = join(__dirname, 'resources/assets');
-//export const paths = getFilePaths(assetsDir);
+export const paths = [
+    'Modules/CatalogSearch/resources/assets/js/app.js',
+];
 
 
 //export const paths = [
