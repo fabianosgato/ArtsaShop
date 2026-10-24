@@ -1,0 +1,97 @@
+<?php
+/**
+ * Fabiano Gato
+ *
+ * NOTICE OF LICENSE
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ *
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
+ *
+ */
+namespace Idea\Framework\Repository\Eav;
+
+use App\Models\CatalogCategoryEntity;
+use App\Models\EavAttributesCategory;
+use Idea\Framework\Repository\AbstractRepository;
+
+class EavAttributesCategoryRepository extends AbstractRepository
+{
+
+    protected static $model = EavAttributesCategory::class;
+
+    public static function saveRelationCategory($eavAttributeSetId, $eavCategoryProductId)
+    {
+
+        self::loadModel()::query()->firstOrCreate([
+            'eav_attribute_set_id' => $eavAttributeSetId,
+            'eav_category_products_id' => $eavCategoryProductId,
+        ]);
+
+    }
+
+    /**
+     * Retorna a categoria de um atributo especifico
+     * @param $attributeSetId
+     * @return null
+     */
+    public static function getCategoryByAttributeSet($attributeSetId)
+    {
+
+        // Inicializa a query
+        $query = self::loadModel()::query();
+
+        $query->join(
+            table: 'catalog_category_entity',
+            first: 'catalog_category_entity.entity_id',
+            operator: '=',
+            second: 'eav_attributes_category.eav_category_products_id'
+        );
+
+        $query->where(
+            column: 'eav_attributes_category.eav_attribute_set_id',
+            operator: '=',
+            value:$attributeSetId
+        );
+
+        if ($query->exists())
+            return $query->first();
+
+        return null;
+
+    }
+
+    /**
+     * Exclui uma categoria do sistema pelo ID do grupo de atributo
+     * @param $attributeSetId
+     * @return void
+     */
+    public static function deleteCategoryByAttributeSet($attributeSetId): void
+    {
+
+        $catalogCategory = self::getCategoryByAttributeSet(
+            $attributeSetId
+        );
+
+        if ($catalogCategory) {
+            $catalogCategoryEntity = CatalogCategoryEntity::query()->where(
+                column: 'entity_id',
+                operator: '=',
+                value: $catalogCategory->entity_id
+            );
+
+            if ($catalogCategoryEntity->exists())
+                $catalogCategoryEntity->delete();
+
+        }
+
+    }
+
+}

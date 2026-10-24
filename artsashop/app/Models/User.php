@@ -1,32 +1,66 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
+/**
+ * Class SysUser
+ *
+ * @property int $user_id
+ * @property int $group_id
+ * @property string $name
+ * @property string $email
+ * @property Carbon|null $email_verified_at
+ * @property string $password
+ * @property string|null $remember_token
+ * @property bool $status
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ *
+ * @property SysGroup $sys_group
+ *
+ * @package App\Models
+ */
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    protected $table = 'sys_users';
+    protected $primaryKey = 'user_id';
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    use HasFactory, Notifiable, HasApiTokens;
+
+    protected $casts = [
+        'group_id' => 'int',
+        'email_verified_at' => 'datetime',
+        'status' => 'bool'
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token'
+    ];
+
+    protected $fillable = [
+        'group_id',
+        'name',
+        'email',
+        'email_verified_at',
+        'password',
+        'remember_token',
+        'status'
+    ];
+
+    public function sys_group()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(SysGroup::class, 'group_id');
     }
+
 }

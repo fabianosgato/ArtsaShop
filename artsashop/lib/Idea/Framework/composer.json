@@ -1,0 +1,28 @@
+{
+    "name": "idea/framework",
+    "description": "Bibliotecas especiais para gerenciamento do sistema",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Idea\\Framework\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Fabiano Gatto",
+            "email": "fabianogattoti@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "facade/ignition-contracts": "^1.0",
+        "ext-simplexml": "*"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Idea\\Framework\\Providers\\IdeaFrameworkServiceProvider"
+            ]
+        }
+    }
+}
