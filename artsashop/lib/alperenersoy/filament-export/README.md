@@ -37,7 +37,7 @@ To use this package in a standalone table builder instead of Filament Admin Pane
 @import '../../vendor/alperenersoy/filament-export/resources/css/filament-export.css';
 ```
 
-2. Import `filament-export.js` in your `/resources/app.js`
+2. Import `filament-export.js` in your `/resources/app.jsx`
 
 ```js
 import '../../vendor/alperenersoy/filament-export/resources/js/filament-export.js';

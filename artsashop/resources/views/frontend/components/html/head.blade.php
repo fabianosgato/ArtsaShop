@@ -35,13 +35,12 @@
         gtag('config', '{{ getConfigData('google/gtag/config_id') }}', {page_path: window.location.pathname,});
     </script>
 @endif
-
 @viteReactRefresh
 @vite([
     'resources/css/frontend/app.css',
-    'resources/js/frontend/react.jsx',
+    'resources/css/frontend/app.jsx',
 ])
-
+@inertiaHead
 @livewireStyles
 
 <link rel='stylesheet' id='{{app('currentStore')->code}}-shop-styles' href='{{ asset('css/frontend/styles.css') }}' type='text/css' media='all' />

@@ -23,6 +23,6 @@
         {{ $slot }}
 
         @filamentScripts
-        @vite('resources/js/app.js')
+        @vite('resources/js/app.jsx')
     </body>
 </html>

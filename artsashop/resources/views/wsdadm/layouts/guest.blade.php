@@ -40,6 +40,6 @@
                 {{ $slot }}
             </div>
         </div>
-        @vite(['resources/js/wsdadm/app.js'])
+        @vite(['resources/js/wsdadm/app.jsx'])
     </body>
 </html>

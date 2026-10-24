@@ -4,6 +4,7 @@
     @include('frontend.components.html.head')
 </head>
 <body>
+@include('frontend.components.html.after_body_start')
 <section class="wrapper">
     @include('frontend.components.html.header-top')
     @include('frontend.components.html.header')

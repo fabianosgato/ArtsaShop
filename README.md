@@ -210,10 +210,10 @@ O Vite possui entradas independentes para cada área:
 
 ```javascript
 'resources/css/wsdadm/app.css',
-'resources/js/wsdadm/app.js',
+'resources/js/wsdadm/app.jsx',
 
 'resources/css/frontend/app.css',
-'resources/js/frontend/app.js'
+'resources/js/frontend/app.jsx'
 ```
 
 Essa separação facilita a evolução independente da interface pública e do sistema administrativo.

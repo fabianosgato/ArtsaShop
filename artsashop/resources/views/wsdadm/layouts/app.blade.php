@@ -70,7 +70,7 @@
 @filamentScripts
 
 <!-- 5. O Javascript do seu projeto fecha o carregamento -->
-@vite(['resources/js/wsdadm/app.js'])
+@vite(['resources/js/wsdadm/app.jsx'])
 
 <wireui:scripts/>
 </body>
