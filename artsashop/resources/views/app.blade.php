@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-
+    @include()
     @viteReactRefresh
     @vite('resources/js/app.jsx')
 
