@@ -19,7 +19,6 @@
 namespace Modules\Catalog\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Idea\Framework\Concerns\ResultApiResponse;
 use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
 use Illuminate\Http\Request;
 use Modules\Catalog\Concerns\ProductsApiResponse;
@@ -29,7 +28,7 @@ use Modules\Catalog\Services\CatalogProductService;
 class CatalogProductController extends Controller
 {
 
-    use ProductsApiResponse, ResultApiResponse;
+    use ProductsApiResponse;
 
     /**
      * Lista todos os produtos do sistema
