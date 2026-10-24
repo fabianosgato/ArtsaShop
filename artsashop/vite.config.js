@@ -3,6 +3,7 @@ import laravel from 'laravel-vite-plugin';
 import {bunny} from 'laravel-vite-plugin/fonts';
 import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
+import collectModuleAssetsPaths from './vite-module-loader.js';
 
 
 export default defineConfig({
@@ -21,6 +22,7 @@ export default defineConfig({
         }),
         vue(),
         tailwindcss(),
+        collectModuleAssetsPaths()
     ],
     resolve: {
         alias: {
