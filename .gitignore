@@ -4,20 +4,29 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
 # Node artifact files
-artsashop/node_modules/
-artsashop/dist/
-artsashop/vendor/
-artsashop/public/build/
-artsashop/public/vendor/
-artsashop/public/tmp/
-artsashop/bootstrap/cache/
-artsashop/public/js/filament/
-artsashop/public/fonts/filament/
-artsashop/public/css/filament/
-artsashop/public/.well-known/
+artsashop/node_modules
+artsashop/dist
+artsashop/vendor
+artsashop/public/build
+artsashop/public/vendor
+artsashop/public/tmp
+artsashop/bootstrap/cache
+artsashop/public/js/filament
+artsashop/public/fonts/filament
+artsashop/public/css/filament
+artsashop/public/.well-known
 artsashop/composer.lock
 artsashop/public/css/app/filament-export-0.3.0.css
 artsashop/public/js/app/filament-export-0.3.0.js
+artsashop/README.md
+artsashop/CLAUDE.md
+artsashop/.gitignore
+artsashop/auth.json
+artsashop/public/hot
+artsashop/public/storage
+artsashop/public/fonts-manifest.dev.json
+artsashop/storage/*.key
+artsashop/storage/pail
 
 # Compiled Java class files
 *.class
@@ -73,12 +82,3 @@ Thumbs.db
 .phpunit.cache
 .vscode
 .zed
-
-# Pastas do projeto
-auth.json
-node_modules
-artsashop/public/fonts-manifest.dev.json
-artsashop/public/hot
-artsashop/public/storage
-artsashop/storage/*.key
-artsashop/storage/pail

@@ -1,23 +1,12 @@
-import inertia from '@inertiajs/vite'
-import laravel from 'laravel-vite-plugin'
-import {defineConfig} from 'vite'
-import {bunny} from 'laravel-vite-plugin/fonts';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import { bunny } from 'laravel-vite-plugin/fonts';
 import tailwindcss from '@tailwindcss/vite';
-
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: [
-                // Arquivos do Frontend
-                'resources/css/frontend/app.css',
-                'resources/js/frontend/app.jsx',
-
-                // Arquivos do backend (wsdadm)
-                'resources/css/wsdadm/app.css',
-                'resources/js/wsdadm/app.js',
-            ],
+            input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
             fonts: [
                 bunny('Instrument Sans', {
@@ -25,21 +14,11 @@ export default defineConfig({
                 }),
             ],
         }),
-        inertia(),
-        react(),
         tailwindcss(),
     ],
-    // 🔥 ADICIONE ESTE BLOCO ABAIXO: Libera o Tailwind v4 para ler o Filament no vendor
     server: {
-        fs: {
-            allow: [
-                'resources',
-                'vendor/filament',
-            ],
-        },
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },
     },
 });
-

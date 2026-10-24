@@ -7,24 +7,13 @@
         "dev": "vite"
     },
     "devDependencies": {
-        "@tailwindcss/forms": "^0.5.11",
-        "@tailwindcss/typography": "^0.5.19",
-        "@tailwindcss/vite": "^4.3.0",
-        "@vitejs/plugin-react": "^6.1.2",
-        "@wotz/livewire-sortablejs": "^1.0.0",
-        "concurrently": "^9.0.1",
-        "daisyui": "^5.5.20",
-        "fontaine": "^0.8.2",
+        "@tailwindcss/vite": "^4.0.0",
+        "concurrently": "^10.0.3",
         "laravel-vite-plugin": "^3.1",
-        "tailwindcss": "^4.3.0",
+        "tailwindcss": "^4.0.0",
         "vite": "^8.0.0"
     },
-    "dependencies": {
-        "@fortawesome/fontawesome-free": "^7.2.0",
-        "@inertiajs/react": "^3.9.1",
-        "@inertiajs/vite": "^3.9.1",
-        "react": "^19.3.1",
-        "react-dom": "^19.3.1",
-        "swiper": "^12.2.0"
+    "optionalDependencies": {
+        "@laravel/multiplex": "^0.4.1"
     }
 }
