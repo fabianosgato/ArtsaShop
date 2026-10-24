@@ -38,7 +38,7 @@
 @viteReactRefresh
 @vite([
     'resources/css/frontend/app.css',
-    'resources/css/frontend/app.jsx',
+    'resources/js/frontend/app.jsx',
 ])
 @inertiaHead
 @livewireStyles
