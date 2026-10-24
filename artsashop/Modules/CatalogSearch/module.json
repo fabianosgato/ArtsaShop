@@ -1,0 +1,11 @@
+{
+    "name": "CatalogSearch",
+    "alias": "catalogsearch",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\CatalogSearch\\Providers\\CatalogSearchServiceProvider"
+    ],
+    "files": []
+}

@@ -29,7 +29,7 @@ const open = ref(false);
                         </li>
 
                         <li>
-                            <a :href="route('account.login')">
+                            <a class="link" :href="route('account.login')">
                                 Entre / Registre-se
                             </a>
                         </li>

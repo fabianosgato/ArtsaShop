@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/salesrules",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\SalesRules\\": "app/",
+            "Modules\\SalesRules\\Database\\Factories\\": "database/factories/",
+            "Modules\\SalesRules\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\SalesRules\\Tests\\": "tests/"
+        }
+    }
+}

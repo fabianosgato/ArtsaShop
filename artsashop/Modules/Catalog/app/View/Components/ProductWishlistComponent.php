@@ -1,0 +1,67 @@
+<?php
+/**
+ * Fabiano Gato
+ *
+ * NOTICE OF LICENSE
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ *
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
+ *
+ */
+namespace Modules\Catalog\View\Components;
+
+use Illuminate\View\Component;
+use Illuminate\View\View;
+
+class ProductWishlistComponent extends Component
+{
+
+    public $productId;
+
+    /**
+     * Create a new component instance.
+     */
+    public function __construct($productId)
+    {
+        $this->productId = $productId;
+    }
+
+    /**
+     * Get the view/contents that represent the component.
+     */
+    public function render(): View|string
+    {
+
+//        // Valida se o cliente esta realmente autenticado
+//        if (Auth::guard('customer')->check()) {
+//
+//            // Retorna as informações do Customer pelo ID
+//            $customer = Auth::guard('customer')->user();
+//
+//            $wishlist = CustomerWishlistEntityRepository::checkIsWishlist(
+//                customerId: $customer->customer_id,
+//                productId: $this->productId
+//            );
+//
+//            if ($wishlist)
+//                return view('catalog::frontend.components.product-wishlist-component', [
+//                    'icon' => 'fa-solid fa-heart'
+//                ]);
+//
+//        }
+
+        return view('catalog::frontend.components.product-wishlist-component', [
+            'icon' => 'fa-regular fa-heart'
+        ]);
+
+    }
+
+}

@@ -1,0 +1,59 @@
+<?php
+/**
+ * Fabiano Gato
+ *
+ * NOTICE OF LICENSE
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ *
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
+ *
+ */
+namespace Modules\Payments\Gateways\Ipag\Endpoint;
+
+use Modules\Payments\Gateways\Ipag\Core\Endpoint;
+use Modules\Payments\Gateways\Ipag\Http\Response;
+
+
+/**
+ * TransferEndpoint class
+ *
+ * Classe responsável pelo controle dos endpoints do recurso Seller Transfer.
+ *
+ */
+class SellerTransferEndpoint extends Endpoint
+{
+    protected string $location = '/service/resources/sellers_transfers';
+
+    /**
+     * Endpoint para listar recursos Transfer vinculados aos Sellers
+     *
+     * @param array|null $filters
+     * @return Response
+     */
+    public function list(?array $filters = []): Response
+    {
+        return $this->_GET($filters ?? []);
+    }
+
+    /**
+     * Endpoint para obter um recurso Transfer vinculado a um Seller
+     *
+     * @param integer $id
+     * @return Response
+     *
+     * @codeCoverageIgnore
+     */
+    public function get(int $id): Response
+    {
+        return $this->_GET(['id' => $id]);
+    }
+
+}
