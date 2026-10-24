@@ -6,6 +6,9 @@ import vue from '@vitejs/plugin-vue';
 
 
 export default defineConfig({
+    devtools: {
+        apply: 'serve',
+    },
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.js'],
@@ -19,6 +22,11 @@ export default defineConfig({
         vue(),
         tailwindcss(),
     ],
+    resolve: {
+        alias: {
+            'ziggy-js': 'vendor/tightenco/ziggy',
+        },
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],

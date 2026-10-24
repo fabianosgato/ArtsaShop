@@ -17,13 +17,14 @@
     "require": {
         "php": "^8.3",
         "facade/ignition-contracts": "^1.0",
+        "idea/framework": "@dev",
         "inertiajs/inertia-laravel": "^3.5",
         "intervention/image": "^4.4",
         "laravel/framework": "^13.17",
         "laravel/sanctum": "^4.3",
         "laravel/tinker": "^3.0",
         "nwidart/laravel-modules": "^13.0",
-        "idea/framework": "@dev"
+        "tightenco/ziggy": "^2.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

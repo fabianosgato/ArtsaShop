@@ -2,10 +2,13 @@
 <html>
 <head>
     @include('frontend.partials.html.head')
+    @routes
     @vite('resources/js/app.js')
     @inertiaHead
 </head>
 <body>
+<section class="wrapper">
 @inertia
+</section>
 </body>
 </html>
