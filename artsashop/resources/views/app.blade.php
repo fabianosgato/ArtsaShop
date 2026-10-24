@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     @include('frontend.partials.head')
+    @routes
     @viteReactRefresh
     @vite('resources/js/app.jsx')
 
