@@ -22,6 +22,11 @@ export default defineConfig({
         vue(),
         tailwindcss(),
     ],
+    resolve: {
+        alias: {
+            'ziggy-js': '/vendor/tightenco/ziggy/src/js',
+        },
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],
