@@ -12,23 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-
-        // Proxy/Cloudflare
-        $middleware->trustProxies(
-            at: '*',
-        );
-
-        // Store Resolver (APENAS WEB)
-        $middleware->appendToGroup(
-            'web',
-            \App\Http\Middleware\IdentifyStoreByHost::class
-        );
-
-        // Middleware do Inertia
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
         ]);
-
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
