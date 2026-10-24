@@ -1,4 +1,5 @@
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon"/>
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon"/>
     <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('images/favicon/apple-icon-57x57.png') }}">
@@ -17,3 +18,18 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="{{ asset('images/favicon/ms-icon-144x144.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    @if(boolval(getConfigData('google/gtag/enable')))
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ getConfigData('google/gtag/config_id') }}"></script>
+        <script> window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', '{{ getConfigData('google/gtag/config_id') }}', {page_path: window.location.pathname,});
+        </script>
+    @endif
+    <link rel='stylesheet' id='{{app('currentStore')->code}}-shop-styles' href='{{ asset('css/frontend/styles.css') }}' type='text/css' media='all' />
+    <link rel='stylesheet' id='{{app('currentStore')->code}}-shop-styles' href='{{ asset('css/frontend/responsive.css') }}' type='text/css' media='all' />
+    <link rel='stylesheet' id='{{app('currentStore')->code}}-shop-theme' href='{{ asset('css/frontend/theme/buttons.css') }}' type='text/css' media='all' />
