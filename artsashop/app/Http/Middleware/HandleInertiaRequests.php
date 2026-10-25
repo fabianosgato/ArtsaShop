@@ -35,15 +35,12 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-//        return [
-//            ...parent::share($request),
-//            //
-//        ];
 
         return array_merge(parent::share($request), [
             // Propriedade global simples
             'appName' => config('app.name'),
-            'currentStore' => 'ArtsaShop',
+            'currentStore' => app('currentStore'),
+
             'route' => [
                 'name' => $request->route()?->getName(),
             ],

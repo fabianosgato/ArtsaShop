@@ -17,17 +17,17 @@ const currentStore = page.props.currentStore
                         <a :href="route('index.home')" class="logo">
                             <img
                                 :src="'/images/frontend/logo.webp'"
-                                :alt="currentStore"
+                                :alt="currentStore.store_name"
                                 width="120"
                                 height="47"
                                 loading="lazy"
                             />
                         </a>
                     </h1>
-                    <a v-else href="{{ route('index.home') }}" class="logo">
+                    <a v-else :href="route('index.home')" class="logo">
                         <img
                             :src="'/images/frontend/logo.webp'"
-                            :alt="currentStore"
+                            :alt="currentStore.store_name"
                             width="120"
                             height="47"
                             loading="lazy"

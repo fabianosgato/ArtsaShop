@@ -75,10 +75,10 @@ body p {
 #top_header .topheader-left .account-top-menu {display:none;font-size: 2.4em;font-weight: 400;}
 #top_header .topheader-right{float:right}
 
-#top_header ul.links {list-style:none;line-height:36px}
-#top_header ul.links li{display:inline-block;font-size:2.2em}
+#top_header ul.links {list-style:none;line-height:36px;margin: 0;padding: 0;}
+#top_header ul.links li{display:inline-block;font-size:2.2em;margin: 0;padding: 0;}
 #top_header ul.links li.first{margin-left:0}
-#top_header ul.links li.wellcome{position:relative;font-weight:600;color:#666;float:left}
+#top_header ul.links li.wellcome{padding0;position:relative;font-weight:600;color:#666;float:left}
 #top_header ul.links li.wellcome:after{content:"•";margin:0 4px;color:#666;width:5px;padding:0 2px}
 
 #top_header ul.links li.link{margin-right:10px}

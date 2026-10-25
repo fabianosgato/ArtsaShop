@@ -13,15 +13,16 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
 
-        $middleware->web(append: [
-            \App\Http\Middleware\HandleInertiaRequests::class,
-        ]);
-
         // Store Resolver
         $middleware->appendToGroup(
             'web',
             \App\Http\Middleware\IdentifyStoreByHost::class
         );
+
+        $middleware->web(append: [
+            \App\Http\Middleware\HandleInertiaRequests::class,
+        ]);
+
 
         // Aliases existentes
         $middleware->alias([
