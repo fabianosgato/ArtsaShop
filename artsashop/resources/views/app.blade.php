@@ -7,8 +7,6 @@
     @inertiaHead
 </head>
 <body>
-<section class="wrapper">
 @inertia
-</section>
 </body>
 </html>
