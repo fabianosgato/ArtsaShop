@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             // Propriedade global simples
             'appName' => config('app.name'),
-
+            'currentStore' => 'ArtsaShop',
             'route' => [
                 'name' => $request->route()?->getName(),
             ],
