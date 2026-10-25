@@ -28,7 +28,7 @@ return [
     | other UI elements where an application name needs to be displayed.
     |
     */
-    'name' => env('APP_NAME', "ArtsaShop V1.2"),
+    'name' => env('APP_NAME', "ArtsaShop V1.7"),
 
     /*
     |--------------------------------------------------------------------------
@@ -40,7 +40,6 @@ return [
     | services the application utilizes. Set this in your ".env" file.
     |
     */
-
     'env' => env('APP_ENV', 'production'),
 
     /*
@@ -53,8 +52,7 @@ return [
     | application. If disabled, a simple generic error page is shown.
     |
     */
-
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool) env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------

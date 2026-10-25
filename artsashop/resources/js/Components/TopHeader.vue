@@ -1,7 +1,10 @@
 <script setup>
 import {ref} from 'vue';
+import {usePage} from "@inertiajs/vue3";
 
 const open = ref(false);
+const page = usePage();
+const appUrl = page.props.appUrl
 </script>
 
 <template>
@@ -38,23 +41,9 @@ const open = ref(false);
 
                 <div class="topheader-right">
                     <ul class="links">
-                        <li class="link">
-                            <a :href="route('index.home')">
-                                Home
-                            </a>
-                        </li>
-
-                        <li class="link">
-                            <a>
-                                Quem Somos
-                            </a>
-                        </li>
-
-                        <li class="contact-us-now">
-                            <a>
-                                Fale Conosco
-                            </a>
-                        </li>
+                        <li class="link"><a :href="route('index.home')">Home</a></li>
+                        <li class="link"><a :href="appUrl + 'quem-somos'">Quem Somos</a></li>
+                        <li class="contact-us-now"><a :href="appUrl + 'fale-conosco'">Fale Conosco</a></li>
                     </ul>
                 </div>
 

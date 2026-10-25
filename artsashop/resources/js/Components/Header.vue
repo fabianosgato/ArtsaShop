@@ -1,9 +1,10 @@
 <script setup>
-import SearchForm from "../../../Modules/CatalogSearch/resources/assets/js/Components/SearchForm.vue";
 import {usePage} from '@inertiajs/vue3';
+import SearchForm from "../../../Modules/CatalogSearch/resources/assets/js/Components/SearchForm.vue";
 
 const page = usePage();
 const isHome = page.props.route.name === 'index.home'
+const appUrl = page.props.appUrl
 const currentStore = page.props.currentStore
 </script>
 
