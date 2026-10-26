@@ -20,6 +20,7 @@
         "@inertiajs/vue3": "^3.9.1",
         "@vitejs/devtools": "^0.8.0",
         "@vitejs/plugin-vue": "^6.0.10",
+        "dompurify": "^3.4.17",
         "qs-esm": "^8.0.2",
         "vue": "^3.5.44"
     }

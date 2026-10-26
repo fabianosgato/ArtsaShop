@@ -21,6 +21,7 @@ namespace Modules\Cms\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Idea\Framework\Repository\Cms\CmsPageRepository;
 use Idea\Framework\Seo\Traits\HasSeoResponse;
+use Inertia\Inertia;
 use RalphJSmit\Laravel\SEO\Support\SEOData;
 
 class CmsPagesController extends Controller
@@ -52,8 +53,8 @@ class CmsPagesController extends Controller
         $regex = '/<a[^>]*>(<img[^>]*>).*?<figcaption[^>]*>.*?<\/figcaption>.*?<\/a>/is';
         $content = preg_replace($regex, '$1', $page->content);
 
-        return view('cms::frontend.page', [
-            'page' => [
+        return Inertia::render('Cms::Page', [
+            'CmsPage' => [
                 'title' => $page->title,
                 'content' => $content,
             ]
