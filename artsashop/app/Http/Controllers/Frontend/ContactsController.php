@@ -26,6 +26,7 @@ use Idea\Framework\Repository\Cms\CmsFaqRepository;
 use Idea\Framework\Seo\Traits\HasSeoResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Inertia\Inertia;
 
 class ContactsController extends Controller
 {
@@ -42,9 +43,13 @@ class ContactsController extends Controller
             )
         );
 
-        return view('frontend.page.contacts', [
+        return Inertia::render('Contacts', [
             'faqs' => CmsFaqRepository::getData()->orderBy('sort_order')->get()
         ]);
+
+//        return view('frontend.page.contacts', [
+//
+//        ]);
     }
 
     public function sendPost(ContactsRequest $request)

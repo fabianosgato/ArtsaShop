@@ -17,10 +17,10 @@ const appUrl = page.props.appUrl
                         </div>
                         <div class="content-block-footer">
                             <ul class="links">
-                                <li><a :href="appUrl + 'quem-somos'">Quem Somos</a></li>
-                                <li><a :href="appUrl + 'politica-de-entrega'">Política de Entrega</a></li>
-                                <li><a :href="appUrl + 'politica-de-trocas-e-devolucoes'">Política de Devoluções</a></li>
-                                <li><a :href="appUrl + 'politica-de-privacidade'">Política de Privacidade</a></li>
+                                <li><Link :href="appUrl+'quem-somos'">Quem Somos</Link></li>
+                                <li><Link :href="appUrl + 'politica-de-entrega'">Política de Entrega</Link></li>
+                                <li><Link :href="appUrl + 'politica-de-trocas-e-devolucoes'">Política de Trocas e Devoluções</Link></li>
+                                <li><Link :href="appUrl + 'politica-de-privacidade'">Política de Privacidade</Link></li>
                             </ul>
                         </div>
                     </div>
@@ -31,10 +31,10 @@ const appUrl = page.props.appUrl
 
                         <div class="content-block-footer">
                             <ul class="links">
-                                <li><a :href="route('account.index')">Painel</a></li>
-                                <li><a :href="route('account.orders')">Pedidos</a></li>
-                                <li><a :href="route('account.edit')">Detalhes da conta</a></li>
-                                <li><a :href="route('checkout.cart')">Carrinho</a></li>
+                                <li><Link :href="route('account.index')">Painel</Link></li>
+                                <li><Link :href="route('account.orders')">Pedidos</Link></li>
+                                <li><Link :href="route('account.edit')">Detalhes da conta</Link></li>
+                                <li><Link :href="route('checkout.cart')">Carrinho</Link></li>
                             </ul>
                         </div>
                     </div>
