@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Idea\Framework\Services\ServiceNavigation;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -26,11 +27,10 @@ class HandleInertiaRequests extends Middleware
         return parent::version($request);
     }
 
+
     /**
      * Define the props that are shared by default.
-     *
      * @see https://inertiajs.com/shared-data
-     *
      * @return array<string, mixed>
      */
     public function share(Request $request): array
@@ -54,6 +54,9 @@ class HandleInertiaRequests extends Middleware
                     'email' => $request->user()->email,
                 ] : null,
             ],
+
+            // Retorna as categorias/departamentos
+            'menuCategories' => fn () => app(ServiceNavigation::class)->menuCategories(),
 
             // Mensagens de sessão (Flash messages)
             'flash' => [
