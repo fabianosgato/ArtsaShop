@@ -20,15 +20,18 @@ const sendMessage = () => {
     });
 }
 
+defineProps({
+    faqs: { type: Array, default: () => [] },
+})
+
 </script>
 
 <template>
-    <Head title="Fale Conosco" />
     <div class="page-title title-buttons">
         <h1>Fale Conosco</h1>
     </div>
     <div class="grid grid-cols-2 gap-2">
-        <div class="p-4 fieldset">
+        <div class="fieldset">
 
             <form @submit.prevent="sendMessage">
                 <h2>Gostaríamos de ouvir sua opinião. Envie-nos uma mensagem preenchendo o formulário abaixo
@@ -97,17 +100,35 @@ const sendMessage = () => {
                             <small class="required">{{ form.errors.message_contacts }}</small>
                         </label>
                     </div>
-                    <div class="border-t p-6 flex justify-between items-center">
+                    <div class="border-t pb-6 pt-6 flex justify-between items-center">
                         <span class="text-sm text-gray-500"> * Campos obrigatórios </span>
                         <ButtonSubmit class="btn btn-large btn-light" :processing="form.processing">
                             Enviar
                         </ButtonSubmit>
-
                     </div>
                 </div>
             </form>
-
         </div>
+
+        <div class="form-list">
+            <h2>Perguntas Frequentes</h2>
+
+            <div
+                v-for="faq in faqs"
+                :key="faq.faq_id"
+                class="bg-base-100 mb-2"
+            >
+                <div class="font-semibold">
+                    {{ faq.faq_title }}
+                </div>
+
+                <div class="text-sm">
+                    <div v-html="faq.faq_content"></div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 </template>
 

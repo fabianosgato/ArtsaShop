@@ -40,7 +40,7 @@ class PageMetaComponent extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('frontend.components.html.page-meta-component');
+        return view('frontend.partials.html.page-meta-component');
     }
 
 }

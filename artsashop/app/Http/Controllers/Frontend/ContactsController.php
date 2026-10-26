@@ -44,12 +44,11 @@ class ContactsController extends Controller
         );
 
         return Inertia::render('Contacts', [
-            'faqs' => CmsFaqRepository::getData()->orderBy('sort_order')->get()
+            'faqs' => CmsFaqRepository::getData()
+                ->orderBy('sort_order')
+                ->get(['faq_id', 'faq_title', 'faq_content']),
         ]);
 
-//        return view('frontend.page.contacts', [
-//
-//        ]);
     }
 
     public function sendPost(ContactsRequest $request)
