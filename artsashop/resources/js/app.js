@@ -39,7 +39,7 @@ async function resolvePage(name) {
 createInertiaApp({
     title: (title) => `ArtisaShop ~ ${title}`,
     resolve: resolvePage,
-
+    //
     // resolve: name => {
     //     const pages = import.meta.glob('./Pages/**/*.vue', { eager: true });
     //     let page = pages[`./Pages/${name}.vue`];

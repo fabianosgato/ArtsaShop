@@ -22,6 +22,7 @@ use App\Http\Controllers\Controller;
 use Idea\Framework\Repository\Catalog\CatalogCategoryRepository;
 use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
 use Idea\Framework\Seo\Traits\HasSeoResponse;
+use Inertia\Inertia;
 
 class CatalogCategoryController extends Controller
 {
@@ -67,9 +68,9 @@ class CatalogCategoryController extends Controller
             view()->share('category', $catalogCategory);
 
             // Retorna as informações para a View
-            return view('catalog::frontend.category-products', [
-                'category' => $catalogCategory,
-                'products' => $products,
+            return Inertia::render('Catalog::CategoryProducts', [
+                'catalogCategory' => $catalogCategory,
+                'catalogProducts' => $products,
             ]);
 
         }
