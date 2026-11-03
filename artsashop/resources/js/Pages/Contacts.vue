@@ -1,6 +1,6 @@
 <script setup>
 import {useForm} from '@inertiajs/vue3'
-import InputError from "../Utils/InputError.vue";
+import InputError from "../Components/InputError.vue";
 import ButtonSubmit from "../Components/ButtonSubmit.vue";
 
 const form = useForm({
