@@ -7,6 +7,9 @@
             "email": "n.widart@gmail.com"
         }
     ],
+    "require": {
+        "simplesoftwareio/simple-qrcode": "~2"
+    },
     "extra": {
         "laravel": {
             "providers": [],
@@ -17,14 +20,31 @@
     },
     "autoload": {
         "psr-4": {
-            "Modules\\Payments\\": "app/",
+            "Modules\\Payments\\Http\\": "app/Http/",
+            "Modules\\Payments\\Manager\\": "app/Manager/",
+            "Modules\\Payments\\Contracts\\": "app/Contracts/",
+            "Modules\\Payments\\Providers\\": "app/Providers/",
+            "Modules\\Payments\\Gateways\\": "app/Gateways/",
+            "Modules\\Payments\\Methods\\": "app/Methods/",
+            "Modules\\Payments\\Concerns\\": "app/Concerns/",
+            "Modules\\Payments\\Exceptions\\": "app/Exceptions/",
+            "Modules\\Payments\\Facade\\": "app/Facade/",
             "Modules\\Payments\\Database\\Factories\\": "database/factories/",
-            "Modules\\Payments\\Database\\Seeders\\": "database/seeders/"
+            "Modules\\Payments\\Database\\Seeders\\": "database/seeders/",
+            "Modules\\Payments\\": "app/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Modules\\Payments\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
         }
     }
 }

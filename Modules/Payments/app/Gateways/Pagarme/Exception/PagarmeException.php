@@ -4,12 +4,11 @@
  *
  * NOTICE OF LICENSE
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
  *
- * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
- * deste software e arquivos de documentação associados
- *
+ * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
+ * mais recentes no futuro.
  *****************************************************
  *
  * @copyright    Copyright (c) Fabiano Gato
@@ -38,7 +37,7 @@ class PagarmeException extends Exception
     protected ?array $responseData;
 
     /**
-     * Cria uma exceção do Pagar.me
+     * Cria uma nova exceção do Pagar.me.
      */
     public function __construct(
         string $message = 'Erro na comunicação com o Pagar.me.',

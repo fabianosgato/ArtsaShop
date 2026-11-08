@@ -4,12 +4,11 @@
  *
  * NOTICE OF LICENSE
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
  *
- * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
- * deste software e arquivos de documentação associados
- *
+ * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
+ * mais recentes no futuro.
  *****************************************************
  *
  * @copyright    Copyright (c) Fabiano Gato
@@ -21,6 +20,9 @@ declare(strict_types=1);
 
 namespace Modules\Payments\Gateways\Pagarme;
 
+use App\Models\ClinicPaymentAccount;
+use App\Models\ClinicsEntity;
+use Idea\Framework\Repository\Clinics\ClinicPaymentAccountRepository;
 use Modules\Payments\Gateways\Pagarme\Core\PagarmeClient;
 use RuntimeException;
 

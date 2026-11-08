@@ -35,6 +35,7 @@ final class ClearSaleCredentials extends Model
      *
      *  + ['name'] string (opcional).
      *  + ['password'] string (opcional).
+     *
      * @throws \Exception
      */
     public function __construct(?array $data = [])

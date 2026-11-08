@@ -101,12 +101,18 @@ abstract class Client implements CompositePathInterface
             $header['Accept'] = $header['Accept'] ?? $outputSerializer->getContentType();
         }
 
-        $this->logger->debug("({$requestId}) {$method} {$url} : Sending request", ['body' => $body, 'query' => $query, 'header' => $header]);
+        $this->logger->debug("($requestId) $method $url : Sending request", ['body' => $body, 'query' => $query, 'header' => $header]);
 
         try {
             $response = $this->httpClient->request(
                 $method,
                 $url,
+                // @NOTE:
+                // We are not using our custom serializer from args
+                // because it easier for an external user to send an alternative body encoded
+                // with another serialization method (Ex: XML) as a string instead of
+                // assuming that the response from the current endpoint is also expecting
+                // to receive XML data.
                 $this->serialize($body, $inputSerializer),
                 $query,
                 $header
@@ -115,11 +121,11 @@ abstract class Client implements CompositePathInterface
             $response = Response::from($response, $this->httpClient->lastResponseHeaders(), $this->httpClient->lastResponseStatusCode());
             $response->setSerializer($outputSerializer);
 
-            $this->logger->debug("({$requestId}) {$method} {$url} : Read successful", ['response' => $response->getBody()]);
+            $this->logger->debug("($requestId) $method $url : Read successful", ['response' => $response->getBody()]);
             return $this->responseReceived($response) ?? $response;
         } catch (HttpException $e) {
             $response = $e->getResponse();
-            $this->logger->error("({$requestId}) {$method} {$url} : Read failed with status code {$e->getStatusCode()} {$e->getStatusMessage()}", ['exception' => strval($e), 'response' => $response ? $response->getBody() : null]);
+            $this->logger->error("($requestId) $method $url : Read failed with status code {$e->getStatusCode()} {$e->getStatusMessage()}", ['exception' => strval($e), 'response' => $response ? $response->getBody() : null]);
 
             if ($response) {
                 $response->setSerializer($outputSerializer);
@@ -127,7 +133,7 @@ abstract class Client implements CompositePathInterface
 
             $this->exceptionThrown($e);
         } catch (Throwable $e) {
-            $this->logger->error("({$requestId}) {$method} {$url} : Read failed with unhandled exception", ['exception' => strval($e)]);
+            $this->logger->error("($requestId) $method $url : Read failed with unhandled exception", ['exception' => strval($e)]);
             $this->exceptionThrown($e);
         }
     }

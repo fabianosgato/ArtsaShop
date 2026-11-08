@@ -29,6 +29,7 @@ use Modules\Payments\Gateways\Ipag\Model\Checkout;
  */
 class CheckoutEndpoint extends Endpoint
 {
+
     protected string $location = '/service/resources/checkout';
 
     /**

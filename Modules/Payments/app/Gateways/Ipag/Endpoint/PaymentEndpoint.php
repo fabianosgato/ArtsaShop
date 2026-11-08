@@ -16,7 +16,7 @@ class PaymentEndpoint extends Endpoint
     protected string $location = '/service';
 
     /**
-     * Endpoint para criar um recurso Payment
+     * Endpoint para criar um novo recurso Payment
      *
      * @param PaymentTransaction $paymentTransaction
      * @return Response

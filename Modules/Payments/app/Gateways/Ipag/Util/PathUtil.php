@@ -20,5 +20,5 @@ namespace Modules\Payments\Gateways\Ipag\Util;
 
 abstract class PathUtil
 {
-    public const string PATH_SEPARATOR = '/';
+    public const PATH_SEPARATOR = '/';
 }

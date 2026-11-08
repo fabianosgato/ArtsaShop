@@ -1,5 +1,21 @@
 <?php
-
+/**
+ * Fabiano Gato
+ *
+ * NOTICE OF LICENSE
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ *
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
+ *
+ */
 namespace Modules\Payments\Providers\Boleto;
 
 use App\Models\SalesOrder;
@@ -20,7 +36,7 @@ class BoletoPayment implements PaymentMethodInterface
 
     public function isAvailable(array $context = []): bool
     {
-        return false;
+        return false; // regras: valor mínimo, país, etc
     }
 
     public function authorize(SalesOrder $order, array $data): array

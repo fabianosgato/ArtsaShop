@@ -4,19 +4,17 @@
  *
  * NOTICE OF LICENSE
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
  *
- * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
- * deste software e arquivos de documentação associados
- *
+ * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
+ * mais recentes no futuro.
  *****************************************************
  *
  * @copyright    Copyright (c) Fabiano Gato
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
-
 namespace Modules\Payments\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -25,7 +23,7 @@ use Idea\Framework\Repository\Sales\SalesOrderRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Modules\Payments\Factories\PaymentGatewayFactory;
+use Modules\Payments\Facade\PaymentFacade;
 use Modules\Sales\Emails\SalesOrderApprovedMail;
 use Modules\Sales\Emails\SalesOrderCanceledMail;
 use Modules\Sales\Emails\SalesOrderCreatedMail;
@@ -35,26 +33,23 @@ class PaymentsController extends Controller
 {
 
     public function __construct(
-        protected PaymentGatewayFactory $paymentGatewayFactory
+        protected PaymentFacade $payments
     )
     {
     }
 
-    /**
-     * @param $orderId
-     * @return void
-     */
     public function pay($orderId)
     {
 
         // Retorna o Pedido do Cliente
         $order = SalesOrderRepository::getOrder($orderId)->first();
 
-        // Retorna o gateway habilitado
-        $gateway = $this->paymentGatewayFactory->make();
-
         if ($order->payment_method == 'pix') {
-            $gateway->paymentPix($order);
+            $gateway = $this->payments->gateway();
+            if ($gateway->supports('pix')) {
+                $method = $gateway->getMethod('pix');
+                $method->authorize($order, []);
+            }
 
         }
 
@@ -93,12 +88,25 @@ class PaymentsController extends Controller
     }
 
     /**
-     * Metodo de Callback para o IPag processar o pedido
+     * Método de Callback para o gateway processar o pedido (Webhook)
+     * Usa o gateway ativo via Strategy Pattern
+     *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function callback(Request $request)
     {
+        // Delega validação HMAC para o gateway ativo
+        if (!$this->payments->validateWebhook($request)) {
+
+            Log::warning('Payment Webhook: Assinatura HMAC inválida', [
+                'ip' => $request->ip(),
+                'payload' => $request->all()
+            ]);
+            return response()->json([
+                'message' => 'Assinatura inválida'
+            ], 401);
+        }
 
         try {
 
@@ -110,18 +118,17 @@ class PaymentsController extends Controller
                 ], 400);
             }
 
-            // Extrai dados principais
-            $orderIncrement = $payload['attributes']['order_id'] ?? null;
-            $status = $payload['attributes']['status']['code'] ?? null;
+            // Processa o webhook através do gateway ativo (Strategy Pattern)
+            $webhookData = $this->payments->handleWebhook($payload);
 
-            if (!$orderIncrement) {
+            if (empty($webhookData['order_id'])) {
                 return response()->json([
-                    'message' => 'Order ID não enviado'
+                    'message' => 'Order ID não enviado no webhook'
                 ], 400);
             }
 
-            // Busca pedido
-            $order = SalesOrderRepository::getByIncrement($orderIncrement)->first();
+            // Busca pedido pelo increment_code (código do pedido no gateway)
+            $order = SalesOrderRepository::getByIncrement($webhookData['order_id'])->first();
 
             if (!$order) {
                 return response()->json([
@@ -129,20 +136,29 @@ class PaymentsController extends Controller
                 ], 404);
             }
 
-            $statusOrder = $this->paymentGatewayFactory->checkPayment(
-                $payload['id']
-            );
+            // Consulta status da transação no gateway ativo
+            $transactionId = $webhookData['transaction_id'] ?? $payload['id'] ?? null;
+            $statusOrder = $this->payments->checkTransaction($transactionId);
+
+            if (!$statusOrder) {
+                return response()->json([
+                    'message' => 'Não foi possível consultar status da transação'
+                ], 500);
+            }
+
+            // Normaliza o status retornado pelo gateway
+            $normalizedStatus = $this->normalizeGatewayStatus($statusOrder);
 
             // Atualiza o status do pedido
             SalesOrderRepository::updateOrder(
                 orderId: $order->order_id,
                 attributes: [
-                    'status_id' => $statusOrder->status_id,
-                    'status_type' => $statusOrder->status,
-                    'status_code' => $statusOrder->status,
-                    'status_label' => $statusOrder->label,
-                    'shipping_cost' => $quoteModel->shipping_cost ?? 0,
-                    'canal' => 'web',
+                    'status_id'    => $normalizedStatus['status_id'],
+                    'status_type'  => $normalizedStatus['status_type'],
+                    'status_code'  => $normalizedStatus['status_code'],
+                    'status_label' => $normalizedStatus['status_label'],
+                    'shipping_cost'=> $order->shipping_cost ?? 0,
+                    'canal'        => 'web',
                 ]);
 
             // Retorna todos os dados do pedido
@@ -150,28 +166,15 @@ class PaymentsController extends Controller
                 SalesOrderRepository::getOrder($order->order_id)->first()
             ))->resolve();
 
-            if ($orderData['status']['code'] == 'approved') {
-                Mail::to($orderData['customer']['customerEmail'])
-                    ->send(new SalesOrderApprovedMail($order));
-
-            } else if ($orderData['status']['code'] == 'canceled') {
-                Mail::to($orderData['customer']['customerEmail'])
-                    ->send(new SalesOrderCanceledMail($order));
-
-            } else if ($orderData['status']['code'] == 'pending_payment') {
-                Mail::to($orderData['customer']['customerEmail'])
-                    ->send(new SalesOrderCreatedMail($order));
-
-            }
+            // Envia e-mail baseado no status final
+            $this->sendStatusEmail($orderData);
 
             // Retorna as informações do pedido
-            return response()->json(
-                $orderData
-            );
+            return response()->json($orderData);
 
         } catch (\Throwable $e) {
 
-            Log::error('IPag Webhook Error', [
+            Log::error('Payment Webhook Error', [
                 'error' => $e->getMessage(),
                 'payload' => $request->all()
             ]);
@@ -186,70 +189,173 @@ class PaymentsController extends Controller
     }
 
     /**
-     * Retorna o IPag para os metodos de pagamento
+     * Retorno do gateway após pagamento (Redirect)
+     * Usa o gateway ativo via Strategy Pattern
+     *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|void
      */
     public function redirect(Request $request)
     {
-
-        // Retorna o payload da requisição
         $payload = $request->all();
 
-        if (!empty($payload['transaction_id'])) {
+        if (empty($payload['transaction_id'])) {
+            return redirect()->route('checkout.onepage.fail')
+                ->with('error', 'Transaction ID não informado');
+        }
 
-            // Retorna as informações do pedido
+        try {
+            // Busca pedido pelo increment_code
+            $incrementCode = $payload['transaction_order_id'] ?? $payload['order_code'] ?? null;
+
+            if (!$incrementCode) {
+                return redirect()->route('checkout.onepage.fail')
+                    ->with('error', 'Order code não informado');
+            }
+
             $salesOrder = SalesOrderRepository::getOrderByIncrementId(
-                orderIncrementId: $payload['transaction_order_id']
+                orderIncrementId: $incrementCode
             );
 
-            // Realiza a consulta do pedido no IPag e retorna o status do pedido
-            $statusOrder = app(PaymentGatewayFactory::class)->consult(
-                $salesOrder,
+            if (!$salesOrder) {
+                return redirect()->route('checkout.onepage.fail')
+                    ->with('error', 'Pedido não encontrado');
+            }
+
+            // Consulta status da transação no gateway ativo
+            $statusOrder = $this->payments->checkTransaction(
                 $payload['transaction_id']
             );
+
+            if (!$statusOrder) {
+                return redirect()->route('checkout.onepage.fail')
+                    ->with('error', 'Não foi possível consultar status da transação');
+            }
+
+            // Normaliza o status
+            $normalizedStatus = $this->normalizeGatewayStatus($statusOrder);
 
             // Atualiza o status do pedido
             SalesOrderRepository::updateOrder(
                 orderId: $salesOrder->order_id,
                 attributes: [
-                    'status_id' => $statusOrder->status_id,
-                    'status_type' => $statusOrder->status,
-                    'status_code' => $statusOrder->status,
-                    'status_label' => $statusOrder->label,
-                    'shipping_cost' => $quoteModel->shipping_cost ?? 0,
-                    'canal' => 'web',
+                    'status_id'    => $normalizedStatus['status_id'],
+                    'status_type'  => $normalizedStatus['status_type'],
+                    'status_code'  => $normalizedStatus['status_code'],
+                    'status_label' => $normalizedStatus['status_label'],
+                    'shipping_cost'=> $salesOrder->shipping_cost ?? 0,
+                    'canal'        => 'web',
                 ]);
 
-            // Retorna todos os dados do pedido
+            // Retorna dados atualizados
             $orderData = (new SalesOrderResource(
                 SalesOrderRepository::getOrder($salesOrder->order_id)->first()
             ))->resolve();
 
-            if ($orderData['status']['code'] == 'approved') {
-                Mail::to($orderData['customer']['customerEmail'])
-                    ->send(new SalesOrderApprovedMail($salesOrder));
+            // Envia e-mail baseado no status
+            $this->sendStatusEmail($orderData);
 
-            } else if ($orderData['status']['code'] == 'canceled') {
-                Mail::to($orderData['customer']['customerEmail'])
-                    ->send(new SalesOrderCanceledMail($salesOrder));
-
-                // Neste caso redireciona para a página de falha
-                return redirect()->route('checkout.onepage.fail');
-
-            } else if ($orderData['status']['code'] == 'pending_payment') {
-                Mail::to($orderData['customer']['customerEmail'])
-                    ->send(new SalesOrderCreatedMail($salesOrder));
-
+            // Redireciona baseado no status
+            if ($normalizedStatus['status_code'] === 'approved') {
+                return redirect()->route('checkout.onepage.success', [
+                    'id' => $salesOrder->order_id
+                ]);
             }
 
-            // Redireciona para a pagina de sucesso
+            if ($normalizedStatus['status_code'] === 'canceled') {
+                return redirect()->route('checkout.onepage.fail');
+            }
+
+            // Para pending_payment (PIX aguardando), vai para success page
             return redirect()->route('checkout.onepage.success', [
                 'id' => $salesOrder->order_id
             ]);
 
+        } catch (\Throwable $e) {
+            Log::error('Payment Redirect Error', [
+                'error' => $e->getMessage(),
+                'payload' => $request->all()
+            ]);
+
+            return redirect()->route('checkout.onepage.fail')
+                ->with('error', 'Erro ao processar retorno do pagamento');
+        }
+    }
+
+    /**
+     * Normaliza status do gateway para status do sistema
+     *
+     * @param array $statusOrder
+     * @return array
+     */
+    protected function normalizeGatewayStatus(array $statusOrder): array
+    {
+        // Status do gateway (ex: 'paid', 'pending', 'canceled', 'failed', 'pre_authorized')
+        $gatewayStatus = $statusOrder['status'] ?? $statusOrder['order_status'] ?? $statusOrder['charge_status'] ?? 'unknown';
+
+        // Mapeia para status do sistema
+        return match ($gatewayStatus) {
+            'paid', 'approved', 'pre_authorized' => [
+                'status_id'    => \App\Models\SalesOrderStatus::where('code', 'awaiting_approval')->first()?->status_id,
+                'status_type'  => 'awaiting_approval',
+                'status_code'  => 'approved',
+                'status_label' => 'Aguardando aprovação da clínica',
+            ],
+            'pending', 'waiting_payment', 'pending_payment', 'processing' => [
+                'status_id'    => \App\Models\SalesOrderStatus::where('code', 'pending_payment')->first()?->status_id,
+                'status_type'  => 'pending_payment',
+                'status_code'  => 'pending_payment',
+                'status_label' => 'Aguardando pagamento',
+            ],
+            'canceled', 'cancelled', 'declined', 'failed', 'refunded' => [
+                'status_id'    => \App\Models\SalesOrderStatus::where('code', 'canceled')->first()?->status_id,
+                'status_type'  => 'canceled',
+                'status_code'  => 'canceled',
+                'status_label' => 'Cancelado',
+            ],
+            default => [
+                'status_id'    => \App\Models\SalesOrderStatus::where('code', 'pending_payment')->first()?->status_id,
+                'status_type'  => 'pending_payment',
+                'status_code'  => 'pending_payment',
+                'status_label' => 'Aguardando pagamento',
+            ],
+        };
+    }
+
+    /**
+     * Envia e-mail baseado no status do pedido
+     *
+     * @param array $orderData
+     * @return void
+     */
+    protected function sendStatusEmail(array $orderData): void
+    {
+        $email = $orderData['customer']['customerEmail'] ?? null;
+
+        if (!$email) {
+            return;
         }
 
+        try {
+            if ($orderData['status']['code'] == 'approved') {
+                Mail::to($email)->send(new SalesOrderApprovedMail(
+                    SalesOrderRepository::getOrder($orderData['order_id'])->first()
+                ));
+            } else if ($orderData['status']['code'] == 'canceled') {
+                Mail::to($email)->send(new SalesOrderCanceledMail(
+                    SalesOrderRepository::getOrder($orderData['order_id'])->first()
+                ));
+            } else if ($orderData['status']['code'] == 'pending_payment') {
+                Mail::to($email)->send(new SalesOrderCreatedMail(
+                    SalesOrderRepository::getOrder($orderData['order_id'])->first()
+                ));
+            }
+        } catch (\Throwable $e) {
+            Log::error('Erro ao enviar e-mail de status', [
+                'error' => $e->getMessage(),
+                'order_id' => $orderData['order_id'] ?? null
+            ]);
+        }
     }
 
 }

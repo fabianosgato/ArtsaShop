@@ -1,23 +1,8 @@
 <?php
-/**
- * Fabiano Gato
- *
- * NOTICE OF LICENSE
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- *
- * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
- * deste software e arquivos de documentação associados
- *
- *****************************************************
- *
- * @copyright    Copyright (c) Fabiano Gato
- * @author       Fabiano Gato <fabianogattoti@gmail.com>
- *
- */
+
 namespace Modules\Payments\Gateways\Ipag\Http;
 
+use Modules\Payments\Gateways\Ipag\IO\MutatorInterface;
 use Modules\Payments\Gateways\Ipag\IO\SerializerInterface;
 use Modules\Payments\Gateways\Ipag\Util\ArrayUtil;
 
@@ -66,7 +51,7 @@ class Response
         if (empty($this->raw) || gettype(json_decode($this->raw)) === 'string')
             $this->data = ['data' => $this->raw];
         else
-            $this->data = $this->serializer?->unserialize($this->raw);
+            $this->data = $this->serializer ? $this->serializer->unserialize($this->raw) : null;
 
         return $this;
     }

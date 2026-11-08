@@ -48,7 +48,7 @@ class IpagClient extends Client
     /**
      * @param string $apiID API ID é a identificação do usuário.
      * @param string $apiKey API Key é a chave de acesso do usuário.
-     * @param string $environment Ambiente de execução (IpagEnvironment::SANDBOX | IpagEnvironment::PRODUCTION).
+     * @param string Ambiente de execução (IpagEnvironment::SANDBOX | IpagEnvironment::PRODUCTION).
      * @param string $version Versão da API (valor padrão = '2').
      */
     public function __construct(string $apiID, string $apiKey, string $environment, ?LoggerInterface $logger = null, string $version = IpagEnvironment::VERSION)

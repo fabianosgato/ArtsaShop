@@ -1,25 +1,8 @@
 <?php
-/**
- * Fabiano Gato
- *
- * NOTICE OF LICENSE
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- *
- * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
- * deste software e arquivos de documentação associados
- *
- *****************************************************
- *
- * @copyright    Copyright (c) Fabiano Gato
- * @author       Fabiano Gato <fabianogattoti@gmail.com>
- *
- */
+
 namespace Modules\Payments\Gateways\Ipag\Model\Schema;
 
 use DateTimeInterface;
-use Modules\Payments\Gateways\Ipag\Model\Model;
 
 /**
  * @codeCoverageIgnore
@@ -56,47 +39,49 @@ final class Schema
         $this->name = $name;
     }
 
-    public function int(string $attribute): SchemaAttribute
+    public function int(string $attribute): SchemaIntegerAttribute
     {
         return $this->set(SchemaIntegerAttribute::from($this, $attribute));
     }
 
-    public function string(string $attribute): SchemaAttribute
+    public function string(string $attribute): SchemaStringAttribute
     {
         return $this->set(SchemaStringAttribute::from($this, $attribute));
     }
 
-    public function date(string $attribute, string $format = DateTimeInterface::RFC3339): SchemaAttribute
+    public function date(string $attribute, string $format = DateTimeInterface::RFC3339): SchemaDateAttribute
     {
         return $this->set(SchemaDateAttribute::from($this, $attribute)->format($format));
     }
 
-    public function bool(string $attribute): SchemaAttribute
+    public function bool(string $attribute): SchemaBoolAttribute
     {
         return $this->set(SchemaBoolAttribute::from($this, $attribute));
     }
 
-    public function enum(string $attribute, array $values): SchemaAttribute
+    public function enum(string $attribute, array $values): SchemaEnumAttribute
     {
         return $this->set(SchemaEnumAttribute::from($this, $attribute)->values($values));
     }
 
-    public function float(string $attribute): SchemaAttribute
+    public function float(string $attribute): SchemaFloatAttribute
     {
         return $this->set(SchemaFloatAttribute::from($this, $attribute));
     }
 
-    public function has(string $attribute, string $class = Model::class): SchemaAttribute
+    //
+
+    public function has(string $attribute, string $class = Model::class): SchemaRelationAttribute
     {
         return $this->set(SchemaRelationAttribute::from($this, $attribute, $class));
     }
 
-    public function hasMany(string $attribute, string $class = Model::class): SchemaAttribute
+    public function hasMany(string $attribute, string $class = Model::class): SchemaRelationAttribute
     {
         return $this->set(SchemaRelationAttribute::from($this, $attribute, $class)->many());
     }
 
-    public function array(string $attribute, ?SchemaAttribute $schema = null): SchemaAttribute
+    public function array(string $attribute, ?SchemaAttribute $schema = null): SchemaArrayAttribute
     {
         return $this->set(SchemaArrayAttribute::from($this, $attribute, $schema));
     }

@@ -1,25 +1,9 @@
 <?php
-/**
- * Fabiano Gato
- *
- * NOTICE OF LICENSE
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- *
- * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
- * deste software e arquivos de documentação associados
- *
- *****************************************************
- *
- * @copyright    Copyright (c) Fabiano Gato
- * @author       Fabiano Gato <fabianogattoti@gmail.com>
- *
- */
+
 namespace Modules\Payments\Gateways\Ipag\Model\Schema;
 
-use Idea\Framework\Services\Payments\Ipag\Util\StringUtil;
 use Modules\Payments\Gateways\Ipag\Model\Schema\Exception\SchemaAttributeParseException;
+use Modules\Payments\Gateways\Ipag\Util\StringUtil;
 
 /**
  * @codeCoverageIgnore
@@ -118,12 +102,12 @@ class SchemaAttribute
         return $this;
     }
 
-    public function list(): SchemaAttribute
+    public function list(): SchemaArrayAttribute
     {
         return $this->array();
     }
 
-    public function array(): SchemaAttribute
+    public function array(): SchemaArrayAttribute
     {
         return $this->schema->array($this->getName(), $this);
     }

@@ -20,7 +20,7 @@ namespace Modules\Payments\Gateways\Ipag\Util;
 
 abstract class StateUtil
 {
-    private static array $states = [
+    private static $states = [
         'AC' => 'Acre',
         'AL' => 'Alagoas',
         'AP' => 'Amapá',

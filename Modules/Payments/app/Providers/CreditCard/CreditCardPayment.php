@@ -20,6 +20,7 @@ namespace Modules\Payments\Providers\CreditCard;
 
 use App\Models\SalesOrder;
 use Modules\Payments\Contracts\PaymentMethodInterface;
+use Modules\Payments\Gateways\Ipag\IpagPayment;
 
 class CreditCardPayment implements PaymentMethodInterface
 {
@@ -70,7 +71,8 @@ class CreditCardPayment implements PaymentMethodInterface
         $orderTotal = $context['quote']['grand_total'] ?? 0;
 
         // Buscar parcelas (valor em centavos)
-        $installments = [];
+        $installments = app(IpagPayment::class)
+            ->getInstallments($orderTotal);
 
         return [
             // outros dados...

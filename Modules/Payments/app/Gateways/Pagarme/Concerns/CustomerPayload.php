@@ -4,12 +4,11 @@
  *
  * NOTICE OF LICENSE
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
  *
- * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
- * deste software e arquivos de documentação associados
- *
+ * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
+ * mais recentes no futuro.
  *****************************************************
  *
  * @copyright    Copyright (c) Fabiano Gato
@@ -142,11 +141,11 @@ trait CustomerPayload
 
         if (!$orderAddressBilling) {
             Log::error(
-                "PEDIDO SEM ENDEREÇO DE COBRANÇA PARA O ID: $orderId"
+                "PEDIDO SEM ENDEREÇO DE COBRANÇA PARA O ID: {$orderId}"
             );
 
             throw new \RuntimeException(
-                "O pedido $orderId não possui endereço de cobrança."
+                "O pedido {$orderId} não possui endereço de cobrança."
             );
 
         }
@@ -173,11 +172,11 @@ trait CustomerPayload
         if (!$orderAddressShipping) {
 
             Log::error(
-                "PEDIDO SEM ENDEREÇO DE ENTREGA PARA O ID: $orderId"
+                "PEDIDO SEM ENDEREÇO DE ENTREGA PARA O ID: {$orderId}"
             );
 
             throw new \RuntimeException(
-                "O pedido $orderId não possui endereço de entrega."
+                "O pedido {$orderId} não possui endereço de entrega."
             );
 
         }
@@ -204,11 +203,11 @@ trait CustomerPayload
         if (!$salesOrderCustomer) {
 
             Log::error(
-                "PEDIDO SEM CLIENTE PARA O ID: $orderId"
+                "PEDIDO SEM CLIENTE PARA O ID: {$orderId}"
             );
 
             throw new \RuntimeException(
-                "O pedido $orderId não possui cliente."
+                "O pedido {$orderId} não possui cliente."
             );
 
         }

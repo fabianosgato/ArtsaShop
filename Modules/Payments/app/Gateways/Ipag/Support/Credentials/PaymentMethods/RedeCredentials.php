@@ -1,5 +1,21 @@
 <?php
-
+/**
+ * Fabiano Gato
+ *
+ * NOTICE OF LICENSE
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ *
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
+ *
+ */
 namespace Modules\Payments\Gateways\Ipag\Support\Credentials\PaymentMethods;
 
 use Modules\Payments\Gateways\Ipag\Model\Model;
@@ -14,12 +30,12 @@ use Modules\Payments\Gateways\Ipag\Model\Schema\SchemaBuilder;
 final class RedeCredentials extends Model
 {
     /**
-     * @param array $data
+     * @param array|null $data
      *  array de dados da credencial da Rede.
      *
      *  + ['erede_key'] string (opcional).
      *  + ['pv'] string (opcional).
-     *
+     * @throws \Exception
      */
     public function __construct(?array $data = [])
     {

@@ -20,6 +20,7 @@ namespace Modules\Payments\Gateways\Ipag\IO;
 
 use Modules\Payments\Gateways\Ipag\Exception\ParseException;
 
+
 class JsonSerializer implements SerializerInterface
 {
     protected int $flags;

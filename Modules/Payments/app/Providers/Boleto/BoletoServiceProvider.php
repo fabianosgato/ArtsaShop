@@ -16,7 +16,6 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
-
 namespace Modules\Payments\Providers\Boleto;
 
 use Illuminate\Support\ServiceProvider;

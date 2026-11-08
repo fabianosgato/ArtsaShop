@@ -25,6 +25,7 @@ class PaymentMethod extends Model
      *  + ['capture'] bool (opcional).
      *  + ['retry'] bool (opcional).
      *  + ['credentials'] array (opcional).
+     * @throws \Exception
      */
     public function __construct(?array $data = [])
     {

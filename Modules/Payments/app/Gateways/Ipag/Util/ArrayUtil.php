@@ -45,10 +45,12 @@ abstract class ArrayUtil
             if (!$splitPath) {
                 $array[$key] = $value;
             } else {
-                if (!array_key_exists($key, $array) || !is_array($array[$key])) {
+                if (array_key_exists($key, $array) && is_array($array[$key])) {
+                    $array = &$array[$key];
+                } else {
                     $array[$key] = [];
+                    $array = &$array[$key];
                 }
-                $array = &$array[$key];
             }
         }
     }

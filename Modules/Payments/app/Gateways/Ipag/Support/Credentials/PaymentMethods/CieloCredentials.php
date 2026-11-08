@@ -30,12 +30,12 @@ use Modules\Payments\Gateways\Ipag\Model\Schema\SchemaBuilder;
 final class CieloCredentials extends Model
 {
     /**
-     * @param array|null $data
+     * @param array $data
      *  array de dados da credencial da Cielo.
      *
      *  + ['merchant_id'] string (opcional).
      *  + ['merchant_key'] string (opcional).
-     * @throws \Exception
+     *
      */
     public function __construct(?array $data = [])
     {

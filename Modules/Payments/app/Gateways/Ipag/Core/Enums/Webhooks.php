@@ -1,5 +1,21 @@
 <?php
-
+/**
+ * Fabiano Gato
+ *
+ * NOTICE OF LICENSE
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ *
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
+ *
+ */
 namespace Modules\Payments\Gateways\Ipag\Core\Enums;
 
 abstract class Webhooks
@@ -7,80 +23,80 @@ abstract class Webhooks
     /**
      * Link de Pagamento recebeu um pagamento aprovado.
      */
-    public const PAYMENT_LINK_PAYMENT_SUCCEEDED = 'PaymentLinkPaymentSucceeded';
+    public const string PAYMENT_LINK_PAYMENT_SUCCEEDED = 'PaymentLinkPaymentSucceeded';
 
     /**
      * Link de Pagamento recebeu um pagamento recusado.
      */
-    public const PAYMENT_LINK_PAYMENT_FAILED = 'PaymentLinkPaymentFailed';
+    public const string PAYMENT_LINK_PAYMENT_FAILED = 'PaymentLinkPaymentFailed';
 
     /**
      * O pagamento da Assinatura foi processado com sucesso.
      */
-    public const SUBSCRIPTION_PAYMENT_SUCCEEDED = 'SubscriptionPaymentSucceeded';
+    public const string SUBSCRIPTION_PAYMENT_SUCCEEDED = 'SubscriptionPaymentSucceeded';
 
     /**
      * O pagamento da Assinatura foi processado com falha.
      */
-    public const SUBSCRIPTION_PAYMENT_FAILED = 'SubscriptionPaymentFailed';
+    public const string SUBSCRIPTION_PAYMENT_FAILED = 'SubscriptionPaymentFailed';
 
     /**
      * O pagamento da Cobrança foi processado com sucesso.
      */
-    public const CHARGE_PAYMENT_SUCCEEDED = 'ChargePaymentSucceeded';
+    public const string CHARGE_PAYMENT_SUCCEEDED = 'ChargePaymentSucceeded';
 
     /**
      * O pagamento da Cobrança foi processado com falha.
      */
-    public const CHARGE_PAYMENT_FAILED = 'ChargePaymentFailed';
+    public const string CHARGE_PAYMENT_FAILED = 'ChargePaymentFailed';
 
     /**
      * A Transação foi criada.
      */
-    public const TRANSACTION_CREATED = 'TransactionCreated';
+    public const string TRANSACTION_CREATED = 'TransactionCreated';
 
     /**
-     * A Transação está aguardando pagamento do boleto.
+     * Transação aguardando pagamento do boleto.
      */
-    public const TRANSACTION_WAITING_PAYMENT = 'TransactionWaitingPayment';
+    public const string TRANSACTION_WAITING_PAYMENT = 'TransactionWaitingPayment';
 
     /**
      * A Transação foi cancelada com sucesso.
      */
-    public const TRANSACTION_CANCELED = 'TransactionCanceled';
+    public const string TRANSACTION_CANCELED = 'TransactionCanceled';
 
     /**
      * A Transação foi Pré-Autorizada com sucesso.
      */
-    public const TRANSACTION_PRE_AUTHORIZED = 'TransactionPreAuthorized';
+    public const string TRANSACTION_PRE_AUTHORIZED = 'TransactionPreAuthorized';
 
     /**
      * A Transação foi Capturada com sucesso.
      */
-    public const TRANSACTION_CAPTURED = 'TransactionCaptured';
+    public const string TRANSACTION_CAPTURED = 'TransactionCaptured';
 
     /**
      * A Transação teve a autorização recusada pela Adquirente.
      */
-    public const TRANSACTION_DENIED = 'TransactionDenied';
+    public const string TRANSACTION_DENIED = 'TransactionDenied';
 
     /**
      * A Transação sofreu disputa do Pagador/Cliente.
      */
-    public const TRANSACTION_DISPUTED = 'TransactionDisputed';
+    public const string TRANSACTION_DISPUTED = 'TransactionDisputed';
 
     /**
      * A Transação foi Estornada, e o valor devolvido ao Pagador/Cliente.
      */
-    public const TRANSACTION_CHARGEDBACK = 'TransactionChargedback';
+    public const string TRANSACTION_CHARGEDBACK = 'TransactionChargedback';
 
     /**
      * A Transferência foi realizada com sucesso.
      */
-    public const TRANSFER_PAYMENT_SUCCEEDED = 'TransferPaymentSucceeded';
+    public const string TRANSFER_PAYMENT_SUCCEEDED = 'TransferPaymentSucceeded';
 
     /**
      * A Transferência foi realizada com falha.
      */
-    public const TRANSFER_PAYMENT_FAILED = 'TransferPaymentFailed';
+    public const string TRANSFER_PAYMENT_FAILED = 'TransferPaymentFailed';
 }

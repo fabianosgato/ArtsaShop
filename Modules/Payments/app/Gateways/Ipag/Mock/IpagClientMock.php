@@ -1,21 +1,5 @@
 <?php
-/**
- * Fabiano Gato
- *
- * NOTICE OF LICENSE
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- *
- * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
- * deste software e arquivos de documentação associados
- *
- *****************************************************
- *
- * @copyright    Copyright (c) Fabiano Gato
- * @author       Fabiano Gato <fabianogattoti@gmail.com>
- *
- */
+
 namespace Modules\Payments\Gateways\Ipag\Mock;
 
 use Modules\Payments\Gateways\Ipag\Core\Client;
@@ -35,7 +19,7 @@ final class IpagClientMock extends IpagClient
                 array_merge(
                     [
                         'headers' => [
-                            'Authorization' => 'Basic ' . base64_encode("$apiID:$apiKey"),
+                            'Authorization' => 'Basic ' . base64_encode("{$apiID}:{$apiKey}"),
                             'Content-Type' => 'application/json',
                             'x-api-version' => $version,
                         ],

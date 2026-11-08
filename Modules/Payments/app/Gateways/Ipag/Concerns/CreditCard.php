@@ -16,21 +16,33 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
+namespace Modules\Payments\Gateways\Ipag\Concerns;
 
-namespace Modules\Payments\Concerns;
-
-use Modules\Payments\Enums\Cards;
-use Modules\Payments\Enums\PaymentTypes;
+use Modules\Payments\Gateways\Ipag\Core\Enums\Cards;
+use Modules\Payments\Gateways\Ipag\Core\Enums\PaymentTypes;
 
 trait CreditCard
 {
 
-    private function getBrand($cardBrand): ?Cards
+    private function getBrand($cardBrand): ?string
     {
-        return match ($cardBrand) {
-            'amx' => Cards::AMEX,
-            default => Cards::tryFrom($cardBrand),
-        };
+
+        if ($cardBrand == 'visa') {
+            return Cards::VISA;
+        } else if ($cardBrand == 'mastercard') {
+            return Cards::MASTERCARD;
+        } else if ($cardBrand == 'elo') {
+            return Cards::ELO;
+        } else if ($cardBrand == 'amx') {
+            return Cards::AMEX;
+        } else if ($cardBrand == 'discover') {
+            return Cards::DISCOVER;
+        } else if ($cardBrand == 'hipercard') {
+            return Cards::HIPERCARD;
+        }
+
+        return null;
+
     }
 
     /**

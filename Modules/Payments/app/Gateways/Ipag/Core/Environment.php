@@ -33,13 +33,15 @@ abstract class Environment implements CompositePathInterface
 
     public function setParent(?CompositePathInterface $parent): void
     {
-        throw new UnexpectedValueException("Não se espera que um ambiente tenha um caminho pai.");
+        throw new UnexpectedValueException("An environment is not supposed to have a parent path");
     }
 
     public function getParent(): ?CompositePathInterface
     {
         return null;
     }
+
+    //
 
     public function joinPath(string $relative): string
     {

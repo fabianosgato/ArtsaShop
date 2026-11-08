@@ -1,5 +1,21 @@
 <?php
-
+/**
+ * Fabiano Gato
+ *
+ * NOTICE OF LICENSE
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ *
+ * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
+ * deste software e arquivos de documentação associados
+ *
+ *****************************************************
+ *
+ * @copyright    Copyright (c) Fabiano Gato
+ * @author       Fabiano Gato <fabianogattoti@gmail.com>
+ *
+ */
 namespace Modules\Payments\Providers;
 
 use Modules\Payments\Contracts\PaymentMethodInterface;
@@ -8,20 +24,6 @@ class PaymentManager
 {
 
     protected array $methods = [];
-
-    public function gateway(): string
-    {
-
-        $gateway = getConfigData('payments/gateway/default');
-
-        if (!$gateway)
-            throw new \RuntimeException(
-                'Nenhum gateway de pagamento está ativo.'
-            );
-
-        return $gateway;
-
-    }
 
     public function register(PaymentMethodInterface $method): void
     {
@@ -33,7 +35,7 @@ class PaymentManager
 
         return array_filter(
             $this->methods,
-            fn($method) => $method->isAvailable($context)
+            fn ($method) => $method->isAvailable($context)
         );
     }
 

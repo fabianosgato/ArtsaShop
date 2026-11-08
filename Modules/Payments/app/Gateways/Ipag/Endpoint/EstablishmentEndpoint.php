@@ -49,8 +49,6 @@ class EstablishmentEndpoint extends Endpoint
      * @param Establishment $establishment
      * @param string $uuid
      * @return Response
-     *
-     * @codeCoverageIgnore
      */
     public function update(Establishment $establishment, string $uuid): Response
     {
@@ -62,8 +60,6 @@ class EstablishmentEndpoint extends Endpoint
      *
      * @param string $uuid
      * @return Response
-     *
-     * @codeCoverageIgnore
      */
     public function get(string $uuid): Response
     {
@@ -75,8 +71,6 @@ class EstablishmentEndpoint extends Endpoint
      *
      * @param array|null $filters
      * @return Response
-     *
-     * @codeCoverageIgnore
      */
     public function list(?array $filters = []): Response
     {
@@ -85,10 +79,7 @@ class EstablishmentEndpoint extends Endpoint
 
     /**
      * Endpoint Transaction do recurso Establishment.
-     *
      * @return EstablishmentTransactionEndpoint
-     *
-     * @codeCoverageIgnore
      */
     public function transaction(): EstablishmentTransactionEndpoint
     {

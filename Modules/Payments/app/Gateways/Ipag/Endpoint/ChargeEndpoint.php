@@ -16,6 +16,7 @@
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
  *
  */
+
 namespace Modules\Payments\Gateways\Ipag\Endpoint;
 
 use Modules\Payments\Gateways\Ipag\Core\Endpoint;
@@ -32,7 +33,7 @@ class ChargeEndpoint extends Endpoint
     protected string $location = '/service/resources/charges';
 
     /**
-     * Endpoint para criar um recurso Charge
+     * Endpoint para criar um recurso 'Charge'
      *
      * @param Charge $charge
      * @return Response
@@ -43,13 +44,11 @@ class ChargeEndpoint extends Endpoint
     }
 
     /**
-     * Endpoint para atualizar um recurso Charge
+     * Endpoint para atualizar um recurso 'Charge'
      *
      * @param Charge $charge
      * @param integer $id
      * @return Response
-     *
-     * @codeCoverageIgnore
      */
     public function update(Charge $charge, int $id): Response
     {
@@ -57,12 +56,9 @@ class ChargeEndpoint extends Endpoint
     }
 
     /**
-     * Endpoint para obter um recurso Charge
-     *
+     * Endpoint para obter um recurso 'Charge'
      * @param integer $id
      * @return Response
-     *
-     * @codeCoverageIgnore
      */
     public function get(int $id): Response
     {
@@ -70,12 +66,9 @@ class ChargeEndpoint extends Endpoint
     }
 
     /**
-     * Endpoint para listar recursos Charge
-     *
+     * Endpoint para listar recursos 'Charge'
      * @param array|null $filters
      * @return Response
-     *
-     * @codeCoverageIgnore
      */
     public function list(?array $filters = []): Response
     {

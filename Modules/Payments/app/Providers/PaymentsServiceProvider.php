@@ -20,9 +20,8 @@ namespace Modules\Payments\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use Modules\Payments\Providers\Boleto\BoletoServiceProvider;
-use Modules\Payments\Providers\CreditCard\CreditCardServiceProvider;
-use Modules\Payments\Providers\Pix\PixServiceProvider;
+use Modules\Payments\Facade\PaymentFacade;
+use Modules\Payments\Manager\GatewayManager;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -56,12 +55,20 @@ class PaymentsServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
-        $this->app->singleton(PaymentManager::class);
 
-        $this->app->register(PixServiceProvider::class);
-        $this->app->register(CreditCardServiceProvider::class);
-        $this->app->register(BoletoServiceProvider::class);
+        // Registra o GatewayManager como singleton
+        // O construtor do GatewayManager já carrega as configurações do banco de dados
+        $this->app->singleton(GatewayManager::class, function ($app) {
+            return new GatewayManager();
+        });
 
+        // Registra PaymentFacade
+        $this->app->singleton(PaymentFacade::class, function ($app) {
+            return new PaymentFacade($app->make(GatewayManager::class));
+        });
+
+        // Alias para facilitar uso em controllers
+        $this->app->alias(PaymentFacade::class, 'payments');
     }
 
     /**
@@ -144,7 +151,10 @@ class PaymentsServiceProvider extends ServiceProvider
      */
     public function provides(): array
     {
-        return [];
+        return [
+            GatewayManager::class,
+            PaymentFacade::class,
+        ];
     }
 
     private function getPublishableViewPaths(): array

@@ -4,12 +4,11 @@
  *
  * NOTICE OF LICENSE
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
  *
- * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
- * deste software e arquivos de documentação associados
- *
+ * Não editar ou acrescentar à este arquivo se você quiser fazer o upgrade para versões
+ * mais recentes no futuro.
  *****************************************************
  *
  * @copyright    Copyright (c) Fabiano Gato
@@ -18,17 +17,16 @@
  */
 declare(strict_types=1);
 
-namespace Modules\Payments\Gateways;
+namespace Modules\Payments\Gateways\Pagarme;
 
 use App\Models\SalesOrder;
-use Modules\Payments\Contracts\PaymentGatewayInterface;
 use Modules\Payments\Gateways\Pagarme\Core\PagarmeClient;
 use Modules\Payments\Gateways\Pagarme\Order\PagarmeOrder;
 use Modules\Payments\Gateways\Pagarme\Order\PagarmeRefund;
 use Modules\Payments\Gateways\Pagarme\Types\PagarmeCreditCard;
 use Modules\Payments\Gateways\Pagarme\Types\PagarmePix;
 
-class PagarmePayment implements PaymentGatewayInterface
+class PagarmePayment
 {
 
     /**
@@ -167,40 +165,4 @@ class PagarmePayment implements PaymentGatewayInterface
 
     }
 
-    public function paymentPix(SalesOrder $salesOrder): array
-    {
-        return $this->processPayment(
-            salesOrder: $salesOrder,
-            paymentType: 'PIX',
-            paymentPayload: []
-        );
-    }
-
-    public function paymentCreditCard(SalesOrder $salesOrder, array $paymentCard): array
-    {
-        return $this->processPayment(
-            salesOrder: $salesOrder,
-            paymentType: 'CC',
-            paymentPayload: []
-        );
-    }
-
-    public function paymentBankSlips(SalesOrder $salesOrder): array
-    {
-        return $this->processPayment(
-            salesOrder: $salesOrder,
-            paymentType: 'CC',
-            paymentPayload: []
-        );
-    }
-
-    public function checkPayment(string $transactionId)
-    {
-        dd($transactionId);
-    }
-
-    #[\Override] public function consult(SalesOrder $salesOrder, string $transactionId)
-    {
-        // TODO: Implement consult() method.
-    }
 }

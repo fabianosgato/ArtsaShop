@@ -1,25 +1,8 @@
 <?php
-/**
- * Fabiano Gato
- *
- * NOTICE OF LICENSE
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- *
- * É concedida permissão, gratuitamente, a qualquer pessoa que obtenha uma cópia
- * deste software e arquivos de documentação associados
- *
- *****************************************************
- *
- * @copyright    Copyright (c) Fabiano Gato
- * @author       Fabiano Gato <fabianogattoti@gmail.com>
- *
- */
+
 namespace Modules\Payments\Gateways\Ipag\Model\Schema;
 
 use DateTimeInterface;
-use Modules\Payments\Gateways\Ipag\Model\Model;
 
 /**
  * @codeCoverageIgnore
@@ -43,12 +26,12 @@ final class SchemaBuilder
         return $this->target->any($attribute);
     }
 
-    public function int(string $attribute): SchemaAttribute
+    public function int(string $attribute): SchemaIntegerAttribute
     {
         return $this->target->int($attribute);
     }
 
-    public function string(string $attribute): SchemaAttribute
+    public function string(string $attribute): SchemaStringAttribute
     {
         return $this->target->string($attribute);
     }
@@ -58,22 +41,22 @@ final class SchemaBuilder
         return $this->target->date($attribute)->format($format);
     }
 
-    public function bool(string $attribute): SchemaAttribute
+    public function bool(string $attribute): SchemaBoolAttribute
     {
         return $this->target->bool($attribute);
     }
 
-    public function enum(string $attribute, array $values): SchemaAttribute
+    public function enum(string $attribute, array $values): SchemaEnumAttribute
     {
         return $this->target->enum($attribute, $values);
     }
 
-    public function float(string $attribute): SchemaAttribute
+    public function float(string $attribute): SchemaFloatAttribute
     {
         return $this->target->float($attribute);
     }
 
-    public function has(string $attribute, string $class = Model::class): SchemaAttribute
+    public function has(string $attribute, string $class = Model::class): SchemaRelationAttribute
     {
         return $this->target->has($attribute, $class);
     }
@@ -84,6 +67,8 @@ final class SchemaBuilder
     {
         return $this->target->hasMany($attribute, $class)->many();
     }
+
+    //
 
     public function build(): Schema
     {
