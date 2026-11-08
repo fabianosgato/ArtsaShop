@@ -15,9 +15,10 @@ artsashop/public/js/filament/
 artsashop/public/fonts/filament/
 artsashop/public/css/filament/
 artsashop/public/.well-known/
-artsashop/composer.lock
-artsashop/public/css/app/filament-export-0.3.0.css
-artsashop/public/js/app/filament-export-0.3.0.js
+artsashop/AGENTS.md
+artsashop/boost.json
+artsashop/opencode.json
+artsashop/.agents
 
 # Compiled Java class files
 *.class
