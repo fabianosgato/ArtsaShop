@@ -20,9 +20,17 @@ declare(strict_types=1);
 
 namespace Idea\Framework\Repository\Catalog;
 
+use App\Models\CatalogCategoryProduct;
 use App\Models\CatalogProduct;
 use App\Models\CatalogProductAttribute;
+use App\Models\CatalogProductCategory;
+use App\Models\CatalogProductMedia;
 use App\Models\CatalogProductPrice;
+use App\Models\CatalogProductQueue;
+use App\Models\CatalogProductStore;
+use App\Models\CatalogProductTagsEntity;
+use App\Models\SeoPage;
+use App\Models\SysUrlRewrite;
 use Idea\Framework\Repository\AbstractRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -1034,23 +1042,68 @@ class CatalogProductsRepository extends AbstractRepository
     /**
      * Metodo responsavel por EXCLUIR DEFINITIVAMENTE um produto da base.
      * Apenas serao excluidos produtos que estao como "NAO APROVADOS" que sao produtos nao editados ainda
-     * @param $productId
+     * @param int $productId
      * @return void
+     * @throws \Throwable
      */
-    public static function deleteProduct($productId): void
+    public static function deleteProduct(int $productId): void
     {
+        DB::beginTransaction();
 
-        // Exclui os preços do produto
-        CatalogProductPrice::query()->where('product_id', $productId)->delete();
+        try {
 
-        // Exclui a relacao dos Atributos do produto
-        CatalogProductAttribute::query()->where('product_id', $productId)->delete();
+            // 1. URL Rewrites (target_type=product, target_path=product/{id})
+            SysUrlRewrite::query()
+                ->where('target_type', 'product')
+                ->where('target_path', 'product/' . $productId)
+                ->delete();
 
-        // Exclui o produto do Catalogo
-        CatalogProduct::query()->where('product_id', $productId)->delete();
+            // 2. Media/Imagens do produto
+            CatalogProductMedia::query()->where('product_id', $productId)->delete();
 
+            // 3. Relacao Produto <-> Loja (multi-store)
+            CatalogProductStore::query()->where('product_id', $productId)->delete();
+
+            // 4. Tags do produto
+            CatalogProductTagsEntity::query()->where('product_id', $productId)->delete();
+
+            // 5. Queue de processamento
+            CatalogProductQueue::query()->where('product_id', $productId)->delete();
+
+            // 6. Relacao Categoria <-> Produto (N:M)
+            CatalogCategoryProduct::query()->where('product_id', $productId)->delete();
+
+            // 7. Produto-Categoria principal (se existir tabela separada)
+            CatalogProductCategory::query()->where('product_id', $productId)->delete();
+
+            // 8. Preços do produto
+            CatalogProductPrice::query()->where('product_id', $productId)->delete();
+
+            // 9. Atributos EAV do produto
+            CatalogProductAttribute::query()->where('product_id', $productId)->delete();
+
+            // 10. SEO Pages (object=product, object_id=productId)
+            // As tabelas filhas (meta_tags, images, link_tags) sao limpas via FK CASCADE
+            SeoPage::query()
+                ->where('object', 'product')
+                ->where('object_id', (string) $productId)
+                ->delete();
+
+            // 11. Por fim, exclui o produto
+            CatalogProduct::query()->where('product_id', $productId)->delete();
+
+            DB::commit();
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
+    /**
+     * Deleta todos os produtos de um Grupo de Atributo específico.
+     * @throws \Throwable
+     */
     public static function deleteByAttributeSet(int $eavAttributeSetId): void
     {
 

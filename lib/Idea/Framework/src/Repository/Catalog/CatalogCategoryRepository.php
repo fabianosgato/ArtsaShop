@@ -21,8 +21,13 @@ declare(strict_types=1);
 namespace Idea\Framework\Repository\Catalog;
 
 use App\Models\CatalogCategoryEntity;
+use App\Models\CatalogCategoryProduct;
+use App\Models\EavAttributesCategory;
+use App\Models\SeoPage;
+use App\Models\SysUrlRewrite;
 use Idea\Framework\Repository\AbstractRepository;
 use Idea\Framework\Repository\System\SysUrlRewriteRepository;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class CatalogCategoryRepository extends AbstractRepository
@@ -538,6 +543,52 @@ class CatalogCategoryRepository extends AbstractRepository
 
         return null;
 
+    }
+
+    /**
+     * Exclui definitivamente uma categoria e suas relações.
+     * @param int $categoryId
+     * @return void
+     */
+    public static function deleteCategory(int $categoryId): void
+    {
+        DB::beginTransaction();
+
+        try {
+            // 1. URL Rewrites (target_type=category, target_path=category/{id})
+            SysUrlRewrite::query()
+                ->where('target_type', 'category')
+                ->where('target_path', 'category/' . $categoryId)
+                ->delete();
+
+            // 2. Atributos EAV da categoria
+            EavAttributesCategory::query()
+                ->where('eav_category_products_id', $categoryId)
+                ->delete();
+
+            // 3. Relacao N:M Categoria <-> Produto
+            CatalogCategoryProduct::query()
+                ->where('category_id', $categoryId)
+                ->delete();
+
+            // 4. SEO Pages (object=category, object_id=categoryId)
+            // As tabelas filhas (meta_tags, images, link_tags) sao limpas via FK CASCADE
+            SeoPage::query()
+                ->where('object', 'category')
+                ->where('object_id', (string) $categoryId)
+                ->delete();
+
+            // 5. Por fim, exclui a categoria
+            CatalogCategoryEntity::query()
+                ->where('entity_id', $categoryId)
+                ->delete();
+
+            DB::commit();
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
 }
