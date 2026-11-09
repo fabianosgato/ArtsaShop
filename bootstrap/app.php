@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Fabiano Gato
  *
@@ -66,6 +65,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.customer' => \App\Http\Middleware\RedirectIfCustomerUnauthenticated::class,
         ]);
 
+        // Inertia Requests para Vue.js
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
         ]);
