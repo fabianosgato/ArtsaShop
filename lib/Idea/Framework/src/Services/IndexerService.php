@@ -18,11 +18,13 @@
  */
 namespace Idea\Framework\Services;
 
+use App\Models\SeoPage;
+use App\Models\SysUrlRewrite;
 use Idea\Framework\Contracts\ServiceInterface;
 use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
+use Idea\Framework\Repository\Seo\SeoPageRepository;
+use Idea\Framework\Repository\System\SysUrlRewriteRepository;
 use Modules\Catalog\Services\CatalogProductMediaService;
-use Modules\Catalog\Tasks\ReindexProductImagesTask;
-use Spatie\Async\Pool;
 
 class IndexerService implements ServiceInterface
 {
@@ -34,62 +36,92 @@ class IndexerService implements ServiceInterface
 
     public function reindex(): void
     {
-
         // Retorna todos os produtos da base
         $catalogProducts = $this->catalogProductsRepository::getProducts()
             ->orderBy(
                 column: 'product_id',
-                direction:'desc'
+                direction: 'desc'
             )
             ->get();
 
         foreach ($catalogProducts as $index => $catalogProduct) {
-
             print("$index : {$catalogProduct->product_id} {$catalogProduct->sku} : {$catalogProduct->name} \n");
 
+            // 1. Indexa as imagens de produtos
             CatalogProductMediaService::proccessAllImages(
                 catalogProduct: $catalogProduct
             );
 
-        }
+            // 2. Valida/Cria URL Rewrite (sys_url_rewrite)
+            $this->ensureUrlRewrite($catalogProduct);
 
+            // 3. Valida/Cria SEO Page (seo_pages)
+            $this->ensureSeoPage($catalogProduct);
+        }
     }
 
-    public function reindexall(): void
+    /**
+     * Garante que o produto tem URL Rewrite válido
+     * @param \App\Models\CatalogProduct $product
+     */
+    protected function ensureUrlRewrite($product): void
     {
+        $targetPath = 'product/' . $product->product_id;
 
-        $pool = Pool::create()
-            ->autoload(base_path('vendor/autoload.php'))
-            ->concurrency(5)
-            ->timeout(120);
+        // Verifica se já existe URL rewrite para este produto
+        $existing = SysUrlRewrite::query()
+            ->where('target_type', 'product')
+            ->where('target_path', $targetPath)
+            ->first();
 
-        $catalogProducts = $this->catalogProductsRepository
-            ->getProducts()
-            ->orderBy('product_id', 'desc')
-            ->limit(10)
-            ->cursor();
-
-        foreach ($catalogProducts as $index => $catalogProduct) {
-
-            $pool->add(
-                    new ReindexProductImagesTask(
-                        productId: $catalogProduct->product_id,
-                        index: $index,
-                    )
-                )
-                ->then(function ($output) {
-                    echo $output.PHP_EOL;
-                })
-                ->catch(function (\Throwable $exception) {
-                    echo "ERRO no processo: "
-                        . $exception->getMessage()
-                        . "\n";
-                })
-                ->timeout(function() {
-                    echo "Process took too long \n";
-                });
+        if (!$existing) {
+            // Cria URL rewrite usando o slug_key do produto
+            SysUrlRewriteRepository::saveUrlRewrite([
+                'request_path' => $product->slug_key,
+                'target_path' => $targetPath,
+                'target_type' => 'product',
+                'is_system' => 1,
+            ]);
+            print("  → URL Rewrite criado: {$product->slug_key} → {$targetPath}\n");
         }
+    }
 
-        $pool->wait();
+    /**
+     * Garante que o produto tem SEO Page válido
+     * @param \App\Models\CatalogProduct $product
+     */
+    protected function ensureSeoPage($product): void
+    {
+        // Verifica se já existe SEO page para este produto
+        $existing = SeoPage::query()
+            ->where('object', 'product')
+            ->where('object_id', (string) $product->product_id)
+            ->first();
+
+        if (!$existing) {
+            // Cria SEO page com dados padrão do produto
+            SeoPageRepository::saveOrUpdateByObject(
+                object: 'product',
+                objectId: $product->product_id,
+                seoPageData: [
+                    'object' => 'product',
+                    'object_id' => $product->product_id,
+                    'path' => trim("{$product->slug_key}-{$product->product_id}"),
+                    'title' => $product->name,
+                    'title_source' => 'auto',
+                    'description' => $product->short_description ?? '',
+                    'description_source' => 'auto',
+                    'change_frequency' => 'weekly',
+                    'priority' => 0.5,
+                    'schema' => '',
+                    'focus_keyword' => '',
+                    'tags' => '',
+                    'robot_index' => 'index',
+                    'robot_follow' => 'follow',
+                    'canonical_url' => url(trim($product->slug_key)),
+                ]
+            );
+            print("  → SEO Page criado: {$product->name}\n");
+        }
     }
 }

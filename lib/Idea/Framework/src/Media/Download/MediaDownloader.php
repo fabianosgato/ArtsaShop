@@ -78,23 +78,23 @@ class MediaDownloader
         if ($productSku != '') {
 
             // Retorna a primeira letra do ASIN para a criação do diretório
-            $fistLetter = substr($productSku, 0, 5);
+            $firstLetter = substr($productSku, 0, 5);
 
             // Cria o diretorio de imagens
-            if (!is_dir($dirImages . DIRECTORY_SEPARATOR . $fistLetter)) {
-                mkdir($dirImages . DIRECTORY_SEPARATOR . $fistLetter, 0777, true);
+            if (!is_dir($dirImages . DIRECTORY_SEPARATOR . $firstLetter)) {
+                mkdir($dirImages . DIRECTORY_SEPARATOR . $firstLetter, 0777, true);
             }
 
             // Retorna a primeira letra do ASIN para a criação do diretório
             $secondLetter = substr($productSku, 5, 2);
 
             // Cria o diretorio de imagens
-            if (!is_dir($dirImages . DIRECTORY_SEPARATOR . $fistLetter . DIRECTORY_SEPARATOR . $secondLetter)) {
-                mkdir($dirImages . DIRECTORY_SEPARATOR . $fistLetter . DIRECTORY_SEPARATOR . $secondLetter, 0777, true);
+            if (!is_dir($dirImages . DIRECTORY_SEPARATOR . $firstLetter . DIRECTORY_SEPARATOR . $secondLetter)) {
+                mkdir($dirImages . DIRECTORY_SEPARATOR . $firstLetter . DIRECTORY_SEPARATOR . $secondLetter, 0777, true);
             }
 
             // Retorna o caminho completo do diretorio
-            return $dirImages . DIRECTORY_SEPARATOR . $fistLetter . DIRECTORY_SEPARATOR . $secondLetter . DIRECTORY_SEPARATOR;
+            return $dirImages . DIRECTORY_SEPARATOR . $firstLetter . DIRECTORY_SEPARATOR . $secondLetter . DIRECTORY_SEPARATOR;
 
         } else {
             return false;

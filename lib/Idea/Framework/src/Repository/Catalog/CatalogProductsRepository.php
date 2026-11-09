@@ -35,6 +35,7 @@ use Idea\Framework\Repository\AbstractRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CatalogProductsRepository extends AbstractRepository
 {
@@ -101,6 +102,7 @@ class CatalogProductsRepository extends AbstractRepository
      * @param int $id
      * @param array $attributes
      * @return \App\Models\CatalogProduct|null
+     * @throws \Exception
      */
     public static function updateProduct(int $id, array $attributes = []): ?CatalogProduct
     {
@@ -111,14 +113,21 @@ class CatalogProductsRepository extends AbstractRepository
                     'product_id' => $id,
                     'sku' => $attributes['sku']
                 ],
-                values:$attributes
+                values: $attributes
             );
 
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            // Log do erro para debugging
+            Log::error('Erro ao atualizar produto', [
+                'product_id' => $id,
+                'sku' => $attributes['sku'] ?? null,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
 
+            // Re-lança a exceção para o handler global do Laravel
+            throw $e;
         }
-
     }
 
     /**

@@ -20,15 +20,18 @@ namespace Idea\Framework\Media\Processing;
 
 use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageInterface;
 
 class ImageResizer
 {
 
     /**
      * Gera as imagens redimensionadas e retorna um array com cada uma
+     * Lê o arquivo original UMA vez para eficiência
      *
      * @param string $originalImagePath
-     * @return array
+     * @return array<string, ImageInterface>
+     * @throws \Intervention\Image\Exceptions\InvalidArgumentException
      */
     public static function resize(string $originalImagePath): array
     {
@@ -39,29 +42,31 @@ class ImageResizer
         $manager = new ImageManager(new Driver());
         $generatedImages = [];
 
+        // Lê o arquivo original UMA vez
+        $originalImage = $manager->read($originalImagePath);
+
+        // Remove metadata EXIF/ICC (via Imagick)
+        if ($originalImage->core() instanceof \Imagick) {
+            $originalImage->core()->stripImage();
+        }
+
         foreach (config('idea.images.images_sizes') as $label => [$width, $height]) {
+            // Clona a imagem original para não modificar a base
+            $image = $originalImage->clone();
 
-            $image = $manager->read($originalImagePath);
-
-            // REMOVE METADATA REAL (via Imagick)
-            $imagick = $image->core()->native();
-            $imagick->stripImage();
-
-            // Resize inteligente
+            // Resize inteligente (mantém aspect ratio, não aumenta)
             $image->scaleDown(width: $width, height: $height);
 
-            // Canvas fixo
+            // Canvas fixo com fundo branco
             $image->pad($width, $height, 'ffffff');
 
             // Sharpen leve
             $image->sharpen(10);
 
             $generatedImages[$label] = $image;
-
         }
 
         return $generatedImages;
-
     }
 
 }

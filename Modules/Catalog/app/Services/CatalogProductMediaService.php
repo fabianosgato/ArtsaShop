@@ -118,25 +118,25 @@ class CatalogProductMediaService
                                 baseName: "{$catalogProduct->sku}_{$idx}"
                             );
 
-                            // Salva a imagem no repositorio
+                            // Salva a imagem no repositorio - usa chaves do config
                             CatalogProductMediaRepository::updateProductMedia([
                                 'media_id' => $catalogProductImage->media_id,
                                 'product_id' => $catalogProduct->product_id,
-                                'media_type' => $path['extension'],
-                                'media_file' => $stored['product_main']['relative_path'],
-                                'media_url' => $stored['product_main']['url'],
+                                'media_type' => 'webp',
+                                'media_file' => $stored['product_main']['relative_path'] ?? $stored['product_listing']['relative_path'] ?? '',
+                                'media_url' => $stored['product_main']['url'] ?? $stored['product_listing']['url'] ?? '',
                                 'sort_order' => $idx
                             ]);
 
                             // Deverá salvar no produto somente a primeira imagem, pois é a principal
                             if ($idx == 0) {
 
-                                // Salva as imagens na tabela de produtos
+                                // Salva as imagens na tabela de produtos - usa chaves do config
                                 CatalogProductsRepository::updateImageProduct(
                                     $catalogProduct->product_id,
                                     [
-                                        'image' => $stored['product_page']['url'],
-                                        'thumbnail' => $stored['product_thumbnail']['url']
+                                        'image' => $stored['product_page']['url'] ?? '',
+                                        'thumbnail' => $stored['product_thumbnail']['url'] ?? ''
                                     ]
                                 );
 
@@ -200,23 +200,23 @@ class CatalogProductMediaService
                         baseName: "{$catalogProduct->sku}_{$idx}"
                     );
 
-                    // Salva a imagem no repositorio
+                    // Salva a imagem no repositorio - usa chaves do config
                     CatalogProductMediaRepository::create([
                         'product_id' => $catalogProduct->product_id,
-                        'media_type' => 'jpg',
-                        'media_file' => $stored['1000x1000']['relative_path'],
-                        'media_url' => $stored['1000x1000']['url'],
+                        'media_type' => 'webp',
+                        'media_file' => $stored['product_main']['relative_path'] ?? $stored['product_listing']['relative_path'] ?? '',
+                        'media_url' => $stored['product_main']['url'] ?? $stored['product_listing']['url'] ?? '',
                     ]);
 
                     // Deverá salvar no produto somente a primeira imagem, pois é a principal
                     if ($idx == 0) {
 
-                        // Salva as imagens na tabela de produtos
+                        // Salva as imagens na tabela de produtos - usa chaves do config
                         CatalogProductsRepository::updateImageProduct(
                             $catalogProduct->product_id,
                             [
-                                'image' => $stored['255x255']['url'],
-                                'thumbnail' => $stored['80x80']['url']
+                                'image' => $stored['product_page']['url'] ?? '',
+                                'thumbnail' => $stored['product_thumbnail']['url'] ?? ''
                             ]
                         );
 

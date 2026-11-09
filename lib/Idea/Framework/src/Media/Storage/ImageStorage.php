@@ -20,7 +20,7 @@ namespace Idea\Framework\Media\Storage;
 
 use Idea\Framework\Media\DTO\ImageListDTO;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Image;
+use Intervention\Image\Interfaces\ImageInterface;
 use RuntimeException;
 
 class ImageStorage
@@ -42,12 +42,12 @@ class ImageStorage
     /**
      * Salva as imagens redimensionadas no diretório já criado
      *
-     * @param array  $images              Array retornado pelo ImageResizer
-     * @param string $absoluteTargetDir   Diretório absoluto gerado pelo MediaDownloader
-     * @param string $baseName            Nome base do arquivo
+     * @param array<string, ImageInterface> $images
+     * @param string $absoluteTargetDir
+     * @param string $baseName
      * @param string $extension
      *
-     * @return array
+     * @return array<string, ImageListDTO>
      */
     public static function save(
         array $images,
@@ -68,16 +68,15 @@ class ImageStorage
         $savedImages = [];
 
         foreach ($images as $size => $image) {
-
-            if (!$image instanceof Image) {
+            if (!$image instanceof ImageInterface) {
                 continue;
             }
 
             $fileName = "{$baseName}_{$size}.{$extension}";
             $absolutePath = rtrim($absoluteTargetDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $fileName;
 
-            // Salva a imagem para WebP
-            $image->toWebp(80)->save($absolutePath);
+            // Intervention Image v4 - encode para WebP com qualidade
+            $image->toWebp(quality: 80)->save($absolutePath);
 
             // Converte para path público relativo
             $relativePath = self::toPublicPath($absolutePath);
