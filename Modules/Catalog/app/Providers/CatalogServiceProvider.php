@@ -30,6 +30,12 @@ class CatalogServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->register(RouteServiceProvider::class);
+
+        // Bind CatalogProductsRepositoryInterface to implementation
+        $this->app->bind(
+            \Idea\Framework\Repository\Catalog\Contracts\CatalogProductsRepositoryInterface::class,
+            \Idea\Framework\Repository\Catalog\CatalogProductsRepository::class
+        );
     }
 
     /**

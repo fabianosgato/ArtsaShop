@@ -36,6 +36,12 @@ class BrandsServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+
+        // Bind CatalogProductBrandRepositoryInterface to implementation
+        $this->app->bind(
+            \Idea\Framework\Repository\Brand\Contracts\CatalogProductBrandRepositoryInterface::class,
+            \Idea\Framework\Repository\Brand\CatalogProductBrandRepositoryImpl::class
+        );
     }
 
     /**

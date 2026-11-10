@@ -19,7 +19,7 @@
 namespace Modules\Payments\Gateways\Ipag;
 
 use App\Models\SalesOrder;
-use Idea\Framework\Repository\Sales\SalesOrderHistoryRespository;
+use Idea\Framework\Repository\Sales\SalesOrderHistoryRepository;
 use Idea\Framework\Repository\Sales\SalesOrderRepository;
 use Idea\Framework\Repository\Sales\SalesOrderStatusRepository;
 use Illuminate\Support\Facades\Cache;
@@ -349,7 +349,7 @@ class IpagPayment
             $response = $this->ipagClient->payment()->create($paymentTransaction);
 
             // Cria o historico do pedido para logs
-            SalesOrderHistoryRespository::createHistory(
+            SalesOrderHistoryRepository::createHistory(
                 salesOrder: $salesOrder,
                 attributes: [
                     'is_customer_notified' => false,
@@ -368,7 +368,7 @@ class IpagPayment
             $urlAuthentication = $response->getParsedPath('attributes.url_authentication');
 
             // Cria o historico do pedido para logs
-            SalesOrderHistoryRespository::createHistory(
+            SalesOrderHistoryRepository::createHistory(
                 salesOrder: $salesOrder,
                 attributes: [
                     'is_customer_notified' => false,
@@ -393,7 +393,7 @@ class IpagPayment
                 $statusGateway === GatewayStatus::SUCCEED &&
                 $statusAcquirer === AcquirerStatus::APPROVED_OR_COMPLETED_SUCCESSFULLY;
 
-            SalesOrderHistoryRespository::createHistory(
+            SalesOrderHistoryRepository::createHistory(
                 salesOrder: $salesOrder,
                 attributes: [
                     'is_customer_notified' => false,
@@ -427,7 +427,7 @@ class IpagPayment
                 'errors' => $e->getMessage(),
             ]);
 
-            SalesOrderHistoryRespository::createHistory(
+            SalesOrderHistoryRepository::createHistory(
                 salesOrder: $salesOrder,
                 attributes: [
                     'is_customer_notified' => false,
@@ -455,7 +455,7 @@ class IpagPayment
                 'errors' => $e->getMessage(),
             ]);
 
-            SalesOrderHistoryRespository::createHistory(
+            SalesOrderHistoryRepository::createHistory(
                 salesOrder: $salesOrder,
                 attributes: [
                     'is_customer_notified' => false,
@@ -635,7 +635,7 @@ class IpagPayment
             }
 
             // Cria o historico do pedido
-            SalesOrderHistoryRespository::createHistory(
+            SalesOrderHistoryRepository::createHistory(
                 salesOrder: $salesOrder,
                 attributes: [
                     'is_customer_notified' => false,
@@ -647,7 +647,7 @@ class IpagPayment
 
         } else if ($salesOrderStatus->status == 'approved') {
             // Cria o historico do pedido
-            SalesOrderHistoryRespository::createHistory(
+            SalesOrderHistoryRepository::createHistory(
                 salesOrder: $salesOrder,
                 attributes: [
                     'is_customer_notified' => false,

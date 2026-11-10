@@ -32,32 +32,33 @@ use App\Models\CatalogProductTagsEntity;
 use App\Models\SeoPage;
 use App\Models\SysUrlRewrite;
 use Idea\Framework\Concerns\SearchScoring;
-use Idea\Framework\Repository\AbstractRepository;
+use Idea\Framework\Repository\Catalog\Contracts\CatalogProductsRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
-class CatalogProductsRepository extends AbstractRepository
+class CatalogProductsRepository implements CatalogProductsRepositoryInterface
 {
     use SearchScoring;
 
-    protected static $model = CatalogProduct::class;
+    protected string $model = CatalogProduct::class;
+
+    protected function model(): Builder
+    {
+        return app($this->model)::query();
+    }
 
     /**
      * Valida se o produto existe na base
      * @param $productSku
      * @return bool
      */
-    public static function isExist($productSku): bool
+    public function isExist($productSku): bool
     {
-
-        return self::loadModel()::query()
-            ->where(
-                column: 'sku',
-                operator: '=',
-                value: $productSku
-            )->exists();
-
+        return $this->model()
+            ->where('sku', '=', $productSku)
+            ->exists();
     }
 
     /**
@@ -65,21 +66,15 @@ class CatalogProductsRepository extends AbstractRepository
      * @param $productSku
      * @return \App\Models\CatalogProduct|null
      */
-    public static function getBaseProduct($productSku): ?CatalogProduct
+    public function getBaseProduct($productSku): ?CatalogProduct
     {
-
-        $catalogProduct = self::loadModel()::query()
-            ->where(
-                column: 'sku',
-                operator: '=',
-                value: $productSku
-            );
+        $catalogProduct = $this->model()
+            ->where('sku', '=', $productSku);
 
         if ($catalogProduct->exists())
             return $catalogProduct->first();
 
         return null;
-
     }
 
     /**
@@ -88,14 +83,10 @@ class CatalogProductsRepository extends AbstractRepository
      * @param int $attributeSetId
      * @return void
      */
-    public static function updateAttributeSetProduct(int $productId, int $attributeSetId): void
+    public function updateAttributeSetProduct(int $productId, int $attributeSetId): void
     {
-        // Altera o Grupo de atributos do produto
-        self::loadModel()::query()->find($productId)
-            ->update([
-                'attribute_set_id' => $attributeSetId
-            ]);
-
+        $this->model()->find($productId)
+            ->update(['attribute_set_id' => $attributeSetId]);
     }
 
     /**
@@ -105,28 +96,20 @@ class CatalogProductsRepository extends AbstractRepository
      * @return \App\Models\CatalogProduct|null
      * @throws \Exception
      */
-    public static function updateProduct(int $id, array $attributes = []): ?CatalogProduct
+    public function updateProduct(int $id, array $attributes = []): ?CatalogProduct
     {
         try {
-
-            return self::loadModel()::query()->updateOrCreate(
-                attributes: [
-                    'product_id' => $id,
-                    'sku' => $attributes['sku']
-                ],
-                values: $attributes
+            return $this->model()->updateOrCreate(
+                ['product_id' => $id, 'sku' => $attributes['sku']],
+                $attributes
             );
-
         } catch (\Exception $e) {
-            // Log do erro para debugging
             \Illuminate\Support\Facades\Log::error('Erro ao atualizar produto', [
                 'product_id' => $id,
                 'sku' => $attributes['sku'] ?? null,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
-
-            // Re-lança a exceção para o handler global do Laravel
             throw $e;
         }
     }
@@ -137,26 +120,21 @@ class CatalogProductsRepository extends AbstractRepository
      * @param $tagName
      * @return void
      */
-    public static function syncTags($productId, $tagName): void
+    public function syncTags($productId, $tagName): void
     {
-
-        // Salva a Tag para o produto
         CatalogProductTagRepository::saveTagToProduct(
-            productId:$productId,
+            productId: $productId,
             tagName: $tagName
         );
-
     }
 
     /**
      * Metodo principal de retorno dos produtos
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public static function getProducts(): Builder
+    public function getProducts(): Builder
     {
-
-        // Inicializa a query do produto
-        $query = self::loadModel()::query();
+        $query = $this->model();
 
         $query->addSelect([
             'catalog_product.product_id',
@@ -193,47 +171,13 @@ class CatalogProductsRepository extends AbstractRepository
             'catalog_product_status.status_key',
         ]);
 
-        $query->join(
-            table: 'eav_attributes_set',
-            first: 'eav_attributes_set.attribute_set_id',
-            operator: '=',
-            second: 'catalog_product.attribute_set_id'
-        );
-
-        // Join na tabela de Marcas
-        $query->join(
-            table: 'catalog_product_brands',
-            first: 'catalog_product_brands.brand_id',
-            operator: '=',
-            second: 'catalog_product.brand_id'
-        );
-
-        // Join na tabela de preços
-        $query->join(
-            table: 'catalog_product_prices',
-            first: 'catalog_product_prices.product_id',
-            operator: '=',
-            second: 'catalog_product.product_id'
-        );
-
-        // Join na tabela de Status de Produto
-        $query->join(
-            table: 'catalog_product_status',
-            first: 'catalog_product_status.status_id',
-            operator: '=',
-            second: 'catalog_product.status_id'
-        );
-
-        // Join na tabela de Categoria Final do produto
-        $query->join(
-            table: 'catalog_product_category',
-            first: 'catalog_product_category.product_id',
-            operator: '=',
-            second: 'catalog_product.product_id'
-        );
+        $query->join('eav_attributes_set', 'eav_attributes_set.attribute_set_id', '=', 'catalog_product.attribute_set_id');
+        $query->join('catalog_product_brands', 'catalog_product_brands.brand_id', '=', 'catalog_product.brand_id');
+        $query->join('catalog_product_prices', 'catalog_product_prices.product_id', '=', 'catalog_product.product_id');
+        $query->join('catalog_product_status', 'catalog_product_status.status_id', '=', 'catalog_product.status_id');
+        $query->join('catalog_product_category', 'catalog_product_category.product_id', '=', 'catalog_product.product_id');
 
         return $query;
-
     }
 
     /**
@@ -241,23 +185,13 @@ class CatalogProductsRepository extends AbstractRepository
      * @param $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public static function getProductsPagination($perPage): LengthAwarePaginator
+    public function getProductsPagination($perPage): LengthAwarePaginator
     {
-
-        // Inicializa a query
-        $query = self::getProducts()
-            ->orderBy(
-                column: 'catalog_product.product_id',
-                direction: 'desc'
-            );
-
-        // Mostra os produtos sem estoque por último nas listagens
-        $query->orderByRaw(
-            'CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END'
-        );
+        $query = $this->getProducts()
+            ->orderBy('catalog_product.product_id', 'desc')
+            ->orderByRaw('CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END');
 
         return $query->paginate($perPage);
-
     }
 
     /**
@@ -267,46 +201,21 @@ class CatalogProductsRepository extends AbstractRepository
      * @param array|null $priceRange
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public static function getProductsByCategoryPagination(int $categoryId, int $perPage=32, ?array $priceRange): LengthAwarePaginator
+    public function getProductsByCategoryPagination(int $categoryId, ?array $priceRange = null, int $perPage = 32): LengthAwarePaginator
     {
+        $query = $this->getProducts();
 
-        // Inicializa a query
-        $query = self::getProducts();
+        $query->join('catalog_category_product', 'catalog_category_product.product_id', '=', 'catalog_product.product_id');
+        $query->where('catalog_category_product.category_id', '=', $categoryId);
 
-        // Join na tabela de catalog_category_product
-        $query->join(
-            table: 'catalog_category_product',
-            first: 'catalog_category_product.product_id',
-            operator: '=',
-            second: 'catalog_product.product_id'
-        );
-
-        // Filtra pelo ID da Categoria
-        $query->where(
-            column: 'catalog_category_product.category_id',
-            operator: '=',
-            value: $categoryId
-        );
-
-        if (count($priceRange) > 0) {
-            // Aplica o filtro de preço
-            self::applyPriceFilter(
-                $query,
-                $priceRange
-            );
+        if (!empty($priceRange)) {
+            $this->applyPriceFilter($query, $priceRange);
         }
 
-        // Mostra os produtos sem estoque por último nas listagens
-        $query->orderByRaw(
-            'CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END'
-        );
+        $query->orderByRaw('CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END');
+        $result = $query->orderBy('catalog_product.product_id', 'desc')->paginate($perPage);
 
-        return $query->orderBy(
-            column: 'catalog_product.product_id',
-            direction: 'desc'
-        )
-        ->paginate($perPage);
-
+        return $result;
     }
 
     /**
@@ -315,21 +224,16 @@ class CatalogProductsRepository extends AbstractRepository
      * @param mixed $priceRange
      * @return void
      */
-    public static function applyPriceFilter(
-        Builder $query,
-        mixed   $priceRange
-    ): void
+    public function applyPriceFilter(Builder $query, mixed $priceRange): void
     {
         if (blank($priceRange)) {
             return;
         }
 
-        // Aceita um único valor ou um array
         if (!is_array($priceRange)) {
             $priceRange = [$priceRange];
         }
 
-        // Remove valores vazios
         $priceRange = array_filter($priceRange);
 
         if (empty($priceRange)) {
@@ -337,15 +241,8 @@ class CatalogProductsRepository extends AbstractRepository
         }
 
         $query->having(function ($query) use ($priceRange) {
-
             foreach ($priceRange as $range) {
-
-                [$from, $to] = array_pad(
-                    explode('-', $range),
-                    2,
-                    null
-                );
-
+                [$from, $to] = array_pad(explode('-', $range), 2, null);
                 $from = is_numeric($from) ? (float)$from : 0;
                 $to = is_numeric($to) ? (float)$to : null;
 
@@ -354,20 +251,14 @@ class CatalogProductsRepository extends AbstractRepository
                         "catalog_product_prices.final_price BETWEEN ? AND ?",
                         [$from, $to]
                     );
-
                 } else {
-
                     $query->orHavingRaw(
                         "catalog_product_prices.final_price >= ?",
                         [$from]
                     );
-
                 }
-
             }
-
         });
-
     }
 
     /**
@@ -376,34 +267,13 @@ class CatalogProductsRepository extends AbstractRepository
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public static function getProductsByBrandsPagination($brandId, int $perPage=32): LengthAwarePaginator
+    public function getProductsByBrandsPagination($brandId, int $perPage = 32): LengthAwarePaginator
     {
-
-        // Inicializa a query do produto
-        $query = self::getProducts();
-
-        // Seleciona o produto pelo ID
-        $query->where(
-            column: 'catalog_product.brand_id',
-            operator: '=',
-            value: $brandId
-        );
-
-        // Mostra os produtos sem estoque por último nas listagens
-        $query->orderByRaw(
-            'CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END'
-        );
-
-        $query->groupBy([
-            'catalog_product.name',
-            'catalog_product.slug_key',
-        ]);
-
-        return $query->orderBy(
-            column: 'catalog_product.product_id',
-            direction: 'desc'
-        )->paginate($perPage);
-
+        $query = $this->getProducts();
+        $query->where('catalog_product.brand_id', '=', $brandId);
+        $query->orderByRaw('CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END');
+        $query->groupBy(['catalog_product.name', 'catalog_product.slug_key']);
+        return $query->orderBy('catalog_product.product_id', 'desc')->paginate($perPage);
     }
 
     /**
@@ -412,56 +282,33 @@ class CatalogProductsRepository extends AbstractRepository
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public static function searchProductsSuggestion(string $word, int $perPage = 32): LengthAwarePaginator
+    public function searchProductsSuggestion(string $word, int $perPage = 32): LengthAwarePaginator
     {
-        // Processa termos de busca (usa método do trait)
-        $processed = self::processSearchTerms($word);
+        $processed = $this->processSearchTerms($word);
         $terms = $processed['terms'];
         $search = $processed['search'];
 
         if (empty($search)) {
-            return self::getProducts()
+            return $this->model()
                 ->where('catalog_product.status_id', '=', 1)
                 ->orderByDesc('catalog_product.product_id')
                 ->paginate($perPage);
         }
 
-        // Query base
-        $query = self::getProducts();
-
-        // Apenas produtos ativos
-        $query->where(
-            column: 'catalog_product.status_id',
-            operator: '=',
-            value: 1
-        );
-
-        // FULLTEXT SEARCH
+        $query = $this->getProducts();
+        $query->where('catalog_product.status_id', '=', 1);
         $query->whereRaw(
-            "MATCH(
-            catalog_product.name,
-            catalog_product.description,
-            catalog_product.sku
-        ) AGAINST(? IN BOOLEAN MODE)",
+            "MATCH(catalog_product.name, catalog_product.description, catalog_product.sku) AGAINST(? IN BOOLEAN MODE)",
             [$search]
         );
 
-        // Score de relevância customizado (usa trait - bindings seguros)
-        self::applyRelevanceScoring($query, $terms, $search);
-
-        // Produtos com estoque primeiro
-        $query->orderByRaw(
-            'CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END'
-        );
-
-        // Ordenação final
+        $this->applyRelevanceScoring($query, $terms, $search);
+        $query->orderByRaw('CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END');
         $query->orderByDesc('relevance_score');
         $query->orderByDesc('fulltext_score');
         $query->orderByDesc('catalog_product.product_id');
 
-        return $query
-            ->paginate($perPage)
-            ->withQueryString();
+        return $query->paginate($perPage)->withQueryString();
     }
 
     /**
@@ -470,59 +317,33 @@ class CatalogProductsRepository extends AbstractRepository
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public static function searchProductsPagination(
-        string $word,
-        int $perPage = 32
-    ): LengthAwarePaginator
+    public function searchProductsPagination(string $word, int $perPage = 32): LengthAwarePaginator
     {
-        // Processa termos de busca (usa método do trait)
-        $processed = self::processSearchTerms($word);
+        $processed = $this->processSearchTerms($word);
         $terms = $processed['terms'];
         $search = $processed['search'];
 
         if (empty($search)) {
-            return self::getProducts()
+            return $this->model()
                 ->where('catalog_product.status_id', '=', 1)
                 ->orderByDesc('catalog_product.product_id')
                 ->paginate($perPage);
         }
 
-        // Query base
-        $query = self::getProducts();
-
-        // Apenas produtos ativos
-        $query->where(
-            column: 'catalog_product.status_id',
-            operator: '=',
-            value: 1
-        );
-
-        // FULLTEXT SEARCH
+        $query = $this->getProducts();
+        $query->where('catalog_product.status_id', '=', 1);
         $query->whereRaw(
-            "MATCH(
-            catalog_product.name,
-            catalog_product.description,
-            catalog_product.sku
-        ) AGAINST(? IN BOOLEAN MODE)",
+            "MATCH(catalog_product.name, catalog_product.description, catalog_product.sku) AGAINST(? IN BOOLEAN MODE)",
             [$search]
         );
 
-        // Score de relevância customizado (usa trait - bindings seguros)
-        self::applyRelevanceScoring($query, $terms, $search);
-
-        // Produtos com estoque primeiro
-        $query->orderByRaw(
-            'CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END'
-        );
-
-        // Ordenação final
+        $this->applyRelevanceScoring($query, $terms, $search);
+        $query->orderByRaw('CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END');
         $query->orderByDesc('relevance_score');
         $query->orderByDesc('fulltext_score');
         $query->orderByDesc('catalog_product.product_id');
 
-        return $query
-            ->paginate($perPage)
-            ->withQueryString();
+        return $query->paginate($perPage)->withQueryString();
     }
 
     /**
@@ -530,33 +351,15 @@ class CatalogProductsRepository extends AbstractRepository
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public static function allProductsPagination(int $perPage=32): LengthAwarePaginator
+    public function allProductsPagination(int $perPage = 32): LengthAwarePaginator
     {
+        $query = $this->getProducts();
+        $query->where('catalog_product.status_id', '=', 1)
+            ->where('catalog_product.qty', '>', 0)
+            ->orderByRaw('CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END')
+            ->orderBy('catalog_product.product_id', 'desc');
 
-        // Inicializa a query do produto
-        $query = self::getProducts();
-
-        // Retorna apenas os produtos com estoque
-        $query->where(
-            column: 'catalog_product.status_id',
-            operator: '=',
-            value:1
-        )->where(
-            column: 'catalog_product.qty',
-            operator: '>',
-            value:0
-        );
-
-        // Mostra os produtos sem estoque por último nas listagens
-        $query->orderByRaw(
-            'CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END'
-        );
-
-        return $query->orderBy(
-            column: 'catalog_product.product_id',
-            direction:  'desc'
-        )->paginate($perPage);
-
+        return $query->paginate($perPage);
     }
 
     /**
@@ -565,40 +368,19 @@ class CatalogProductsRepository extends AbstractRepository
      * @param int $eavAttributeId
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public static function getProductsBlock(int $limit, int $eavAttributeId = 0): \Illuminate\Database\Eloquent\Collection
+    public function getProductsBlock(int $limit, int $eavAttributeId = 0): Collection
     {
-
-        // Inicializa a query
-        $query = self::getProducts();
+        $query = $this->getProducts();
 
         if ($eavAttributeId != 0) {
-            $query->where(
-                column: 'catalog_product.attribute_set_id',
-                operator: '=',
-                value: $eavAttributeId
-            );
+            $query->where('catalog_product.attribute_set_id', '=', $eavAttributeId);
         }
 
-        // Retorna apenas os produtos com estoque
-        $query->where(
-            column: 'catalog_product.status_id',
-            operator: '=',
-            value:1
-        )->where(
-            column: 'catalog_product.qty',
-            operator: '>',
-            value:0
-        );
+        $query->where('catalog_product.status_id', '=', 1)
+            ->where('catalog_product.qty', '>', 0)
+            ->orderBy('catalog_product.created_at', 'DESC');
 
-        // Ordenação por data de cadastro decrescente
-        $query->orderBy(
-            column: 'catalog_product.created_at',
-            direction: 'DESC'
-        );
-
-        // Retorna os produtos
         return $query->limit($limit)->get();
-
     }
 
     /**
@@ -606,10 +388,8 @@ class CatalogProductsRepository extends AbstractRepository
      * @param int $limit
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public static function getNewProducts(int $limit)
+    public function getNewProducts(int $limit): Collection
     {
-
-        // QUERY BASE SIMPLES (SEM getProducts)
         $baseQuery = DB::table('catalog_product')
             ->select([
                 'catalog_product.product_id',
@@ -619,7 +399,6 @@ class CatalogProductsRepository extends AbstractRepository
             ->where('catalog_product.status_id', '=', 1)
             ->where('catalog_product.qty', '>', 0);
 
-        // ROW_NUMBER sem poluir select
         $sub = $baseQuery->selectRaw('
             ROW_NUMBER() OVER (
                 PARTITION BY catalog_product.attribute_set_id
@@ -627,8 +406,7 @@ class CatalogProductsRepository extends AbstractRepository
             ) as rn'
         );
 
-        //
-        $query = self::getProducts()
+        $query = $this->getProducts()
             ->joinSub($sub, 'filtered', function ($join) {
                 $join->on('catalog_product.product_id', '=', 'filtered.product_id');
             })
@@ -636,7 +414,6 @@ class CatalogProductsRepository extends AbstractRepository
             ->limit($limit);
 
         return $query->get();
-
     }
 
     /**
@@ -644,22 +421,11 @@ class CatalogProductsRepository extends AbstractRepository
      * @param string $slugKey
      * @return \App\Models\CatalogProduct|null
      */
-    public static function getProductBySlug(string $slugKey): ?CatalogProduct
+    public function getProductBySlug(string $slugKey): ?CatalogProduct
     {
-
-        // Inicializa a query do produto
-        $query = self::loadModel()::query();
-
-        // Filtra pelo ID da AmazonProducts
-        $query->where(
-            column: 'slug_key',
-            operator: '=',
-            value: $slugKey
-        );
-
-        // Retorna o primeiro registro encontrado
-        return $query->first();
-
+        return $this->model()
+            ->where('slug_key', '=', $slugKey)
+            ->first();
     }
 
     /**
@@ -667,43 +433,18 @@ class CatalogProductsRepository extends AbstractRepository
      * @param $productId
      * @return \App\Models\CatalogProduct|null
      */
-    public static function getProductById($productId): ?CatalogProduct
+    public function getProductById($productId): ?CatalogProduct
     {
+        $query = $this->getProducts();
+        $query->addSelect('catalog_category_entity.category');
+        $query->where('catalog_product.product_id', '=', $productId);
+        $query->join('catalog_category_product', 'catalog_category_product.product_id', '=', 'catalog_product.product_id')
+            ->join('catalog_category_entity', 'catalog_category_entity.entity_id', '=', 'catalog_category_product.category_id');
 
-        // Inicializa a query do produto
-        $query = self::getProducts();
-
-        // Adiciona o nome da Categoria ao select
-        $query->addSelect(
-            'catalog_category_entity.category'
-        );
-
-        // Seleciona o produto pelo ID
-        $query->where(
-            column: 'catalog_product.product_id',
-            operator: '=',
-            value: $productId
-        );
-
-        // Realiza o join nas tabelas de Categorias
-        $query->join(
-                table:'catalog_category_product',
-                first: 'catalog_category_product.product_id',
-                operator: '=',
-                second: 'catalog_product.product_id'
-            )
-            ->join(
-                table:'catalog_category_entity',
-                first: 'catalog_category_entity.entity_id',
-                operator: '=',
-                second: 'catalog_category_product.category_id'
-            );
-
-        if ($query->exists())
+        if ($query->exists()) {
             return $query->first();
-
+        }
         return null;
-
     }
 
     /**
@@ -711,37 +452,24 @@ class CatalogProductsRepository extends AbstractRepository
      * @param $productSku
      * @return ?CatalogProduct
      */
-    public static function getProductBySku($productSku): ?CatalogProduct
+    public function getProductBySku($productSku): ?CatalogProduct
     {
-
-        // Inicializa a query do produto
-        $query = self::getData();
-
-        // Seleciona o produto pelo ID
-        $query->where(
-            column: 'catalog_product.sku',
-            operator: '=',
-            value: $productSku
-        );
+        $query = $this->getData();
+        $query->where('catalog_product.sku', '=', $productSku);
 
         if ($query->exists()) {
             return $query->first();
         }
-
         return null;
-
     }
 
     /**
      * Retorna a lista de produtos para o WsdAdm
      * @return Builder
      */
-    public static function getData(): Builder
+    public function getData(): Builder
     {
-
-        // Inicializa a query do produto
-        return self::getProducts();
-
+        return $this->getProducts();
     }
 
     /**
@@ -750,32 +478,17 @@ class CatalogProductsRepository extends AbstractRepository
      * @param int $limit
      * @return Builder
      */
-    public static function getByAttributeSet(int $attributeSetId, int $limit = 10): Builder
+    public function getByAttributeSet(int $attributeSetId, int $limit = 10): Builder
     {
-        // Retorna os produtos
-        $query = self::getProducts();
-
-        // Filtra pelo grupo de atributos
-        $query->where(
-            column: 'catalog_product.attribute_set_id',
-            operator: '=',
-            value: $attributeSetId
-        );
-
-        // Produtos com estoque primeiro
-        $query->orderByRaw(
-            'CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END'
-        );
-
-        // Mais recentes primeiro (product_id DESC = ordem de cadastro decrescente)
+        $query = $this->getProducts();
+        $query->where('catalog_product.attribute_set_id', '=', $attributeSetId);
+        $query->orderByRaw('CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END');
         $query->orderBy('catalog_product.product_id', 'DESC');
 
         if ($limit) {
             $query->limit($limit);
         }
-
         return $query;
-
     }
 
     /**
@@ -784,22 +497,11 @@ class CatalogProductsRepository extends AbstractRepository
      * @param int $attributeSetId
      * @return void
      */
-    public static function updateAttributeSet(int $productId, int $attributeSetId): void
+    public function updateAttributeSet(int $productId, int $attributeSetId): void
     {
-
-        // Retorna os dados do produto
-        $catalogProduct = CatalogProduct::query()
-            ->where(
-                column: 'product_id',
-                operator: '=',
-                value: $productId
-            );
-
-        // Atualiza o grupo de atributos do produto
-        $catalogProduct->update([
-            'attribute_set_id' => $attributeSetId
-        ]);
-
+        CatalogProduct::query()
+            ->where('product_id', '=', $productId)
+            ->update(['attribute_set_id' => $attributeSetId]);
     }
 
     /**
@@ -808,17 +510,14 @@ class CatalogProductsRepository extends AbstractRepository
      * @param $images
      * @return void
      */
-    public static function updateImageProduct($productId, $images): void
+    public function updateImageProduct($productId, $images): void
     {
-
-        // Inicializa a query do produto
         CatalogProduct::query()
             ->where('product_id', '=', $productId)
             ->update([
                 'image' => $images['image'],
                 'thumbnail' => $images['thumbnail'],
             ]);
-
     }
 
     /**
@@ -827,7 +526,7 @@ class CatalogProductsRepository extends AbstractRepository
      * @param $brandId
      * @return void
      */
-    public static function updateProductBrand(int $productId, int $brandId): void
+    public function updateProductBrand(int $productId, int $brandId): void
     {
         CatalogProduct::query()
             ->where('product_id', '=', $productId)
@@ -840,76 +539,46 @@ class CatalogProductsRepository extends AbstractRepository
      * @return void
      * @throws \Throwable
      */
-    public static function deleteProduct(int $productId): void
+    public function deleteProduct(int $productId): void
     {
         DB::beginTransaction();
-
         try {
-
-            // 1. URL Rewrites (target_type=product, target_path=product/{id})
             SysUrlRewrite::query()
                 ->where('target_type', '=', 'product')
                 ->where('target_path', '=', 'product/' . $productId)
                 ->delete();
 
-            // 2. Media/Imagens do produto
             CatalogProductMedia::query()->where('product_id', '=', $productId)->delete();
-
-            // 3. Relacao Produto <-> Loja (multi-store)
             CatalogProductStore::query()->where('product_id', '=', $productId)->delete();
-
-            // 4. Tags do produto
             CatalogProductTagsEntity::query()->where('product_id', '=', $productId)->delete();
-
-            // 5. Queue de processamento
             CatalogProductQueue::query()->where('product_id', '=', $productId)->delete();
-
-            // 6. Relacao Categoria <-> Produto (N:M)
             CatalogCategoryProduct::query()->where('product_id', '=', $productId)->delete();
-
-            // 7. Produto-Categoria principal (se existir tabela separada)
             CatalogProductCategory::query()->where('product_id', '=', $productId)->delete();
-
-            // 8. Preços do produto
             CatalogProductPrice::query()->where('product_id', '=', $productId)->delete();
-
-            // 9. Atributos EAV do produto
             CatalogProductAttribute::query()->where('product_id', '=', $productId)->delete();
 
-            // 10. SEO Pages (object=product, object_id=productId)
-            // As tabelas filhas (meta_tags, images, link_tags) sao limpas via FK CASCADE
             SeoPage::query()
                 ->where('object', '=', 'product')
                 ->where('object_id', '=', (string) $productId)
                 ->delete();
 
-            // 11. Por fim, exclui o produto
             CatalogProduct::query()->where('product_id', '=', $productId)->delete();
 
             DB::commit();
-
         } catch (\Throwable $e) {
             DB::rollBack();
             throw $e;
         }
     }
 
-    public static function deleteByAttributeSet(int $eavAttributeSetId): void
+    public function deleteByAttributeSet(int $eavAttributeSetId): void
     {
-
-        // Exclui os produtos pelo ID do grupo de atributo
-        $catalogProducts = CatalogProduct::query()->where(
-            column: 'attribute_set_id',
-            operator: '=',
-            value:$eavAttributeSetId
-        )->get();
+        $catalogProducts = CatalogProduct::query()
+            ->where('attribute_set_id', '=', $eavAttributeSetId)
+            ->get();
 
         foreach ($catalogProducts as $catalogProduct) {
-            self::deleteProduct(
-                productId: $catalogProduct->product_id
-            );
+            $this->deleteProduct($catalogProduct->product_id);
         }
-
     }
-
 }
