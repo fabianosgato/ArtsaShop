@@ -164,7 +164,7 @@ class EavAttributesRepository extends AbstractRepository
                             'attribute_set_id' => $attributeData['attributeSetId'],
                             'attribute_id' => $attributeData['attributeId'],
                             'entity_attribute_id' => $eavEntityAttribute->entity_attribute_id,
-                            'option_id' => $option['id'],
+                            'option_value' => $option['id'],
                             'option_name' => $option['name'],
                             'is_default' => $isDefault
                         ]);

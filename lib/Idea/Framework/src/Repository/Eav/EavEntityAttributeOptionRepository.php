@@ -30,21 +30,27 @@ class EavEntityAttributeOptionRepository extends AbstractRepository
 
     /**
      * Insere/Atualiza as opções de um Atributo
-     * @param $attributeOptionsData
+     * Chave única lógica: entity_attribute_id + option_value
+     * @param array $attributeOptionsData
      * @return \App\Models\EavEntityAttributeOption
      */
-    public static function saveOrUpdate($attributeOptionsData): EavEntityAttributeOption
+    public static function saveOrUpdate(array $attributeOptionsData): EavEntityAttributeOption
     {
+        // Campos obrigatórios para identificar unicamente a opção
+        $entityAttributeId = $attributeOptionsData['entity_attribute_id'] ?? null;
+        $optionValue = $attributeOptionsData['option_value'] ?? null;
+
+        if (!$entityAttributeId || !$optionValue) {
+            throw new \InvalidArgumentException('entity_attribute_id e option_value são obrigatórios para saveOrUpdate');
+        }
 
         return self::getData()->updateOrCreate(
             attributes: [
-                'attribute_set_id' => $attributeOptionsData['attribute_set_id'] ?? null,
-                'entity_attribute_id' => $attributeOptionsData['entity_attribute_id'] ?? null,
-                'eav_attribute_option_id' => $attributeOptionsData['eav_attribute_option_id'] ?? null,
+                'entity_attribute_id' => $entityAttributeId,
+                'option_value' => $optionValue,
             ],
             values: $attributeOptionsData
         );
-
     }
 
     public static function sync(

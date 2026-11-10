@@ -407,11 +407,11 @@ class SalesOrderRepository extends AbstractRepository
 
     /**
      * Metodo que retorna todos os pedidos do sistema
+     * LEFT JOINs para relations opcionais (payment, customer) — não perde pedidos
      * @return Builder
      */
     public static function getData(): Builder
     {
-        // Certifique-se de incluir o facade DB no topo do arquivo: use Illuminate\Support\Facades\DB;
         return self::loadModel()::query()
             ->select([
                 'sales_orders.order_id',
@@ -437,7 +437,6 @@ class SalesOrderRepository extends AbstractRepository
 
                 'sales_order_code.increment_code',
 
-
                 'sales_order_status.status',
                 'sales_order_status.label',
 
@@ -450,53 +449,47 @@ class SalesOrderRepository extends AbstractRepository
                 'sales_order_payments.value as payment_amount',
                 'sales_order_payments.method',
                 'sales_order_payments.description',
-
             ])
 
-            // Join na tabela de Status de Pedidos
+            // sales_order_code: obrigatório (código do pedido)
             ->join(
-                table:'sales_order_code',
-                first:'sales_order_code.order_id',
+                table: 'sales_order_code',
+                first: 'sales_order_code.order_id',
                 operator: '=',
                 second: 'sales_orders.order_id'
             )
-            // Join na tabela de Status de Pedidos
+
+            // sales_order_status: obrigatório (status do pedido)
             ->join(
-                table:'sales_order_status',
-                first:'sales_order_status.status_id',
+                table: 'sales_order_status',
+                first: 'sales_order_status.status_id',
                 operator: '=',
                 second: 'sales_orders.status_id'
             )
 
-            // Join na tabela de Clientes
-            ->join(
-                table:'sales_order_customer',
-                first:'sales_order_customer.order_id',
+            // sales_order_customer: LEFT JOIN — pedido pode não ter customer vinculado
+            ->leftJoin(
+                table: 'sales_order_customer',
+                first: 'sales_order_customer.order_id',
                 operator: '=',
                 second: 'sales_orders.order_id'
             )
 
-            // Join na tabela de Clientes
-            ->join(
-                table:'customer_entity',
-                first:'customer_entity.customer_id',
-                operator:'=',
-                second:'sales_order_customer.customer_id'
+            // customer_entity: LEFT JOIN — depende de sales_order_customer
+            ->leftJoin(
+                table: 'customer_entity',
+                first: 'customer_entity.customer_id',
+                operator: '=',
+                second: 'sales_order_customer.customer_id'
             )
 
-            // Join na tabela de Pagamentos
-            ->join(
-                table:'sales_order_payments',
-                first:'sales_order_payments.order_id',
-                operator:'=',
-                second:'sales_orders.order_id'
-            )
-
-            // Agrupa por todas as colunas não agregadas (compatível com ONLY_FULL_GROUP_BY)
-            ->groupBy([
-                'sales_orders.order_id'
-            ]);
-
+            // sales_order_payments: LEFT JOIN — pedido pode não ter payment (ex: boleto pendente)
+            ->leftJoin(
+                table: 'sales_order_payments',
+                first: 'sales_order_payments.order_id',
+                operator: '=',
+                second: 'sales_orders.order_id'
+            );
     }
 
 }
