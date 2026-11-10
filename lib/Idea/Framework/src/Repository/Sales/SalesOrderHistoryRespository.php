@@ -23,7 +23,7 @@ use App\Models\SalesOrder;
 use App\Models\SalesOrderHistory;
 use Idea\Framework\Repository\AbstractRepository;
 
-class SalesOrderHistoryRepository extends AbstractRepository
+class SalesOrderHistoryRespository extends AbstractRepository
 {
 
     protected static $model = SalesOrderHistory::class;

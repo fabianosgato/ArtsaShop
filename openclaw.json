@@ -1,0 +1,14 @@
+{
+    "$schema": "https://openclaw.ai/schema.json",
+    "mcp": {
+        "laravel-boost": {
+            "type": "local",
+            "enabled": true,
+            "command": [
+                "php",
+                "artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}
