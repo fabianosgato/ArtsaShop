@@ -34,19 +34,24 @@ class ServiceCache
      */
     private function checkTags($tags): array
     {
-        $invalidTags = array_diff(
-            $tags,
-            array_keys(config('idea.cache.types'))
-        );
-
-        if (!empty($invalidTags)) {
-            throw new InvalidArgumentException(
-                "Tag `$invalidTags[0]` informada não consta na configuração"
+        // Drivers que suportam tags nativamente
+        $tagSupportedDrivers = ['redis', 'memcached', 'array', 'dynamodb'];
+        
+        // Só valida tags se o driver suportar tags
+        if (in_array(env('CACHE_STORE'), $tagSupportedDrivers)) {
+            $invalidTags = array_diff(
+                $tags,
+                array_keys(config('idea.cache.types'))
             );
+
+            if (!empty($invalidTags)) {
+                throw new InvalidArgumentException(
+                    "Tag `$invalidTags[0]` informada não consta na configuração"
+                );
+            }
         }
 
         return $tags;
-
     }
 
     /**
@@ -55,9 +60,8 @@ class ServiceCache
      */
     public function defaultExpireIn(): int
     {
-        return intval(getConfigData(
-            path: 'cache/config/expire_in'
-        ));
+        // Lê direto do config (evita recursão com SysConfigRepository -> ServiceCache)
+        return intval(config('idea.cache.config.expire_in') ?? 3600);
     }
 
     /**
@@ -107,24 +111,20 @@ class ServiceCache
         Closure $closure
     ): mixed
     {
-
         // Valida as tags configuradas no sistema
         $tags = $this->checkTags($tags);
 
-        // Quando o valor de expire_in for zero, o cache é eterno
-        if ($this->getCacheExpireIn($tags) == 0)
-            return Cache::tags($tags)
-                ->rememberForever(
-                    key: $cacheKey,
-                    callback: $closure
-                );
+        // COM tags -> usa Cache::tags()
+        if (!empty($tags)) {
+            $ttl = $this->getCacheExpireIn($tags);
+            if ($ttl == 0) {
+                return Cache::tags($tags)->rememberForever($cacheKey, $closure);
+            }
+            return Cache::tags($tags)->remember($cacheKey, $ttl, $closure);
+        }
 
-        return Cache::tags($tags)
-            ->remember(
-                key: $cacheKey,
-                ttl: $this->getCacheExpireIn($tags),
-                callback: $closure
-            );
+        // SEM tags -> usa Cache::remember()
+        return Cache::remember($cacheKey, $this->defaultExpireIn(), $closure);
     }
 
     /**

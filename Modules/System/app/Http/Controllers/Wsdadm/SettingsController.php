@@ -19,7 +19,7 @@
 namespace Modules\System\Http\Controllers\Wsdadm;
 
 use Idea\Framework\Admin\AdminController;
-use Idea\Framework\Repository\System\SysConfigRespository;
+use Idea\Framework\Repository\System\SysConfigRepository;
 
 class SettingsController extends AdminController
 {
@@ -31,7 +31,7 @@ class SettingsController extends AdminController
     {
 
         // Retorna as configurações do sistema
-        $sysConfig = SysConfigRespository::getConfigs();
+        $sysConfig = SysConfigRepository::getConfigs();
 
         return view('wsdadm.partials.forms', [
             'componentName' => 'system::form.sys-config-form',

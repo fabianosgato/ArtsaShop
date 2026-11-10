@@ -60,7 +60,7 @@ class CommandIndexerUrlRewrite extends Command
             ->orderBy('url_rewrite_id');
 
         if ($filterType) {
-            $query->where('target_type', $filterType);
+            $query->where('target_type', '=', $filterType);
         }
 
         $totalCount = (clone $query)->count();
@@ -142,10 +142,10 @@ class CommandIndexerUrlRewrite extends Command
         }
 
         return match ($targetType) {
-            'product' => CatalogProduct::query()->where('product_id', $id)->exists(),
-            'category' => CatalogCategoryEntity::query()->where('entity_id', $id)->exists(),
-            'brand' => CatalogProductBrand::query()->where('brand_id', $id)->exists(),
-            'cms' => CmsPage::query()->where('page_id', $id)->exists(),
+            'product' => CatalogProduct::query()->where('product_id', '=', $id)->exists(),
+            'category' => CatalogCategoryEntity::query()->where('entity_id', '=', $id)->exists(),
+            'brand' => CatalogProductBrand::query()->where('brand_id', '=', $id)->exists(),
+            'cms' => CmsPage::query()->where('page_id', '=', $id)->exists(),
             default => false,
         };
     }

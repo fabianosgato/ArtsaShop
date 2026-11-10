@@ -34,9 +34,9 @@ class EavAttributeSetRepository extends AbstractRepository
 
     /**
      * Retorna o ID de um grupo de atributos padrão
-     * @return null
+     * @return int|null
      */
-    public static function getDefaultAttributeId()
+    public static function getDefaultAttributeId(): ?int
     {
 
         $query = self::getData()->addSelect([
@@ -69,7 +69,7 @@ class EavAttributeSetRepository extends AbstractRepository
      */
     public static function delete(int $id): int
     {
-        return self::loadModel()::query()->where(['attribute_set_id' => $id])->delete();
+        return self::loadModel()::query()->where('attribute_set_id', '=', $id)->delete();
     }
 
     /**
@@ -100,7 +100,7 @@ class EavAttributeSetRepository extends AbstractRepository
         $query->when(
             $search,
             fn(Builder $query) => $query
-                ->where('attribute_set_name', 'like', "%$search%")
+                ->where('attribute_set_name', 'LIKE', "%$search%")
         );
 
         $attributeSets = $query->groupBy('eav_attributes_set.attribute_set_id')
@@ -307,7 +307,7 @@ class EavAttributeSetRepository extends AbstractRepository
 
             if (!$id) {
                 // Cria a key do atributo
-                $attributes['attribute_set_key'] = app('currentStore')->code_order."-".Str::uuid7();
+                $attributes['attribute_set_key'] = app('currentStore')->code_order . "-" . Str::uuid7();
             }
 
             return self::getData()->updateOrCreate(

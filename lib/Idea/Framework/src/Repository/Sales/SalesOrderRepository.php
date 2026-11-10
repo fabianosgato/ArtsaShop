@@ -176,34 +176,32 @@ class SalesOrderRepository extends AbstractRepository
 
     /**
      * Retorna as informacoes de endereço de um pedido específico
-     * @param $orderId
-     * @param $addressType
+     * Com fallback seguro (iterativo, sem recursão)
+     * @param int $orderId
+     * @param string $addressType
      * @return Builder
      */
-    public static function getOrderAddress($orderId, $addressType): Builder
+    public static function getOrderAddress(int $orderId, string $addressType): Builder
     {
+        $typesToTry = [$addressType];
+        if ($addressType === 'shipping') {
+            $typesToTry[] = 'billing';
+        }
 
-        // Inicializa a query
-        $query = SalesOrderAddress::query();
+        foreach ($typesToTry as $type) {
+            $query = SalesOrderAddress::query()
+                ->where('order_id', '=', $orderId)
+                ->where('address_type', '=', $type);
 
-        $query->where(
-            column: "order_id",
-            operator: '=',
-            value: $orderId);
+            if ($query->exists()) {
+                return $query;
+            }
+        }
 
-        $query->where(
-            column: "address_type",
-            operator: '=',
-            value: $addressType
-        );
-
-        if (!$query->exists() && ($addressType == 'shipping'))
-            // Retorna o endereço de cobrança como "shipping"
-            $query = self::getOrderAddress($orderId, 'billing');
-
-
-        return $query;
-
+        // Nenhum encontrado → retorna query vazia do tipo original
+        return SalesOrderAddress::query()
+            ->where('order_id', '=', $orderId)
+            ->where('address_type', '=', $addressType);
     }
 
     /**

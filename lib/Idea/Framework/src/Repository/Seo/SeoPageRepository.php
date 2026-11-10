@@ -32,8 +32,8 @@ class SeoPageRepository extends AbstractRepository
     public static function getSeoFor(SeoAware $entity): ?SeoPage
     {
         return SeoPage::query()
-            ->where('object', $entity->getSeoObject())
-            ->where('object_id', $entity->getSeoObjectId())
+            ->where('object', '=', $entity->getSeoObject())
+            ->where('object_id', '=', $entity->getSeoObjectId())
             ->first();
     }
 
@@ -104,58 +104,49 @@ class SeoPageRepository extends AbstractRepository
      */
     public static function saveOrUpdateByObject(string $object, string $objectId, array $seoPageData): ?SeoPage
     {
+        // Busca TODOS os registros para este object/objectId, ordenados por ID (primário = mais antigo)
+        $seoPages = self::getData()
+            ->where('object', '=', $object)
+            ->where('object_id', '=', $objectId)
+            ->orderBy('seo_page_id')
+            ->get();
 
-        // Busca pela página se ela existe
-        $seoPage = self::getData()
-            ->where(
-                column: 'object',
-                operator: '=',
-                value: $object
-            )
-            ->where(
-                column: 'object_id',
-                operator: '=',
-                value: $objectId
-            );
-
-        // Se existir irá atualizar
-        if ($seoPage->exists()) {
-
-            // Verifica se existem mais de 2 registros
-            if (count($seoPage->get()->toArray()) > 1) {
-
-                // Exclui tudo relacionado ao SEO
-                $seoPage->delete();
-
-                // Cria novamente o novo registro no banco de dados
-                return self::createSeoData(
-                    $seoPageData
-                );
-
-            }
-
-            // Retorna o array do dados SEO do Object
-            $seoData = $seoPage->first()->toArray();
-
-            // Permanece a mesma description
-            if (empty($seoPageData['description']))
-                $seoPageData['description'] = $seoData['description'];
-
-            self::getData()->find($seoPage->first()->seo_page_id)->update(
-                $seoPageData
-            );
-
-            return self::findByObject($object, $objectId);
-
-        } else {
-
-            // Cria novamente o novo registro no banco de dados
-            return self::createSeoData(
-                $seoPageData
-            );
-
+        if ($seoPages->isEmpty()) {
+            // Não existe → Cria novo
+            return self::createSeoData($seoPageData);
         }
 
+        // Existe pelo menos 1 → O primeiro é o primário
+        $primary = $seoPages->first();
+
+        if ($seoPages->count() > 1) {
+            // Tem duplicatas → Apaga APENAS os extras (IDs > primário)
+            $duplicateIds = $seoPages->skip(1)->pluck('seo_page_id')->toArray();
+
+            if (!empty($duplicateIds)) {
+                self::getData()
+                    ->whereIn('seo_page_id', $duplicateIds)
+                    ->delete();
+
+                // Log para auditoria
+                \Illuminate\Support\Facades\Log::warning('SEO duplicatas removidas', [
+                    'object' => $object,
+                    'object_id' => $objectId,
+                    'deleted_ids' => $duplicateIds,
+                    'kept_id' => $primary->seo_page_id,
+                ]);
+            }
+        }
+
+        // Preserva description se não enviada
+        if (empty($seoPageData['description'])) {
+            $seoPageData['description'] = $primary->description;
+        }
+
+        // Atualiza o primário
+        $primary->update($seoPageData);
+
+        return self::findByObject($object, $objectId);
     }
 
 }

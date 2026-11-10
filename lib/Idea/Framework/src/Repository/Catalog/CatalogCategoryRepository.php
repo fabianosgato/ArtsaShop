@@ -122,7 +122,7 @@ class CatalogCategoryRepository extends AbstractRepository
     protected static function updateDescendantsSlug(int $parentId): void
     {
         $children = self::loadModel()::query()
-            ->where('parent_id', $parentId)
+            ->where('parent_id', '=', $parentId)
             ->get();
 
         foreach ($children as $child) {
@@ -247,7 +247,7 @@ class CatalogCategoryRepository extends AbstractRepository
     public static function hasChildren(int $parentId): bool
     {
         return self::loadModel()::query()
-            ->where('parent_id', $parentId)
+            ->where('parent_id', '=', $parentId)
             ->exists();
     }
 
@@ -557,30 +557,30 @@ class CatalogCategoryRepository extends AbstractRepository
         try {
             // 1. URL Rewrites (target_type=category, target_path=category/{id})
             SysUrlRewrite::query()
-                ->where('target_type', 'category')
-                ->where('target_path', 'category/' . $categoryId)
+                ->where('target_type', '=', 'category')
+                ->where('target_path', '=', 'category/' . $categoryId)
                 ->delete();
 
             // 2. Atributos EAV da categoria
             EavAttributesCategory::query()
-                ->where('eav_category_products_id', $categoryId)
+                ->where('eav_category_products_id', '=', $categoryId)
                 ->delete();
 
             // 3. Relacao N:M Categoria <-> Produto
             CatalogCategoryProduct::query()
-                ->where('category_id', $categoryId)
+                ->where('category_id', '=', $categoryId)
                 ->delete();
 
             // 4. SEO Pages (object=category, object_id=categoryId)
             // As tabelas filhas (meta_tags, images, link_tags) sao limpas via FK CASCADE
             SeoPage::query()
-                ->where('object', 'category')
-                ->where('object_id', (string) $categoryId)
+                ->where('object', '=', 'category')
+                ->where('object_id', '=', (string) $categoryId)
                 ->delete();
 
             // 5. Por fim, exclui a categoria
             CatalogCategoryEntity::query()
-                ->where('entity_id', $categoryId)
+                ->where('entity_id', '=', $categoryId)
                 ->delete();
 
             DB::commit();

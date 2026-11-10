@@ -17,7 +17,7 @@
  *
  */
 
-use Idea\Framework\Repository\System\SysConfigRespository;
+use Idea\Framework\Repository\System\SysConfigRepository;
 use Idea\Framework\Seo\Data\SeoPageData;
 use Idea\Framework\Seo\SeoManager;
 use Illuminate\Database\Eloquent\Model;
@@ -35,7 +35,7 @@ if (! function_exists('getConfigData')) {
     {
 
         // Retorna as configurações gerais do e-commerce
-        $configs = SysConfigRespository::getConfigs();
+        $configs = SysConfigRepository::getConfigs();
 
         if (isset($configs[$path])) {
             return $configs[$path];

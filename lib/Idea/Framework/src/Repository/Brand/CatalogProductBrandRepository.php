@@ -36,10 +36,10 @@ class CatalogProductBrandRepository extends AbstractRepository
 
     /**
      * Retorna uma marca pelo Id
-     * @param $brandId
+     * @param int $brandId
      * @return \App\Models\CatalogProductBrand|null
      */
-    public static function getBrand($brandId): ?CatalogProductBrand
+    public static function getBrand(int $brandId): ?CatalogProductBrand
     {
         return self::find($brandId);
     }
@@ -63,10 +63,10 @@ class CatalogProductBrandRepository extends AbstractRepository
 
     /**
      * Retorna uma marca pelo brand_key
-     * @param $brandKey
+     * @param string $brandKey
      * @return CatalogProductBrand|bool
      */
-    public static function getBrandByKey($brandKey): ?CatalogProductBrand
+    public static function getBrandByKey(string $brandKey): ?CatalogProductBrand
     {
 
         $query = self::getData()
@@ -96,7 +96,11 @@ class CatalogProductBrandRepository extends AbstractRepository
         try {
             // Verifica se a marca tem produtos associados
             $productsCount = CatalogProduct::query()
-                ->where('brand_id', $brandId)
+                ->where(
+                    column: 'brand_id',
+                    operator: '=',
+                    value: $brandId
+                )
                 ->count();
 
             if ($productsCount > 0) {
@@ -105,20 +109,20 @@ class CatalogProductBrandRepository extends AbstractRepository
 
             // 1. URL Rewrites (target_type=brand, target_path=brand/{id})
             SysUrlRewrite::query()
-                ->where('target_type', 'brand')
-                ->where('target_path', 'brand/' . $brandId)
+                ->where('target_type', '=', 'brand')
+                ->where('target_path', '=', 'brand/' . $brandId)
                 ->delete();
 
             // 2. SEO Pages (object=brand, object_id=brandId)
             // As tabelas filhas (meta_tags, images, link_tags) sao limpas via FK CASCADE
             SeoPage::query()
-                ->where('object', 'brand')
-                ->where('object_id', (string) $brandId)
+                ->where('object', '=', 'brand')
+                ->where('object_id', '=', (string) $brandId)
                 ->delete();
 
             // 3. Por fim, exclui a marca
             CatalogProductBrand::query()
-                ->where('brand_id', $brandId)
+                ->where('brand_id', '=', $brandId)
                 ->delete();
 
             DB::commit();

@@ -61,7 +61,7 @@ class EavEntityAttributeOptionRepository extends AbstractRepository
 
         // Remove as opções excluídas
         self::getData()
-            ->where('entity_attribute_id', $entityAttributeId)
+            ->where('entity_attribute_id', '=', $entityAttributeId)
             ->when(
                 $formIds->isNotEmpty(),
                 fn($query) => $query->whereNotIn(

@@ -26,7 +26,7 @@ use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
-use Idea\Framework\Repository\System\SysConfigRespository;
+use Idea\Framework\Repository\System\SysConfigRepository;
 use Idea\Framework\Services\ServiceCache;
 use Idea\Framework\View\Wsdadm\Components\FormComponent;
 
@@ -367,7 +367,7 @@ class SysConfigForm extends FormComponent
         // Salva os dados da configuração
         foreach ($data as $path => $value) {
 
-            $sysConfig = SysConfigRespository::getData()->updateOrCreate(
+            $sysConfig = SysConfigRepository::getData()->updateOrCreate(
                 attributes: [
                     'path' => $path
                 ],

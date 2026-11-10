@@ -50,7 +50,7 @@ class AdminController extends Controller
 
                 // Sempre irá pesquisar pela rota "index"
                 $sysModulesMenus = SysModulesMenu::query()
-                    ->where('menu_link', $route)
+                    ->where('menu_link', '=', $route)
                     ->first();
 
                 if (!is_null($sysModulesMenus)) {

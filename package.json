@@ -10,7 +10,7 @@
         "@tailwindcss/forms": "^0.5.11",
         "@tailwindcss/typography": "^0.5.19",
         "@tailwindcss/vite": "^4.3.0",
-        "@vitejs/plugin-react": "^6.1.2",
+        "@vitejs/plugin-react": "^6.3.0",
         "@wotz/livewire-sortablejs": "^1.0.0",
         "concurrently": "^9.0.1",
         "daisyui": "^5.5.20",

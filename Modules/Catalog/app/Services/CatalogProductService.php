@@ -154,31 +154,30 @@ class CatalogProductService extends AbstractService
     }
 
     /**
-     * metodo responsavel por salvar os atributos dos produtos
+     * metodo responsavel por salvar os atributos dos produtos (batch)
      * @param array $payload
      * @return void
      */
     private static function updateAttributes(array $payload): void
     {
+        $attributes = [];
 
         foreach ($payload as $attribute => $value) {
-
             if (str_contains($attribute, 'attributes_')) {
-
-                // Retorna o codigo do atributo
                 $eavAttributeCode = str_replace("attributes_", "", $attribute);
-
-                CatalogProductAttributeRepository::updateAttributes(
-                    productId: $payload['product_id'],
-                    atributeSetId: $payload['attribute_set_id'],
-                    attributeCode: $eavAttributeCode,
-                    value: $value
-                );
-
+                $attributes[] = ['code' => $eavAttributeCode, 'value' => $value];
             }
-
         }
 
+        if (empty($attributes)) {
+            return;
+        }
+
+        CatalogProductAttributeRepository::updateAttributesBatch(
+            productId: $payload['product_id'],
+            attributeSetId: $payload['attribute_set_id'],
+            attributes: $attributes
+        );
     }
 
     /**

@@ -21,6 +21,9 @@ return [
         ]
     ],
     'cache' => [
+        'config' => [
+            'expire_in' => 3600
+        ],
         'types' => [
             'seo-meta' => [
                 'expire_in' => 3200

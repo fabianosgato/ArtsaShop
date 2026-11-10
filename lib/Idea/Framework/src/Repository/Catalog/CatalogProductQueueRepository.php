@@ -30,7 +30,11 @@ class CatalogProductQueueRepository extends AbstractRepository
 
     public static function deleteQueue($productId)
     {
-        self::loadModel()::query()->where(['product_id' => $productId])->delete();
+        self::loadModel()::query()->where(
+            column:'product_id',
+            operator:'=',
+            value:$productId
+        )->delete();
     }
 
     public static function getCatalogQueue(): array
@@ -88,7 +92,9 @@ class CatalogProductQueueRepository extends AbstractRepository
     {
 
         $queue = self::loadModel()::query()->where(
-            column: 'product_id', operator: '=', value: $productId
+            column: 'product_id',
+            operator: '=',
+            value: $productId
         );
 
         if (!$queue->exists()) {

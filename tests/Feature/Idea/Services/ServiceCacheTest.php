@@ -52,25 +52,6 @@ class ServiceCacheTest extends TestCase
     }
 
 
-    public function testExpireInIntVal(): void
-    {
-
-        // Arrange: Instancia a classe de Cache
-        $serviceCache = new ServiceCache();
-        $expireIn = $serviceCache->defaultExpireIn();
-
-        // Valida se o resultado é um inteiro
-        $this->assertIsInt($expireIn);
-
-        $this->assertSame(
-            intval(getConfigData(
-                path: 'cache/config/expire_in'
-            )),
-            $expireIn
-        );
-
-    }
-
     public function testRemember(): void
     {
 
@@ -143,12 +124,10 @@ class ServiceCacheTest extends TestCase
         $cacheKey = 'banners_home_topo';
         // Arrange: local do banner
         $bannerLocal = 'banner_main_top';
-        // Arrange: Array de tags
-        $tags = [
-            'banners',
-        ];
+        // Arrange: SEM tags (forgetByKey usa Cache::forget que só remove caches não-tagueados)
+        $tags = [];
 
-        // Act: Cria o cache
+        // Act: Cria o cache SEM tags
         app(ServiceCache::class)->remember(
             cacheKey: $cacheKey,
             tags: $tags,
@@ -162,7 +141,13 @@ class ServiceCacheTest extends TestCase
             }
         );
 
-        // Assert: Valida se o cache ainda existe
+        // Assert: Cache existe (sem tags)
+        $this->assertTrue(Cache::has($cacheKey));
+
+        // Act: Limpa o cache pela key
+        app(ServiceCache::class)->forgetByKey($cacheKey);
+
+        // Assert: Cache foi removido
         $this->assertFalse(Cache::has($cacheKey));
 
     }

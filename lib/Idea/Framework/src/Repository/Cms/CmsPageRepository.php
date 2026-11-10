@@ -48,20 +48,20 @@ class CmsPageRepository extends AbstractRepository
         try {
             // 1. URL Rewrites (target_type=cms, target_path=cms/{id})
             SysUrlRewrite::query()
-                ->where('target_type', 'cms')
-                ->where('target_path', 'cms/' . $pageId)
+                ->where('target_type', '=', 'cms')
+                ->where('target_path', '=', 'cms/' . $pageId)
                 ->delete();
 
             // 2. SEO Pages (object=cms, object_id=pageId)
             // As tabelas filhas (meta_tags, images, link_tags) sao limpas via FK CASCADE
             SeoPage::query()
-                ->where('object', 'cms')
-                ->where('object_id', (string) $pageId)
+                ->where('object', '=', 'cms')
+                ->where('object_id', '=', (string) $pageId)
                 ->delete();
 
             // 3. Por fim, exclui a página CMS
             CmsPage::query()
-                ->where('page_id', $pageId)
+                ->where('page_id', '=', $pageId)
                 ->delete();
 
             DB::commit();

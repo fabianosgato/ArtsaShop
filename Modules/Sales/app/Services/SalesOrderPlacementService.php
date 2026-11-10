@@ -331,40 +331,42 @@ class SalesOrderPlacementService
     }
 
     /**
-     * Retorna endereço padrão do cliente
+     * Retorna endereço padrão do cliente com fallback seguro (iterativo, sem recursão)
      */
     private function hydrateFromCustomerAddress(int $customerId, string $type): array
     {
-        $address = CustomerAddressRepository::getData()
-            ->where('customer_id', $customerId)
-            ->where(
-                $type === 'shipping'
-                    ? 'is_default_shipping'
-                    : 'is_default_billing',
-                1
-            )
-            ->first();
-
-        if (!$address && $type === 'shipping') {
-            return $this->hydrateFromCustomerAddress($customerId, 'billing');
+        $typesToTry = [$type];
+        if ($type === 'shipping') {
+            $typesToTry[] = 'billing';
         }
 
-        if (!$address) {
-            return [];
+        foreach ($typesToTry as $t) {
+            $address = CustomerAddressRepository::getData()
+                ->where('customer_id', '=', $customerId)
+                ->where(
+                    $t === 'shipping' ? 'is_default_shipping' : 'is_default_billing',
+                    '=',
+                    1
+                )
+                ->first();
+
+            if ($address) {
+                return [
+                    'name' => $address->recipient_name,
+                    'phone' => $address->phone,
+                    'cellphone' => $address->cellphone,
+                    'postcode' => $address->postcode,
+                    'street' => $address->street,
+                    'number' => $address->number,
+                    'complement' => $address->complement,
+                    'neighborhood' => $address->neighborhood,
+                    'city' => $address->city,
+                    'region' => $address->region,
+                    'country' => $address->country ?? 'Brasil',
+                ];
+            }
         }
 
-        return [
-            'name' => $address->recipient_name,
-            'phone' => $address->phone,
-            'cellphone' => $address->cellphone,
-            'postcode' => $address->postcode,
-            'street' => $address->street,
-            'number' => $address->number,
-            'complement' => $address->complement,
-            'neighborhood' => $address->neighborhood,
-            'city' => $address->city,
-            'region' => $address->region,
-            'country' => $address->country ?? 'Brasil',
-        ];
+        return [];
     }
 }

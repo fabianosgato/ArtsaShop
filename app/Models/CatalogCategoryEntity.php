@@ -93,7 +93,7 @@ class CatalogCategoryEntity extends Model implements SeoAware
     public function childrenRecursive()
     {
         return $this->children()
-            ->where('has_products', true)
+            ->where('has_products', '=', true)
             ->with('childrenRecursive');
     }
 

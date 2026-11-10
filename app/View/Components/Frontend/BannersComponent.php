@@ -46,9 +46,9 @@ class BannersComponent extends Component
                 tags:['banners'],
                 closure: function () use ($bannerLocal) {
                     return CmsBannerRepository::getData()
-                        ->where('is_active', 1)
-                        ->where('banner_type', 'banner_home')
-                        ->where('banner_local', $bannerLocal)
+                        ->where('is_active', '=', 1)
+                        ->where('banner_type','=', 'banner_home')
+                        ->where('banner_local', '=', $bannerLocal)
                         ->orderBy('banner_order')
                         ->get();
                 }

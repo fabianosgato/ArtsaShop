@@ -21,12 +21,14 @@ namespace Idea\Framework\Repository;
 
 use App\Models\CatalogCategoryEntity;
 use App\Models\CatalogProduct;
+use Idea\Framework\Concerns\SearchScoring;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 
 
 class SearchRepository
 {
+    use SearchScoring;
 
     /**
      * Método usado para retornar os exames agrupados na busca
@@ -382,26 +384,10 @@ class SearchRepository
         // Remove espaços extras
         $word = trim($requestData['word']);
 
-        // Inicializa o search
-        $search = '';
-
-        if ($word) {
-
-            // Quebra os termos
-            $terms = collect(
-                preg_split('/\s+/', $word)
-            )->filter()->values();
-
-            // Primeiro termo = intenção principal
-            $mainTerm = $terms->first();
-
-            // Busca FULLTEXT
-            $search = '+' . $mainTerm;
-
-            foreach ($terms->slice(1) as $term) {
-                $search .= ' ' . $term;
-            }
-        }
+        // Processa termos de busca (usa método do trait)
+        $processed = self::processSearchTerms($word);
+        $terms = $processed['terms'];
+        $search = $processed['search'];
 
         // Query base da busca geral de produtos
         $query = self::getProducts();
@@ -418,78 +404,8 @@ class SearchRepository
                 [$search]
             );
 
-            // Score de relevância customizado
-            $scoreSql = [];
-            $bindings = [];
-
-            foreach ($terms as $index => $term) {
-
-                // Primeiro termo = intenção principal
-                $nameWeight = $index === 0 ? 100 : 15;
-                $descWeight = $index === 0 ? 30 : 5;
-                $skuWeight = $index === 0 ? 120 : 25;
-
-                // Nome começando com termo
-                $scoreSql[] = "
-                CASE
-                    WHEN catalog_product.name LIKE ? THEN " . ($nameWeight + 50) . "
-                    ELSE 0
-                END
-            ";
-
-                $bindings[] = $term . '%';
-
-                // Nome contendo termo
-                $scoreSql[] = "
-                CASE
-                    WHEN catalog_product.name LIKE ? THEN {$nameWeight}
-                    ELSE 0
-                END
-            ";
-
-                $bindings[] = '%' . $term . '%';
-
-                // Description
-                $scoreSql[] = "
-                CASE
-                    WHEN catalog_product.description LIKE ? THEN {$descWeight}
-                    ELSE 0
-                END
-            ";
-
-                $bindings[] = '%' . $term . '%';
-
-                // SKU
-                $scoreSql[] = "
-            CASE
-                WHEN catalog_product.sku LIKE ? THEN {$skuWeight}
-                ELSE 0
-            END
-            ";
-
-                $bindings[] = '%' . $term . '%';
-
-            }
-
-            $scoreExpression = implode(' + ', $scoreSql);
-
-            // Score FULLTEXT do MySQL
-            $query->selectRaw(
-                "(
-                        MATCH(
-                            catalog_product.name,
-                            catalog_product.description,
-                            catalog_product.sku
-                        ) AGAINST(? IN BOOLEAN MODE)
-                 ) as fulltext_score",
-                [$search]
-            );
-
-            // Score customizado
-            $query->selectRaw(
-                "({$scoreExpression}) as relevance_score",
-                $bindings
-            );
+            // Score de relevância customizado (usa trait - bindings seguros)
+            self::applyRelevanceScoring($query, $terms, $search);
 
         }
 

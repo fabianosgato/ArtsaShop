@@ -70,8 +70,8 @@ class IndexerService implements ServiceInterface
 
         // Verifica se já existe URL rewrite para este produto
         $existing = SysUrlRewrite::query()
-            ->where('target_type', 'product')
-            ->where('target_path', $targetPath)
+            ->where('target_type', '=', 'product')
+            ->where('target_path', '=', $targetPath)
             ->first();
 
         if (!$existing) {
@@ -94,8 +94,8 @@ class IndexerService implements ServiceInterface
     {
         // Verifica se já existe SEO page para este produto
         $existing = SeoPage::query()
-            ->where('object', 'product')
-            ->where('object_id', (string) $product->product_id)
+            ->where('object', '=', 'product')
+            ->where('object_id', '=', (string) $product->product_id)
             ->first();
 
         if (!$existing) {

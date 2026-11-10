@@ -137,12 +137,16 @@ class CatalogProductMediaRepository extends AbstractRepository
                     $shortName = Str::words($product->name, 5, '');
                     $altText = "{$shortName}{$suffix}";
 
+                    // Extrai URL base removendo sufixo de tamanho (_product_main.webp, etc.)
+                    $baseUrl = preg_replace('/_product_(main|page|sharing|listing|thumbnail)\.webp$/', '', $productImage['media_url']);
+
+                    // Gera URLs para cada tamanho usando as chaves do config
                     $imageData = [
-                        'product_main' => $productImage['media_url'],
-                        'product_page' => str_replace('1000x1000', '454x454', $productImage['media_url']),
-                        'product_sharing' => str_replace('1000x1000', '300x300', $productImage['media_url']),
-                        'product_listing' => str_replace('1000x1000', '255x255', $productImage['media_url']),
-                        'product_thumbnail' => str_replace('1000x1000', '80x80', $productImage['media_url']),
+                        'product_main'      => $baseUrl . '_product_main.webp',
+                        'product_page'      => $baseUrl . '_product_page.webp',
+                        'product_sharing'   => $baseUrl . '_product_sharing.webp',
+                        'product_listing'   => $baseUrl . '_product_listing.webp',
+                        'product_thumbnail' => $baseUrl . '_product_thumbnail.webp',
                         'alt' => Str::limit($altText, 125)
                     ];
 

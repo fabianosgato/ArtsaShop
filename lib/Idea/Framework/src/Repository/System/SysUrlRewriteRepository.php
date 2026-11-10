@@ -33,9 +33,9 @@ class SysUrlRewriteRepository extends AbstractRepository
     /**
      * Retorna a URL pelo Slug
      * @param $slug
-     * @return false
+     * @return false|array
      */
-    public static function getBySlug($slug)
+    public static function getBySlug($slug): false|array
     {
 
         // Inicializa a query
@@ -181,7 +181,7 @@ class SysUrlRewriteRepository extends AbstractRepository
     public static function getCanonicalByTargetPath(string $targetPath): ?SysUrlRewrite
     {
         return self::getData()
-            ->where('target_path', $targetPath)
+            ->where('target_path', '=', $targetPath)
             ->whereNull('options') // canonical = sem redirect
             ->first();
     }

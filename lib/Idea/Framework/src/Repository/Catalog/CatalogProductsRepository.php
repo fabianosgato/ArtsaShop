@@ -31,14 +31,15 @@ use App\Models\CatalogProductStore;
 use App\Models\CatalogProductTagsEntity;
 use App\Models\SeoPage;
 use App\Models\SysUrlRewrite;
+use Idea\Framework\Concerns\SearchScoring;
 use Idea\Framework\Repository\AbstractRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class CatalogProductsRepository extends AbstractRepository
 {
+    use SearchScoring;
 
     protected static $model = CatalogProduct::class;
 
@@ -118,7 +119,7 @@ class CatalogProductsRepository extends AbstractRepository
 
         } catch (\Exception $e) {
             // Log do erro para debugging
-            Log::error('Erro ao atualizar produto', [
+            \Illuminate\Support\Facades\Log::error('Erro ao atualizar produto', [
                 'product_id' => $id,
                 'sku' => $attributes['sku'] ?? null,
                 'error' => $e->getMessage(),
@@ -406,191 +407,23 @@ class CatalogProductsRepository extends AbstractRepository
     }
 
     /**
-     * Retorna os produtos paginados filtrando pela busca
+     * Retorna os produtos paginados filtrando pela busca (sugestões)
      * @param string $word
-     * @return array
-     */
-    public static function searchProductsSuggestion(string $word): array
-    {
-
-        // Quebra os termos
-        $terms = collect(
-            preg_split('/\s+/', $word)
-        )
-            ->filter()
-            ->values();
-
-        // Primeiro termo = intenção principal
-        $mainTerm = $terms->first();
-
-        // Busca FULLTEXT
-        // Exemplo:
-        // +lareira vapor
-        $search = '+' . $mainTerm;
-
-        foreach ($terms->slice(1) as $term) {
-            $search .= ' ' . $term;
-        }
-
-        // Query base
-        $query = self::getProducts();
-
-        // Apenas produtos ativos
-        $query->where(
-            'catalog_product.status_id',
-            '=',
-            1
-        );
-
-        // FULLTEXT SEARCH
-        $query->whereRaw(
-            "MATCH(
-            catalog_product.name,
-            catalog_product.description,
-            catalog_product.sku
-        ) AGAINST(? IN BOOLEAN MODE)",
-            [$search]
-        );
-
-        // Score de relevância customizado
-        $scoreSql = [];
-        $bindings = [];
-
-        foreach ($terms as $index => $term) {
-
-            // Primeiro termo = intenção principal
-            $nameWeight = $index === 0 ? 100 : 15;
-            $descWeight = $index === 0 ? 30 : 5;
-            $skuWeight  = $index === 0 ? 120 : 25;
-
-            // Nome começando com termo
-            $scoreSql[] = "
-                CASE
-                    WHEN catalog_product.name LIKE ? THEN " . ($nameWeight + 50) . "
-                    ELSE 0
-                END
-            ";
-
-            $bindings[] = $term . '%';
-
-            // Nome contendo termo
-            $scoreSql[] = "
-                CASE
-                    WHEN catalog_product.name LIKE ? THEN {$nameWeight}
-                    ELSE 0
-                END
-            ";
-
-            $bindings[] = '%' . $term . '%';
-
-            // Description
-            $scoreSql[] = "
-                CASE
-                    WHEN catalog_product.description LIKE ? THEN {$descWeight}
-                    ELSE 0
-                END
-            ";
-
-            $bindings[] = '%' . $term . '%';
-
-            // SKU
-            $scoreSql[] = "
-            CASE
-                WHEN catalog_product.sku LIKE ? THEN {$skuWeight}
-                ELSE 0
-            END
-            ";
-
-            $bindings[] = '%' . $term . '%';
-
-        }
-
-        $scoreExpression = implode(' + ', $scoreSql);
-
-        // Score FULLTEXT do MySQL
-        $query->selectRaw(
-            "(
-            MATCH(
-                catalog_product.name,
-                catalog_product.description,
-                catalog_product.sku
-            ) AGAINST(? IN BOOLEAN MODE)
-        ) as fulltext_score",
-            [$search]
-        );
-
-        // Score customizado
-        $query->selectRaw(
-            "({$scoreExpression}) as relevance_score",
-            $bindings
-        );
-
-        // Produtos com estoque primeiro
-        $query->orderByRaw(
-            'CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END'
-        );
-
-        // Ordenação final
-        $query->orderByDesc('relevance_score');
-        $query->orderByDesc('fulltext_score');
-        $query->orderByDesc('catalog_product.product_id');
-
-        // Limite de sugestões
-        $products = $query
-            ->limit(5)
-            ->get();
-
-        // Total encontrado
-        $total = (clone $query)->count();
-
-        return [
-            'products' => $products->map(function ($product) {
-
-                return [
-                    'name'  => $product->name,
-                    'url'   => url($product->slug_key),
-                    'image' => $product->thumbnail
-                ];
-
-            }),
-
-            'total' => $total
-        ];
-
-    }
-
-    /**
-     * Realiza a busca de produtos no site
-     * @param $word
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public static function searchProductsPagination(
-        $word,
-        int $perPage = 32
-    ): LengthAwarePaginator
+    public static function searchProductsSuggestion(string $word, int $perPage = 32): LengthAwarePaginator
     {
+        // Processa termos de busca (usa método do trait)
+        $processed = self::processSearchTerms($word);
+        $terms = $processed['terms'];
+        $search = $processed['search'];
 
-        // Remove espaços extras
-        $word = trim($word);
-
-        // Quebra os termos
-        $terms = collect(
-            preg_split('/\s+/', $word)
-        )
-            ->filter()
-            ->values();
-
-        // Primeiro termo = intenção principal
-        $mainTerm = $terms->first();
-
-        // Busca FULLTEXT
-        // Exemplo:
-        // +lareira vapor
-        $search = '+' . $mainTerm;
-
-        foreach ($terms->slice(1) as $term) {
-            $search .= ' ' . $term;
+        if (empty($search)) {
+            return self::getProducts()
+                ->where('catalog_product.status_id', '=', 1)
+                ->orderByDesc('catalog_product.product_id')
+                ->paginate($perPage);
         }
 
         // Query base
@@ -598,9 +431,9 @@ class CatalogProductsRepository extends AbstractRepository
 
         // Apenas produtos ativos
         $query->where(
-            'catalog_product.status_id',
-            '=',
-            1
+            column: 'catalog_product.status_id',
+            operator: '=',
+            value: 1
         );
 
         // FULLTEXT SEARCH
@@ -613,78 +446,8 @@ class CatalogProductsRepository extends AbstractRepository
             [$search]
         );
 
-        // Score de relevância customizado
-        $scoreSql = [];
-        $bindings = [];
-
-        foreach ($terms as $index => $term) {
-
-            // Primeiro termo = intenção principal
-            $nameWeight = $index === 0 ? 100 : 15;
-            $descWeight = $index === 0 ? 30 : 5;
-            $skuWeight  = $index === 0 ? 120 : 25;
-
-            // Nome começando com termo
-            $scoreSql[] = "
-                CASE
-                    WHEN catalog_product.name LIKE ? THEN " . ($nameWeight + 50) . "
-                    ELSE 0
-                END
-            ";
-
-            $bindings[] = $term . '%';
-
-            // Nome contendo termo
-            $scoreSql[] = "
-                CASE
-                    WHEN catalog_product.name LIKE ? THEN {$nameWeight}
-                    ELSE 0
-                END
-            ";
-
-            $bindings[] = '%' . $term . '%';
-
-            // Description
-            $scoreSql[] = "
-                CASE
-                    WHEN catalog_product.description LIKE ? THEN {$descWeight}
-                    ELSE 0
-                END
-            ";
-
-            $bindings[] = '%' . $term . '%';
-
-            // SKU
-            $scoreSql[] = "
-            CASE
-                WHEN catalog_product.sku LIKE ? THEN {$skuWeight}
-                ELSE 0
-            END
-            ";
-
-            $bindings[] = '%' . $term . '%';
-
-        }
-
-        $scoreExpression = implode(' + ', $scoreSql);
-
-        // Score FULLTEXT do MySQL
-        $query->selectRaw(
-            "(
-            MATCH(
-                catalog_product.name,
-                catalog_product.description,
-                catalog_product.sku
-            ) AGAINST(? IN BOOLEAN MODE)
-        ) as fulltext_score",
-            [$search]
-        );
-
-        // Score customizado
-        $query->selectRaw(
-            "({$scoreExpression}) as relevance_score",
-            $bindings
-        );
+        // Score de relevância customizado (usa trait - bindings seguros)
+        self::applyRelevanceScoring($query, $terms, $search);
 
         // Produtos com estoque primeiro
         $query->orderByRaw(
@@ -699,7 +462,67 @@ class CatalogProductsRepository extends AbstractRepository
         return $query
             ->paginate($perPage)
             ->withQueryString();
+    }
 
+    /**
+     * Realiza a busca de produtos no site
+     * @param string $word
+     * @param int $perPage
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public static function searchProductsPagination(
+        string $word,
+        int $perPage = 32
+    ): LengthAwarePaginator
+    {
+        // Processa termos de busca (usa método do trait)
+        $processed = self::processSearchTerms($word);
+        $terms = $processed['terms'];
+        $search = $processed['search'];
+
+        if (empty($search)) {
+            return self::getProducts()
+                ->where('catalog_product.status_id', '=', 1)
+                ->orderByDesc('catalog_product.product_id')
+                ->paginate($perPage);
+        }
+
+        // Query base
+        $query = self::getProducts();
+
+        // Apenas produtos ativos
+        $query->where(
+            column: 'catalog_product.status_id',
+            operator: '=',
+            value: 1
+        );
+
+        // FULLTEXT SEARCH
+        $query->whereRaw(
+            "MATCH(
+            catalog_product.name,
+            catalog_product.description,
+            catalog_product.sku
+        ) AGAINST(? IN BOOLEAN MODE)",
+            [$search]
+        );
+
+        // Score de relevância customizado (usa trait - bindings seguros)
+        self::applyRelevanceScoring($query, $terms, $search);
+
+        // Produtos com estoque primeiro
+        $query->orderByRaw(
+            'CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END'
+        );
+
+        // Ordenação final
+        $query->orderByDesc('relevance_score');
+        $query->orderByDesc('fulltext_score');
+        $query->orderByDesc('catalog_product.product_id');
+
+        return $query
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     /**
@@ -752,7 +575,7 @@ class CatalogProductsRepository extends AbstractRepository
             $query->where(
                 column: 'catalog_product.attribute_set_id',
                 operator: '=',
-                value:$eavAttributeId
+                value: $eavAttributeId
             );
         }
 
@@ -793,7 +616,7 @@ class CatalogProductsRepository extends AbstractRepository
                 'catalog_product.attribute_set_id',
                 'catalog_product.created_at'
             ])
-            ->where('catalog_product.status_id', 1)
+            ->where('catalog_product.status_id', '=', 1)
             ->where('catalog_product.qty', '>', 0);
 
         // ROW_NUMBER sem poluir select
@@ -809,7 +632,7 @@ class CatalogProductsRepository extends AbstractRepository
             ->joinSub($sub, 'filtered', function ($join) {
                 $join->on('catalog_product.product_id', '=', 'filtered.product_id');
             })
-            ->where('filtered.rn', 1)
+            ->where('filtered.rn', '=', 1)
             ->limit($limit);
 
         return $query->get();
@@ -923,11 +746,11 @@ class CatalogProductsRepository extends AbstractRepository
 
     /**
      * Retorna os produtos pelo Grupo de Atributos
-     * @param $attributeSetId
+     * @param int $attributeSetId
      * @param int $limit
      * @return Builder
      */
-    public static function getByAttributeSet($attributeSetId, int $limit = 10): Builder
+    public static function getByAttributeSet(int $attributeSetId, int $limit = 10): Builder
     {
         // Retorna os produtos
         $query = self::getProducts();
@@ -939,21 +762,19 @@ class CatalogProductsRepository extends AbstractRepository
             value: $attributeSetId
         );
 
-        if ($limit)
-            $query->limit($limit)
-                ->orderBy('catalog_product.product_id', 'DESC')
-                ->inRandomOrder();
-
-        // Mostra os produtos sem estoque por último nas listagens
+        // Produtos com estoque primeiro
         $query->orderByRaw(
             'CASE WHEN catalog_product.qty > 0 THEN 0 ELSE 1 END'
         );
 
-        // Retorna os produtos por ordem de cadastro decrescente
-        return $query->orderBy(
-            column: 'catalog_product.product_id',
-            direction:  'desc'
-        );
+        // Mais recentes primeiro (product_id DESC = ordem de cadastro decrescente)
+        $query->orderBy('catalog_product.product_id', 'DESC');
+
+        if ($limit) {
+            $query->limit($limit);
+        }
+
+        return $query;
 
     }
 
@@ -1006,51 +827,15 @@ class CatalogProductsRepository extends AbstractRepository
      * @param $brandId
      * @return void
      */
-    public static function updateBrand($productId, $brandId): void
+    public static function updateProductBrand(int $productId, int $brandId): void
     {
-
-        // Inicializa a query do produto
         CatalogProduct::query()
             ->where('product_id', '=', $productId)
-            ->update([
-                'brand_id' => $brandId
-            ]);
-
+            ->update(['brand_id' => $brandId]);
     }
 
     /**
-     * Metodo responsavel por alterar o status de um produto dependendo do estoque
-     * @param $productId
-     * @param $qty
-     * @return void
-     */
-    public static function updateStatus($productId, $qty): void
-    {
-
-        if ($qty == 0) {
-            // Inicializa a query do produto
-            CatalogProduct::query()
-                ->where('product_id', '=', $productId)
-                ->update([
-                    'status_id' => 3,
-                    'qty' => $qty
-                ]);
-
-        } else {
-            // Inicializa a query do produto
-            CatalogProduct::query()
-                ->where('product_id', '=', $productId)
-                ->update([
-                    'status_id' => 1,
-                    'qty' => $qty
-                ]);
-        }
-
-    }
-
-    /**
-     * Metodo responsavel por EXCLUIR DEFINITIVAMENTE um produto da base.
-     * Apenas serao excluidos produtos que estao como "NAO APROVADOS" que sao produtos nao editados ainda
+     * Metodo responsavel por Excluir o Produto do Sistema.
      * @param int $productId
      * @return void
      * @throws \Throwable
@@ -1063,43 +848,43 @@ class CatalogProductsRepository extends AbstractRepository
 
             // 1. URL Rewrites (target_type=product, target_path=product/{id})
             SysUrlRewrite::query()
-                ->where('target_type', 'product')
-                ->where('target_path', 'product/' . $productId)
+                ->where('target_type', '=', 'product')
+                ->where('target_path', '=', 'product/' . $productId)
                 ->delete();
 
             // 2. Media/Imagens do produto
-            CatalogProductMedia::query()->where('product_id', $productId)->delete();
+            CatalogProductMedia::query()->where('product_id', '=', $productId)->delete();
 
             // 3. Relacao Produto <-> Loja (multi-store)
-            CatalogProductStore::query()->where('product_id', $productId)->delete();
+            CatalogProductStore::query()->where('product_id', '=', $productId)->delete();
 
             // 4. Tags do produto
-            CatalogProductTagsEntity::query()->where('product_id', $productId)->delete();
+            CatalogProductTagsEntity::query()->where('product_id', '=', $productId)->delete();
 
             // 5. Queue de processamento
-            CatalogProductQueue::query()->where('product_id', $productId)->delete();
+            CatalogProductQueue::query()->where('product_id', '=', $productId)->delete();
 
             // 6. Relacao Categoria <-> Produto (N:M)
-            CatalogCategoryProduct::query()->where('product_id', $productId)->delete();
+            CatalogCategoryProduct::query()->where('product_id', '=', $productId)->delete();
 
             // 7. Produto-Categoria principal (se existir tabela separada)
-            CatalogProductCategory::query()->where('product_id', $productId)->delete();
+            CatalogProductCategory::query()->where('product_id', '=', $productId)->delete();
 
             // 8. Preços do produto
-            CatalogProductPrice::query()->where('product_id', $productId)->delete();
+            CatalogProductPrice::query()->where('product_id', '=', $productId)->delete();
 
             // 9. Atributos EAV do produto
-            CatalogProductAttribute::query()->where('product_id', $productId)->delete();
+            CatalogProductAttribute::query()->where('product_id', '=', $productId)->delete();
 
             // 10. SEO Pages (object=product, object_id=productId)
             // As tabelas filhas (meta_tags, images, link_tags) sao limpas via FK CASCADE
             SeoPage::query()
-                ->where('object', 'product')
-                ->where('object_id', (string) $productId)
+                ->where('object', '=', 'product')
+                ->where('object_id', '=', (string) $productId)
                 ->delete();
 
             // 11. Por fim, exclui o produto
-            CatalogProduct::query()->where('product_id', $productId)->delete();
+            CatalogProduct::query()->where('product_id', '=', $productId)->delete();
 
             DB::commit();
 
@@ -1109,10 +894,6 @@ class CatalogProductsRepository extends AbstractRepository
         }
     }
 
-    /**
-     * Deleta todos os produtos de um Grupo de Atributo específico.
-     * @throws \Throwable
-     */
     public static function deleteByAttributeSet(int $eavAttributeSetId): void
     {
 
