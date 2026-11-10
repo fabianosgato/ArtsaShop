@@ -109,7 +109,7 @@ class CatalogProductAttributeRepository extends AbstractRepository
                         ]);
                 } else {
                     // Cria o novo atributo do produto
-                    self::create(
+                    self::firstOrCreate(
                         attributes: [
                             'attribute_set_id' => $atributeSetId,
                             'attribute_id' => $eavAttribute->attribute_id,

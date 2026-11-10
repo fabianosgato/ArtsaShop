@@ -47,12 +47,40 @@ abstract class AbstractRepository implements RepositoryInterface
         return self::loadModel()::query()->find($id);
     }
 
-    public static function create(array $attributes = [], array $values = []): Model|null
+    /**
+     * Cria um novo registro (falha se PK duplicada)
+     * @param array $attributes
+     * @return Model
+     * @throws \Illuminate\Database\QueryException
+     */
+    public static function create(array $attributes = []): Model
+    {
+        return self::loadModel()::query()->create($attributes);
+    }
+
+    /**
+     * Acha pelo attributes ou cria novo (firstOrCreate)
+     * @param array $attributes
+     * @param array $values
+     * @return Model
+     */
+    public static function firstOrCreate(array $attributes = [], array $values = []): Model
     {
         return self::loadModel()::query()->firstOrCreate(
             attributes: $attributes,
-            values:$values
+            values: $values
         );
+    }
+
+    /**
+     * Alias semântico para firstOrCreate
+     * @param array $attributes
+     * @param array $values
+     * @return Model
+     */
+    public static function findOrCreate(array $attributes = [], array $values = []): Model
+    {
+        return self::firstOrCreate($attributes, $values);
     }
 
     public static function update(int $id, array $attributes = []): int

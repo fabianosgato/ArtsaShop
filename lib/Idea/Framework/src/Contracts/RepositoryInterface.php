@@ -28,7 +28,20 @@ interface RepositoryInterface
 
     public static function all(): Collection;
 
-    public static function create(array $attributes, array $values = []): Model|null;
+    /**
+     * Cria um novo registro (falha se PK duplicada)
+     * @param array $attributes
+     * @return Model
+     */
+    public static function create(array $attributes): Model;
+
+    /**
+     * Acha pelo attributes ou cria novo (firstOrCreate)
+     * @param array $attributes
+     * @param array $values
+     * @return Model
+     */
+    public static function firstOrCreate(array $attributes, array $values = []): Model;
 
     public static function find(int $id): Model|null;
 

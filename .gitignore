@@ -23,6 +23,7 @@ public/.well-known/
 AGENTS.md
 boost.json
 opencode.json
+openclaw.json
 .agents
 
 # Compiled Java class files
