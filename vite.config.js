@@ -2,7 +2,6 @@ import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
 import {bunny} from 'laravel-vite-plugin/fonts';
 import tailwindcss from '@tailwindcss/vite';
-import react from '@vitejs/plugin-react';
 
 
 export default defineConfig({
@@ -16,9 +15,6 @@ export default defineConfig({
                 // Arquivos do Frontend
                 'resources/css/frontend/app.css',
                 'resources/js/frontend/app.js',
-
-                // React - laboratório
-                'resources/js/frontend/react.jsx',
             ],
             refresh: true,
             fonts: [
@@ -27,7 +23,6 @@ export default defineConfig({
                 }),
             ],
         }),
-        react(),
         tailwindcss(),
     ],
     // 🔥 ADICIONE ESTE BLOCO ABAIXO: Libera o Tailwind v4 para ler o Filament no vendor

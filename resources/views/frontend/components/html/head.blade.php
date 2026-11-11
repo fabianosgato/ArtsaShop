@@ -39,7 +39,6 @@
 @viteReactRefresh
 @vite([
     'resources/css/frontend/app.css',
-    'resources/js/frontend/react.jsx',
 ])
 
 @livewireStyles
