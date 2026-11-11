@@ -1,4 +1,4 @@
-import {createInertiaApp} from '@inertiajs/react'
+import {createInertiaApp} from '@inertiajs/vue3'
 // Importar Swiper
 import Swiper from 'swiper/bundle';
 
