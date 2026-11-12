@@ -28,8 +28,9 @@ use Modules\Catalog\Services\CatalogProductService;
 
 class CatalogProductController extends Controller
 {
-
-    use ProductsApiResponse, ResultApiResponse;
+    use ProductsApiResponse, ResultApiResponse {
+        ResultApiResponse::paginatedResponse as paginatedResultResponse;
+    }
 
     /**
      * Lista todos os produtos do sistema

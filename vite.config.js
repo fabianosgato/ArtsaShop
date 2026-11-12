@@ -22,7 +22,14 @@ export default defineConfig({
                 }),
             ],
         }),
-        tailwindcss(),
+        tailwindcss({
+            // Escanear arquivos Vue/TS para detectar classes Tailwind
+            sourceFiles: [
+                './resources/js/frontend/**/*.vue',
+                './resources/js/frontend/**/*.ts',
+                './resources/views/**/*.blade.php',
+            ],
+        }),
         vue({
             template: {
                 compilerOptions: {

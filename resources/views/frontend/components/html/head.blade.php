@@ -36,9 +36,8 @@
     </script>
 @endif
 
-@viteReactRefresh
 @vite([
-    'resources/css/frontend/app.css',
+    'resources/css/frontend/app.css'
 ])
 
 @livewireStyles

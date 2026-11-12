@@ -86,5 +86,4 @@ node_modules
 public/fonts-manifest.dev.json
 public/hot
 public/storage
-storage/*.key
-storage/pail
+storage

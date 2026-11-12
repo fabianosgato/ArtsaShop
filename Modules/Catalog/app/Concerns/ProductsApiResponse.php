@@ -19,36 +19,10 @@
 namespace Modules\Catalog\Concerns;
 
 use App\Models\CatalogProduct;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Catalog\Transformers\CatalogProductResource;
 
 trait ProductsApiResponse
 {
-
-    /**
-     * Paginação de produtos
-     * @param \Illuminate\Contracts\Pagination\LengthAwarePaginator $paginator
-     * @return array
-     */
-    protected function paginatedResponse(LengthAwarePaginator $paginator): array
-    {
-
-        return [
-            'request_info' => [
-                'success' => true
-            ],
-            'request_metadata' => [
-                'created_at' => date('Y-m-d H:i:s'),
-                'processed_at' => date('Y-m-d H:i:s'),
-            ],
-            'data' => CatalogProductResource::collection($paginator->items()),
-            'current_page' => $paginator->currentPage(),
-            'last_page' => $paginator->lastPage(),
-            'per_page' => $paginator->perPage(),
-            'total' => $paginator->total(),
-        ];
-
-    }
 
     protected function resultCatalogProduct(CatalogProduct $catalogProduct)
     {

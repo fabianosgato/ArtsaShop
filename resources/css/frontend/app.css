@@ -1,13 +1,23 @@
-@import "../../../node_modules/tailwindcss";
+@import "tailwindcss";
+
+/* Theme customizado (opcional) */
+@theme {
+  --color-orange-500: #ea580c;
+  --color-orange-600: #dc4801;
+}
 
 /* Styles padrões */
 @import "./styles.css";
 @import "./responsive.css";
 
-/* MAPEAMENTO DE CAMINHOS ADICIONAIS */
+/* MAPEAMENTO DE CAMINHOS PARA PURGE (Tailwind v4) */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source "../../Modules/**/resources/views/**/*.blade.php";
 @source "../../library/Idea/**/resources/views/**/*.blade.php";
 @source "../../resources/views/frontend/**/*.blade.php";
 @source '../../storage/framework/views/*.php';
+
+/* IMPORTANTE: Escanear arquivos Vue/TS para classes Tailwind */
+@source "../../resources/js/frontend/**/*.vue";
+@source "../../resources/js/frontend/**/*.ts";
 
