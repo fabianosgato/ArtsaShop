@@ -3,7 +3,9 @@ import {Link, usePage} from '@inertiajs/vue3'
 import {route} from 'ziggy-js'
 
 const page = usePage()
-const storeName = 'ArtsaShop'
+const appName = page.props.appName
+const appUrl = page.props.appUrl
+
 </script>
 
 <template>
@@ -12,10 +14,10 @@ const storeName = 'ArtsaShop'
       <div class="flex items-center justify-between gap-4 py-4 flex-wrap">
         <!-- Logo -->
         <div id="logo" class="flex-shrink-0">
-          <Link :href="route('index.home')" class="logo" :aria-label="storeName + ' - Home'">
+          <Link :href="route('index.home')" class="logo" :aria-label="appName + ' - Home'">
             <img
               :src="route('index.home') + '/images/frontend/logo.webp'"
-              :alt="storeName"
+              :alt="appName"
               width="120"
               height="47"
               loading="lazy"
@@ -26,8 +28,8 @@ const storeName = 'ArtsaShop'
         <!-- Navegação Principal (Desktop) -->
         <nav class="hidden md:flex items-center gap-6">
           <Link :href="route('index.home')" class="text-gray-700 hover:text-orange-600 transition font-medium">Home</Link>
-          <Link href="/quem-somos" class="text-gray-700 hover:text-orange-600 transition font-medium">Quem Somos</Link>
-          <Link href="/fale-conosco" class="text-gray-700 hover:text-orange-600 transition font-medium">Fale Conosco</Link>
+          <Link :href="appUrl + 'quem-somos'" class="text-gray-700 hover:text-orange-600 transition font-medium">Quem Somos</Link>
+          <Link :href="appUrl + 'fale-conosco'" class="text-gray-700 hover:text-orange-600 transition font-medium">Fale Conosco</Link>
         </nav>
 
         <!-- Mobile Menu Toggle -->

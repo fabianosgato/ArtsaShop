@@ -25,7 +25,7 @@
 
                     <div class="content-block-footer">
                         <ul class="links">
-                            <li><a href="{{ route('account.index') }}">Painel</a></li>
+                            <li><a :href="route('account.index')">Painel</a></li>
                             <li><a href="{{ route('account.orders') }}">Pedidos</a></li>
                             <li><a href="{{ route('account.edit') }}">Detalhes da conta</a></li>
                             <li><a href="{{ route('checkout.cart') }}">Carrinho</a></li>
@@ -83,5 +83,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <!-- Copyright -->
+    <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+        <p>&copy; {{ new Date().getFullYear() }} ArtsaShop. Todos os direitos reservados.</p>
     </div>
 </div>
