@@ -4,12 +4,12 @@ import {createApp, h} from 'vue'
 import {renderToString} from 'vue/server-renderer'
 import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers'
 
-const modules = import.meta.glob('./pages/frontend/**/*.vue')
+const modules = import.meta.glob('./pages/**/*.vue')
 
 createInertiaApp({
   resolve: (name: string): Promise<DefineComponent> =>
     resolvePageComponent(
-      `./pages/frontend/${name}.vue`,
+      `./pages/${name}.vue`,
       modules
     ) as Promise<DefineComponent>,
 

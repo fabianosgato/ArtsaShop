@@ -50,7 +50,7 @@ class IndexController extends Controller
             $categories = \Idea\Framework\Repository\Catalog\CatalogCategoryRepository::getCategoriesTree();
 
             // Retorna via Inertia (Vue)
-            return Inertia::render('frontend/Home', [
+            return Inertia::render('Home', [
                 'featuredProducts' => $featuredProducts,
                 'categories' => $categories,
                 'newProducts' => $newProducts,

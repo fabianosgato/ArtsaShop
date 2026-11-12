@@ -6,22 +6,20 @@ import {ZiggyVue} from 'ziggy-js'
 import {createPinia} from 'pinia'
 import '../../css/frontend/app.css'
 
-const modules = import.meta.glob('./pages/frontend/**/*.vue')
+const modules = import.meta.glob('./pages/**/*.vue')
 
 createInertiaApp({
   resolve: (name: string): Promise<DefineComponent> =>
     resolvePageComponent(
-      `./pages/frontend/${name}.vue`,
+      `./pages/${name}.vue`,
       modules
     ) as Promise<DefineComponent>,
 
   setup({ el, App, props, plugin }) {
     const app = createApp({ render: () => h(App, props) })
-
     app.use(plugin)
     app.use(ZiggyVue)
     app.use(createPinia())
-
     app.mount(el)
   },
 

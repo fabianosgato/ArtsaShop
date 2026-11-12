@@ -31,8 +31,9 @@ export default defineConfig({
             },
         }),
         inertia({
-            ssr: 'resources/js/frontend/ssr.ts',
-            resolve: ['resources/js/frontend/pages/frontend/**/*.vue'],
+            // 🔥 SSR TEMPORARIAMENTE DESABILITADO PARA DEV
+            // REATIVAR EM PRODUÇÃO: ssr: 'resources/js/frontend/ssr.ts',
+            resolve: ['resources/js/frontend/pages/**/*.vue'],
         }),
     ],
 
