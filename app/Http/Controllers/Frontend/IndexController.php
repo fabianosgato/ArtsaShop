@@ -25,6 +25,7 @@ use Idea\Framework\Repository\Catalog\CatalogProductsRepository;
 use Idea\Framework\Repository\System\SysStoreRepository;
 use Idea\Framework\Seo\Traits\HasSeoResponse;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 use Modules\Catalog\Services\CatalogProductService;
 
 class IndexController extends Controller
@@ -43,11 +44,16 @@ class IndexController extends Controller
                 entity: SysStoreRepository::getStoreByCode(app('currentStore')->code)
             );
 
-            return view('frontend.page.home', [
-                'newProducts' => app(CatalogProductService::class)->getNewProducts(12),
-                'featuredTwo' => app(CatalogProductService::class)->getCategoryProductBlock(383, 8),
-                'featuredThree' => app(CatalogProductService::class)->getCategoryProductBlock(480, 20),
-                'featuredFour' => app(CatalogProductService::class)->getCategoryProductBlock(399, 20),
+            // Busca produtos para a home
+            $newProducts = app(CatalogProductService::class)->getNewProducts(12);
+            $featuredProducts = app(CatalogProductService::class)->getCategoryProductBlock(489, 20);
+            $categories = \Idea\Framework\Repository\Catalog\CatalogCategoryRepository::getCategoriesTree();
+
+            // Retorna via Inertia (Vue)
+            return Inertia::render('frontend/Home', [
+                'featuredProducts' => $featuredProducts,
+                'categories' => $categories,
+                'newProducts' => $newProducts,
             ]);
 
         } else {
@@ -78,9 +84,15 @@ class IndexController extends Controller
                 );
 
                 if ($brands)
-                    return view('brands::frontend.brand', [
-                        'brand' => $brands,
-                        'products' => $products
+                    return Inertia::render('Brand', [
+                        'brand' => [
+                            'brand_id' => $brands['brand_id'],
+                            'brand_name' => $brands->brand_name,
+                            'brand_key' => $brands->brand_key,
+                            'seo_page_title' => $brands->seo_page_title,
+                            'seo_meta_description' => $brands->seo_meta_description,
+                        ],
+                        'products' => $products,
                     ]);
 
             }
@@ -100,12 +112,27 @@ class IndexController extends Controller
                     );
 
                     // Compartilha as informacoes da Categoria
-                    view()->share('category', $catalogCategory);
+                    View::share('category', $catalogCategory);
 
-                    // Retorna as informações para a View
-                    return view('catalog::frontend.category-products', [
-                        'category' => $catalogCategory,
+                    // Retorna as informações via Inertia
+                    return Inertia::render('CategoryProducts', [
+                        'category' => [
+                            'entity_id' => $catalogCategory->entity_id,
+                            'category' => $catalogCategory->category,
+                            'category_name' => $catalogCategory->category_name,
+                            'slug_key' => $catalogCategory->slug_key,
+                        ],
                         'products' => $products,
+                        'filters' => [
+                            'brands' => \Idea\Framework\Repository\Brand\CatalogProductBrandRepository::getBrands(100),
+                            'categories' => \Idea\Framework\Repository\Catalog\CatalogCategoryRepository::getCategoriesTree(),
+                            'priceRanges' => [
+                                ['min' => 0, 'max' => 100],
+                                ['min' => 100, 'max' => 500],
+                                ['min' => 500, 'max' => 1000],
+                                ['min' => 1000, 'max' => null],
+                            ],
+                        ],
                     ]);
 
                 }
