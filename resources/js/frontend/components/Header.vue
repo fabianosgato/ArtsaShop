@@ -17,7 +17,7 @@ const appUrl = page.props.appUrl
                 <div id="logo" class="flex-shrink-0">
                     <Link :href="route('index.home')" class="logo" :aria-label="appName + ' - Home'">
                         <img
-                            :src="route('index.home') + '/images/frontend/logo.webp'"
+                            :src="appUrl + 'images/frontend/logo.webp'"
                             :alt="appName"
                             width="120"
                             height="47"

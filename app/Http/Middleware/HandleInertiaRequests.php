@@ -38,7 +38,8 @@ class HandleInertiaRequests extends Middleware
 
         return array_merge(parent::share($request), [
             'appName' => $store->store_name,
-            'appUrl' => config('app.url'),
+            'appUrl' => asset('/'),
+            'assetUrl' => asset('/'),
             'currentStore' => $store,
 
             'route' => [

@@ -84,8 +84,9 @@
             </div>
         </div>
     </div>
-    <!-- Copyright -->
-    <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
-        <p>&copy; {{ new Date().getFullYear() }} ArtsaShop. Todos os direitos reservados.</p>
-    </div>
 </div>
+<!-- Copyright -->
+<div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+    <p>&copy; {{ new Date().getFullYear() }} ArtsaShop. Todos os direitos reservados.</p>
+</div>
+

@@ -494,7 +494,7 @@ label span.obs {
 .breadcrumb-block .breadcrumbs li:last-child:after{display:none}
 
 /* Footer ================================================================================ */
-.footer-container{background:#fff;border-top:1px solid #ebebeb;padding:22px 0 0}
+.footer-container{border-top:1px solid #ebebeb;margin-top: 22px;}
 .footer-container .footer{margin:0 auto;position:relative;}
 .footer-container .footer .footer-title{margin-bottom:28px;}
 .footer-container .footer .footer-title h5{font-size:1.9em}
