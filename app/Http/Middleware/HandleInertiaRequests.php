@@ -32,10 +32,14 @@ class HandleInertiaRequests extends Middleware
 
     public function share(Request $request): array
     {
+
+        // Retorna a loja atual
+        $store = app('currentStore');
+
         return array_merge(parent::share($request), [
-            'appName' => config('app.name'),
+            'appName' => $store->store_name,
             'appUrl' => config('app.url'),
-            'currentStore' => app('currentStore'),
+            'currentStore' => $store,
 
             'route' => [
                 'name' => $request->route()?->getName(),
