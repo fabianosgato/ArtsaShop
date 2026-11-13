@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {Link, usePage} from '@inertiajs/vue3'
 import {route} from 'ziggy-js'
+import UserDropdown from '@customers/components/UserDropdown.vue'
 
 const page = usePage()
 const appName = page.props.appName
 const appUrl = page.props.appUrl
-
 </script>
 
 <template>
@@ -26,18 +26,10 @@ const appUrl = page.props.appUrl
                     </Link>
                 </div>
 
-                <!-- Navegação Principal (Desktop) -->
-                <nav class="hidden md:flex items-center gap-6">
-                    <Link :href="route('index.home')"
-                          class="text-gray-700 hover:text-orange-600 transition font-medium">Home
-                    </Link>
-                    <Link :href="appUrl + 'quem-somos'"
-                          class="text-gray-700 hover:text-orange-600 transition font-medium">Quem Somos
-                    </Link>
-                    <Link :href="route('contacts.index')"
-                          class="text-gray-700 hover:text-orange-600 transition font-medium">Fale Conosco
-                    </Link>
-                </nav>
+                <!-- User Dropdown (Customers Module) -->
+                <div class="flex-1 flex justify-end">
+                    <UserDropdown />
+                </div>
 
                 <!-- Mobile Menu Toggle -->
                 <button class="md:hidden p-2 text-gray-600 hover:text-orange-600" aria-label="Menu">

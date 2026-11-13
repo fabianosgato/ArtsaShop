@@ -54,6 +54,17 @@ export default defineConfig({
             '@stores': path.resolve(import.meta.dirname, 'resources/js/frontend/stores'),
             '@plugins': path.resolve(import.meta.dirname, 'resources/js/frontend/plugins'),
             '@utils': path.resolve(import.meta.dirname, 'resources/js/frontend/utils'),
+            /* Módulos */
+            '@brands': path.resolve(import.meta.dirname, 'Modules/Brands/resources/js/frontend'),
+            '@catalog': path.resolve(import.meta.dirname, 'Modules/Catalog/resources/js/frontend'),
+            '@catalogsearch': path.resolve(import.meta.dirname, 'Modules/CatalogSearch/resources/js/frontend'),
+            '@checkout': path.resolve(import.meta.dirname, 'Modules/Checkout/resources/js/frontend'),
+            '@cms': path.resolve(import.meta.dirname, 'Modules/Cms/resources/js/frontend'),
+            '@customers': path.resolve(import.meta.dirname, 'Modules/Customers/resources/js/frontend'),
+            '@payments': path.resolve(import.meta.dirname, 'Modules/Payments/resources/js/frontend'),
+            '@review': path.resolve(import.meta.dirname, 'Modules/Review/resources/js/frontend'),
+            '@sales': path.resolve(import.meta.dirname, 'Modules/Sales/resources/js/frontend'),
+            '@salesRules': path.resolve(import.meta.dirname, 'Modules/SalesRules/resources/js/frontend')
         },
     },
 
