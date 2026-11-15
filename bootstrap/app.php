@@ -43,6 +43,11 @@ return Application::configure(basePath: dirname(__DIR__))
             fn(Request $request) => route('wsdadmin.login')
         );
 
+//        // Detecta o local do usuário
+//        $middleware->web(prepend: [
+//            \App\Http\Middleware\DetectUserLocation::class,
+//        ]);
+
         // Proxy / Cloudflare
         $middleware->trustProxies(
             at: '*',

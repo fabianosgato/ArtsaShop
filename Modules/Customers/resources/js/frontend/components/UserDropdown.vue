@@ -10,12 +10,12 @@ const customer = page.props.auth.customer ?? undefined
 const userName = computed(() => customer?.customer_name || '')
 const open = ref(false)
 
-const toggle = () => {
-    open.value = !open.value
-}
-
 const close = () => {
     open.value = false
+}
+
+const toggle = () => {
+    open.value = !open.value
 }
 
 // Close on outside click
@@ -70,6 +70,7 @@ onUnmounted(() => {
                 aria-orientation="vertical"
             >
                 <template v-if="customer">
+
                     <!-- Welcome -->
                     <div class="px-4 py-3 border-b border-gray-100">
                         <p class="text-sm font-medium text-gray-900">Olá, {{ userName }}</p>
