@@ -120,36 +120,43 @@ const formatCep = (value: string) => {
 
 <template>
     <div class="p-3 space-y-3">
+
+        <!-- CEP -->
         <!-- CEP -->
         <div>
             <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">CEP</label>
-            <div class="flex gap-2">
-                <input
-                    type="text"
-                    v-model="form.cep"
-                    @input="form.cep = formatCep(form.cep)"
-                    @blur="buscarCep"
-                    placeholder="00000-000"
-                    class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                    maxlength="9"
-                    :disabled="loadingCep"
-                />
-                <button
-                    type="button"
-                    @click="buscarCep"
-                    :disabled="loadingCep || form.cep.replace(/\D/g, '').length !== 8"
-                    class="px-3 py-2 text-xs bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 transition whitespace-nowrap"
-                >
-                    <span v-if="loadingCep" class="flex items-center gap-1">
-                        <svg class="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12"
-                                                                                      r="10" stroke="currentColor"
-                                                                                      stroke-width="4"></circle><path
-                            class="opacity-75" fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                    </span>
-                    <span v-else>Buscar</span>
-                </button>
-            </div>
+
+            <!-- Input CEP -->
+            <input
+                type="text"
+                v-model="form.cep"
+                @input="form.cep = formatCep(form.cep)"
+                @blur="buscarCep"
+                placeholder="00000-000"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                maxlength="9"
+                :disabled="loadingCep"
+            />
+
+            <!-- Botão Buscar (embaixo, largura total) -->
+            <button
+                type="button"
+                @click="buscarCep"
+                :disabled="loadingCep || form.cep.replace(/\D/g, '').length !== 8"
+                class="w-full mt-2 px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50"
+            >
+                <span v-if="loadingCep" class="flex items-center justify-center gap-1">
+                    <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Buscando...
+                </span>
+                <span v-else>Buscar CEP</span>
+            </button>
+
+            <!-- Linha divisória -->
+            <hr class="border-gray-100 my-3" />
         </div>
 
         <!-- Estado -->

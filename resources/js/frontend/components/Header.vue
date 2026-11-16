@@ -27,10 +27,9 @@ const appUrl = page.props.appUrl
                     </Link>
                 </div>
 
-                <div class="flex-1 flex justify-center lg:justify-start">
-                    <LocationSelector />
-                </div>
-                <div class="flex-1 flex justify-end">
+                <!-- Centro/Direita: Busca + Location + UserDropdown -->
+                <div class="flex-1 flex items-center justify-end gap">
+                    <LocationSelector class="mr-4 hidden lg:flex" />
                     <UserDropdown />
                 </div>
 

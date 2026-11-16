@@ -5,26 +5,28 @@ import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers'
 import {ZiggyVue} from 'ziggy-js'
 import {createPinia} from 'pinia'
 import '../../css/frontend/app.css'
+import Button from './ui/Button.vue'
 
 const modules = import.meta.glob('./pages/**/*.vue')
 
 createInertiaApp({
-  resolve: (name: string): Promise<DefineComponent> =>
-    resolvePageComponent(
-      `./pages/${name}.vue`,
-      modules
-    ) as Promise<DefineComponent>,
+    resolve: (name: string): Promise<DefineComponent> =>
+        resolvePageComponent(
+            `./pages/${name}.vue`,
+            modules
+        ) as Promise<DefineComponent>,
 
-  setup({ el, App, props, plugin }) {
-    const app = createApp({ render: () => h(App, props) })
-    app.use(plugin)
-    app.use(ZiggyVue)
-    app.use(createPinia())
-    app.mount(el)
-  },
+    setup({el, App, props, plugin}) {
+        const app = createApp({render: () => h(App, props)})
+        app.use(plugin)
+        app.use(ZiggyVue)
+        app.use(createPinia())
+        app.mount(el)
+        app.component('Button', Button)
+    },
 
-  progress: {
-    color: '#ff8400',
-    showSpinner: true,
-  },
+    progress: {
+        color: '#ff8400',
+        showSpinner: true,
+    },
 })

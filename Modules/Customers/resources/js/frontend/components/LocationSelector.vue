@@ -54,7 +54,7 @@ const openCepLookup = () => {
         <!-- Trigger Button -->
         <button
             type="button"
-            class="location-trigger flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-100 rounded-lg transition"
+            class="location-trigger flex items-center gap-2 py-2 text-sm font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-100 rounded-lg transition"
             @click="open = !open"
             :aria-expanded="open"
             aria-label="Alterar local de entrega"
