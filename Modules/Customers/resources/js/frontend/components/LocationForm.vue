@@ -79,7 +79,7 @@ const buscarCep = async () => {
 
     loadingCep.value = true
     try {
-        const resp = await fetch(`/api/cep/${cep}`)
+        const resp = await fetch(`/cep/${cep}`)
         const data = await resp.json()
 
         if (!data.error) {
@@ -112,7 +112,7 @@ const salvar = async () => {
 
     try {
         // Salvar via API (persiste na sessão Laravel)
-        const response = await fetch('/api/location/save', {
+        const response = await fetch('/location/save', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

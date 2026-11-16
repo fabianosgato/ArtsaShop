@@ -39,3 +39,16 @@ Route::get('/sitemap_index.xml', function () {
 // Rota para as páginas com SEO/UrlRewrite (Produtos, Categorias, Cms, Marcas)
 Route::fallback([\App\Http\Controllers\Frontend\UrlRewriteController::class, 'resolve'])
     ->middleware('web');
+
+// CEP Lookup (proxy para ViaCEP / BrasilAPI)
+Route::prefix('cep')->group(function () {
+    Route::get('{cep}', [\App\Http\Controllers\Backend\LocationController::class, 'lookup'])
+        ->where('cep', '[0-9]{8}')
+        ->name('cep.lookup');
+});
+
+// Rotas para definir o location do cliente
+Route::prefix('location')->group(function () {
+    Route::post('save', [\App\Http\Controllers\Backend\LocationController::class, 'save'])
+        ->name('location.save');
+});
