@@ -40,15 +40,6 @@ export function useUserLocation() {
         }
     })
 
-    // Para dev tools: window.__SET_LOCATION__(location)
-    if (import.meta.env.DEV && typeof window !== 'undefined') {
-        (window as any).__SET_LOCATION__ = (loc: UserLocation) => {
-            manualOverride.value = loc
-        }
-        ;(window as any).__CLEAR_LOCATION__ = () => {
-            manualOverride.value = null
-        }
-    }
 
     return {
         location,
