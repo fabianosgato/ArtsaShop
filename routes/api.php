@@ -33,3 +33,8 @@ Route::prefix('cep')->group(function () {
         ->name('api.cep.lookup');
 });
 
+// Rotas para definir o location do cliente
+Route::prefix('location')->group(function () {
+    Route::post('save', [\App\Http\Controllers\Api\LocationController::class, 'save'])
+        ->name('api.location.save');
+});

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref, watch} from 'vue'
 import {useForm} from '@inertiajs/vue3'
+import {useUserLocation} from "../composables/useUserLocation";
 
 interface Estado {
     sigla: string
@@ -44,6 +45,7 @@ const estados = ref<Estado[]>([
 const cidades = ref<Cidade[]>([])
 const loadingCidades = ref(false)
 const loadingCep = ref(false)
+const { updateLocation } = useUserLocation()
 
 const form = useForm({
     cep: '',
@@ -92,11 +94,11 @@ const buscarCep = async () => {
     }
 }
 
-const salvar = () => {
+const salvar = async () => {
     const estado = estados.value.find(e => e.sigla === form.estado)
     const cidade = cidades.value.find(c => String(c.id) === form.cidade_id)
 
-    const location: UserLocation = {
+    const location = {
         country_code: 'BR',
         country_name: 'Brasil',
         state_code: form.estado,
@@ -108,7 +110,26 @@ const salvar = () => {
         timezone: 'America/Sao_Paulo',
     }
 
-    emit('saved', location)
+    try {
+        // Salvar via API (persiste na sessão Laravel)
+        const response = await fetch('/api/location/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+            },
+            body: JSON.stringify(location),
+        })
+
+        if (response.ok) {
+            updateLocation(location)
+            emit('saved', location) // Fecha dropdown
+        } else {
+            console.error('Erro ao salvar localização')
+        }
+    } catch (error) {
+        console.error('Erro ao salvar:', error)
+    }
 }
 
 const formatCep = (value: string) => {

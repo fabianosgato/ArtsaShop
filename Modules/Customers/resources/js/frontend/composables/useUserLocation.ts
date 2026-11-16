@@ -1,4 +1,3 @@
-// resources/js/frontend/composables/useUserLocation.ts
 import {computed, ref} from 'vue'
 import {usePage} from '@inertiajs/vue3'
 
@@ -24,7 +23,7 @@ export function useUserLocation() {
     const manualOverride = ref<UserLocation | null>(null)
 
     const location = computed<UserLocation>(() => {
-        // 1. Override manual (dev tools)
+        // 1. Override manual (dev tools OU atualização via API)
         if (manualOverride.value) return manualOverride.value
 
         // 2. Do Inertia (server-side GeoIP)
@@ -40,10 +39,19 @@ export function useUserLocation() {
         }
     })
 
+    // Atualiza o override
+    const updateLocation = (newLocation: UserLocation) => {
+        manualOverride.value = newLocation
+    }
+
+    const clearOverride = () => {
+        manualOverride.value = null
+    }
 
     return {
         location,
-        setManualOverride: (loc: UserLocation) => manualOverride.value = loc,
-        clearOverride: () => manualOverride.value = null,
+        updateLocation,
+        clearOverride,
     }
+
 }

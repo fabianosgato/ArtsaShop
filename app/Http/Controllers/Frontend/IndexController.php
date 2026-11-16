@@ -36,6 +36,8 @@ class IndexController extends Controller
     public function index()
     {
 
+        dd(session()->all());
+
         // Identifica se a loja é a padrão
         if (app('currentStore')->code == 'default') {
 
