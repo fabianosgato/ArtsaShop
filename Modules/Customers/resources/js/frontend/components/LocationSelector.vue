@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import {computed, onMounted, onUnmounted, ref} from 'vue'
-import {useUserLocation} from '@customers/composables/useUserLocation'
+import {useUserLocation} from '../composables/useUserLocation'
 import LocationForm from './LocationForm.vue'
+
 import IconLocation from '@/components/icons/IconLocation.vue'
 import IconChevronDown from '@/components/icons/IconChevronDown.vue'
 import IconCurrentLocation from '@/components/icons/IconCurrentLocation.vue'

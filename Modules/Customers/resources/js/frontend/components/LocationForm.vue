@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {ref, watch} from 'vue'
 import {useForm} from '@inertiajs/vue3'
-import {useUserLocation} from '@customers/composables/useUserLocation'
 
 interface Estado {
     sigla: string
@@ -29,19 +28,17 @@ const emit = defineEmits<{
     saved: [location: UserLocation]
 }>()
 
-const { location: currentLocation } = useUserLocation()
-
 const estados = ref<Estado[]>([
-    { sigla: 'AC', nome: 'Acre' }, { sigla: 'AL', nome: 'Alagoas' }, { sigla: 'AP', nome: 'Amapá' },
-    { sigla: 'AM', nome: 'Amazonas' }, { sigla: 'BA', nome: 'Bahia' }, { sigla: 'CE', nome: 'Ceará' },
-    { sigla: 'DF', nome: 'Distrito Federal' }, { sigla: 'ES', nome: 'Espírito Santo' },
-    { sigla: 'GO', nome: 'Goiás' }, { sigla: 'MA', nome: 'Maranhão' }, { sigla: 'MT', nome: 'Mato Grosso' },
-    { sigla: 'MS', nome: 'Mato Grosso do Sul' }, { sigla: 'MG', nome: 'Minas Gerais' },
-    { sigla: 'PA', nome: 'Pará' }, { sigla: 'PB', nome: 'Paraíba' }, { sigla: 'PR', nome: 'Paraná' },
-    { sigla: 'PE', nome: 'Pernambuco' }, { sigla: 'PI', nome: 'Piauí' }, { sigla: 'RJ', nome: 'Rio de Janeiro' },
-    { sigla: 'RN', nome: 'Rio Grande do Norte' }, { sigla: 'RS', nome: 'Rio Grande do Sul' },
-    { sigla: 'RO', nome: 'Rondônia' }, { sigla: 'RR', nome: 'Roraima' }, { sigla: 'SC', nome: 'Santa Catarina' },
-    { sigla: 'SP', nome: 'São Paulo' }, { sigla: 'SE', nome: 'Sergipe' }, { sigla: 'TO', nome: 'Tocantins' },
+    {sigla: 'AC', nome: 'Acre'}, {sigla: 'AL', nome: 'Alagoas'}, {sigla: 'AP', nome: 'Amapá'},
+    {sigla: 'AM', nome: 'Amazonas'}, {sigla: 'BA', nome: 'Bahia'}, {sigla: 'CE', nome: 'Ceará'},
+    {sigla: 'DF', nome: 'Distrito Federal'}, {sigla: 'ES', nome: 'Espírito Santo'},
+    {sigla: 'GO', nome: 'Goiás'}, {sigla: 'MA', nome: 'Maranhão'}, {sigla: 'MT', nome: 'Mato Grosso'},
+    {sigla: 'MS', nome: 'Mato Grosso do Sul'}, {sigla: 'MG', nome: 'Minas Gerais'},
+    {sigla: 'PA', nome: 'Pará'}, {sigla: 'PB', nome: 'Paraíba'}, {sigla: 'PR', nome: 'Paraná'},
+    {sigla: 'PE', nome: 'Pernambuco'}, {sigla: 'PI', nome: 'Piauí'}, {sigla: 'RJ', nome: 'Rio de Janeiro'},
+    {sigla: 'RN', nome: 'Rio Grande do Norte'}, {sigla: 'RS', nome: 'Rio Grande do Sul'},
+    {sigla: 'RO', nome: 'Rondônia'}, {sigla: 'RR', nome: 'Roraima'}, {sigla: 'SC', nome: 'Santa Catarina'},
+    {sigla: 'SP', nome: 'São Paulo'}, {sigla: 'SE', nome: 'Sergipe'}, {sigla: 'TO', nome: 'Tocantins'},
 ])
 
 const cidades = ref<Cidade[]>([])
@@ -66,7 +63,7 @@ watch(() => form.estado, async (uf) => {
     try {
         const resp = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`)
         const data = await resp.json()
-        cidades.value = data.map((c: any) => ({ id: c.id, nome: c.nome })).sort((a, b) => a.nome.localeCompare(b.nome))
+        cidades.value = data.map((c: any) => ({id: c.id, nome: c.nome})).sort((a, b) => a.nome.localeCompare(b.nome))
     } catch {
         cidades.value = []
     } finally {
@@ -144,7 +141,11 @@ const formatCep = (value: string) => {
                     class="px-3 py-2 text-xs bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 transition whitespace-nowrap"
                 >
                     <span v-if="loadingCep" class="flex items-center gap-1">
-                        <svg class="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        <svg class="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12"
+                                                                                      r="10" stroke="currentColor"
+                                                                                      stroke-width="4"></circle><path
+                            class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                     </span>
                     <span v-else>Buscar</span>
                 </button>
