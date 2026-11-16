@@ -1,4 +1,3 @@
-<!-- Modules/Customers/resources/js/frontend/components/LocationPrompt.vue -->
 <script setup lang="ts">
 import {useGeolocation} from '@/composables/useGeolocation'
 import {usePage} from '@inertiajs/vue3'

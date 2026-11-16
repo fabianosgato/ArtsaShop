@@ -43,10 +43,10 @@ return Application::configure(basePath: dirname(__DIR__))
             fn(Request $request) => route('wsdadmin.login')
         );
 
-//        // Detecta o local do usuário
-//        $middleware->web(prepend: [
-//            \App\Http\Middleware\DetectUserLocation::class,
-//        ]);
+        // Detecta o local do usuário
+        $middleware->web(prepend: [
+            \App\Http\Middleware\DetectUserLocation::class,
+        ]);
 
         // Proxy / Cloudflare
         $middleware->trustProxies(
@@ -78,7 +78,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
 
-        // APIs continuam retornando erros em JSON
+        // APIs retornam erros em JSON
         $exceptions->shouldRenderJsonWhen(
             fn(Request $request) => $request->is('api/*'),
         );

@@ -2,6 +2,7 @@
 import {Link, usePage} from '@inertiajs/vue3'
 import {route} from 'ziggy-js'
 import UserDropdown from '@customers/components/UserDropdown.vue'
+import LocationSelector from '@customers/components/LocationSelector.vue'
 
 const page = usePage()
 const appName = page.props.appName
@@ -26,7 +27,9 @@ const appUrl = page.props.appUrl
                     </Link>
                 </div>
 
-                <!-- User Dropdown (Customers Module) -->
+                <div class="flex-1 flex justify-center lg:justify-start">
+                    <LocationSelector />
+                </div>
                 <div class="flex-1 flex justify-end">
                     <UserDropdown />
                 </div>
