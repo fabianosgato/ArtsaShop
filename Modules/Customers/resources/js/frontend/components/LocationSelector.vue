@@ -6,6 +6,7 @@ import LocationForm from './LocationForm.vue'
 import IconLocation from '@/components/icons/IconLocation.vue'
 import IconChevronDown from '@/components/icons/IconChevronDown.vue'
 import IconCurrentLocation from '@/components/icons/IconCurrentLocation.vue'
+import IconSearch from '@/components/icons/IconSearch.vue'
 
 const { location } = useUserLocation()
 
@@ -14,11 +15,16 @@ const open = ref(false)
 const displayLocation = computed(() => {
     const loc = location.value
     const parts = []
-    if (loc.city) parts.push(loc.city)
-    if (loc.state_code) parts.push(loc.state_code)
-    if (loc.country_name) parts.push(loc.country_name)
+    if (loc?.city) parts.push(loc.city)
+    if (loc?.state_code) parts.push(loc.state_code)
+    if (loc?.country_name) parts.push(loc.country_name)
     return parts.join(', ') || 'Brasil'
-});
+})
+
+const hasLocation = computed(() => {
+    const loc = location.value
+    return !!(loc?.city || loc?.state_code || loc?.country_name)
+})
 
 const close = () => {
     open.value = false
@@ -42,6 +48,10 @@ onUnmounted(() => {
 const useCurrentLocation = () => {
     // TODO: Browser Geolocation API
 }
+
+const openCepLookup = () => {
+    // TODO: Abrir modal CEP
+}
 </script>
 
 <template>
@@ -49,13 +59,13 @@ const useCurrentLocation = () => {
         <!-- Trigger Button -->
         <button
             type="button"
-            class="location-trigger flex items-center gap-2 py-2 text-sm font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-100 rounded-lg transition"
+            class="location-trigger flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-100 rounded-lg transition"
             @click="open = !open"
             :aria-expanded="open"
             aria-label="Alterar local de entrega"
         >
             <IconLocation class="w-5 h-5 text-orange-600" />
-            <span class="hidden sm:inline truncate max-w-[180px]">{{ displayLocation }}</span>
+            <span class="hidden sm:inline block truncate" style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ displayLocation }}</span>
             <IconChevronDown class="w-4 h-4 ml-1 text-gray-400" />
         </button>
 
@@ -79,8 +89,13 @@ const useCurrentLocation = () => {
                     <p class="text-sm font-medium text-gray-900 truncate">{{ displayLocation }}</p>
                 </div>
 
+                <!-- Empty State (sem localização) -->
+                <div v-if="!hasLocation" class="px-4 py-4 text-center text-gray-500 text-sm">
+                    Nenhuma localização definida. Clique em "Buscar por CEP" ou selecione Estado/Cidade.
+                </div>
+
                 <!-- Location Form (inline no dropdown) -->
-                <LocationForm @saved="close" />
+                <LocationForm v-else @saved="close" />
 
                 <!-- Divider -->
                 <hr class="border-gray-100 my-1" />
@@ -95,6 +110,13 @@ const useCurrentLocation = () => {
                         Usar minha localização atual
                     </button>
 
+                    <button
+                        class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:text-orange-600 hover:bg-gray-50 rounded-lg transition"
+                        @click="openCepLookup"
+                    >
+                        <IconSearch class="w-5 h-5 flex-shrink-0" />
+                        Buscar por CEP
+                    </button>
                 </div>
             </div>
         </Transition>

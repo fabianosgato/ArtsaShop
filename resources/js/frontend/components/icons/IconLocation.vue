@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface Props {
-    class?: string
+    className?: string
     fill?: string
     stroke?: string
     strokeWidth?: number | string
@@ -14,11 +14,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
     <svg
-        :class="class"
+        :class="className"
         :fill="fill"
         :stroke="stroke"
         :stroke-width="strokeWidth"
-        viewBox="0 0 24 24"
+        viewBox='0 0 24 24'
         aria-hidden="true"
     >
         <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="strokeWidth" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
