@@ -90,7 +90,7 @@ const buscarCep = async () => {
             setTimeout(() => {
                 const cidade = cidades.value.find(c => c.nome.toLowerCase() === data.cidade.toLowerCase())
                 if (cidade) form.cidade_id = String(cidade.id)
-            }, 100)
+            }, 400)
         }
     } finally {
         loadingCep.value = false
