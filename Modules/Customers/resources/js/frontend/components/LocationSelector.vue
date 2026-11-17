@@ -2,12 +2,15 @@
 import {computed, onMounted, onUnmounted, ref} from 'vue'
 import {useUserLocation} from '../composables/useUserLocation'
 import LocationForm from './LocationForm.vue'
+import {useGeolocation} from '@/composables/useGeolocation'
 
 import IconLocation from '@/components/icons/IconLocation.vue'
 import IconChevronDown from '@/components/icons/IconChevronDown.vue'
 import IconCurrentLocation from '@/components/icons/IconCurrentLocation.vue'
 
-const { location } = useUserLocation()
+const { location, updateLocation } = useUserLocation()
+
+const { getCurrentPosition, loading: geoLoading, error: geoError } = useGeolocation()
 
 const open = ref(false)
 
@@ -45,10 +48,48 @@ onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside)
 })
 
-const useCurrentLocation = () => {
-    // TODO: Browser Geolocation API
-}
+const useCurrentLocation = async () => {
+    try {
+        const coords = await getCurrentPosition()
 
+        // Reverse geocoding via Nominatim (OpenStreetMap)
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}&addressdetails=1&accept-language=pt-BR`
+        )
+        const data = await response.json()
+
+        if (data.address) {
+            const location = {
+                country_code: data.address.country_code?.toUpperCase() || 'BR',
+                country_name: data.address.country || 'Brasil',
+                state_code: data.address.state || '',
+                state_name: data.address.state || '',
+                city: data.address.city || data.address.town || data.address.village || data.address.municipality || '',
+                postal_code: data.address.postcode || '',
+                currency: 'BRL',
+                locale: 'pt_BR',
+                timezone: 'America/Sao_Paulo',
+            }
+
+            updateLocation(location)
+
+            // Opcional: salvar no backend
+            await fetch('/location/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify(location),
+            })
+
+            close()
+        }
+    } catch (err) {
+        console.error('Erro ao obter localização:', err)
+        alert('Não foi possível obter sua localização. Verifique as permissões do navegador.')
+    }
+}
 </script>
 
 <template>
@@ -95,13 +136,14 @@ const useCurrentLocation = () => {
                 <!-- Quick Actions -->
                 <div class="px-4 py-2 space-y-1">
                     <button
+                        :disabled="geoLoading"
                         class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:text-orange-600 hover:bg-gray-50 rounded-lg transition"
                         @click="useCurrentLocation"
                     >
                         <IconCurrentLocation class="w-5 h-5 flex-shrink-0 text-orange-600" />
-                        Usar minha localização atual
+                        <span v-if="geoLoading">Obtendo localização...</span>
+                        <span v-else>Usar minha localização atual</span>
                     </button>
-
                 </div>
             </div>
         </Transition>

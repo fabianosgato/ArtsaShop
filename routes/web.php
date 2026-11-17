@@ -48,6 +48,9 @@ Route::prefix('location')->group(function () {
         ->where('cep', '[0-9]{8}')
         ->name('location.cep.lookup');
 
+    Route::get('geolocation', [\App\Http\Controllers\Backend\LocationController::class, 'searchIpGeoLocation'])
+        ->name('location.search.geolocation');
+
     Route::post('save', [\App\Http\Controllers\Backend\LocationController::class, 'save'])
         ->name('location.save');
 
