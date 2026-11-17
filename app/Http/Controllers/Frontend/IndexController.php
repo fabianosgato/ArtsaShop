@@ -35,6 +35,7 @@ class IndexController extends Controller
 
     public function index()
     {
+
         // Identifica se a loja é a padrão
         if (app('currentStore')->code == 'default') {
 

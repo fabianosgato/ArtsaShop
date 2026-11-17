@@ -31,7 +31,7 @@ const emit = defineEmits<{
     saved: [location: UserLocation]
 }>()
 
-const { location } = useUserLocation()
+const { updateLocation } = useUserLocation()
 
 const estados = ref<Estado[]>([
     { sigla: 'AC', nome: 'Acre' }, { sigla: 'AL', nome: 'Alagoas' }, { sigla: 'AP', nome: 'Amapá' },
@@ -82,7 +82,7 @@ const buscarCep = async () => {
 
     loadingCep.value = true
     try {
-        const resp = await fetch(`/api/cep/${cep}`)
+        const resp = await fetch(`/location/zipcode/${cep}`)
         const data = await resp.json()
 
         if (!data.error) {
@@ -97,7 +97,8 @@ const buscarCep = async () => {
     }
 }
 
-const salvar = () => {
+
+const salvar = async () => {
     const estado = estados.value.find(e => e.sigla === form.estado)
     const cidade = cidades.value.find(c => String(c.id) === form.cidade_id)
 
@@ -111,6 +112,27 @@ const salvar = () => {
         currency: 'BRL',
         locale: 'pt_BR',
         timezone: 'America/Sao_Paulo',
+    }
+
+    try {
+        // Salva a localização do cliente
+        const response = await fetch('/location/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+            },
+            body: JSON.stringify(location),
+        })
+
+        if (response.ok) {
+            updateLocation(location)
+            emit('saved', location)  // Fecha dropdown
+        } else {
+            console.error('Erro ao salvar localização')
+        }
+    } catch (error) {
+        console.error('Erro ao salvar:', error)
     }
 
     emit('saved', location)

@@ -6,7 +6,6 @@ import LocationForm from './LocationForm.vue'
 import IconLocation from '@/components/icons/IconLocation.vue'
 import IconChevronDown from '@/components/icons/IconChevronDown.vue'
 import IconCurrentLocation from '@/components/icons/IconCurrentLocation.vue'
-import IconSearch from '@/components/icons/IconSearch.vue'
 
 const { location } = useUserLocation()
 
@@ -49,9 +48,6 @@ const useCurrentLocation = () => {
     // TODO: Browser Geolocation API
 }
 
-const openCepLookup = () => {
-    // TODO: Abrir modal CEP
-}
 </script>
 
 <template>
@@ -89,13 +85,8 @@ const openCepLookup = () => {
                     <p class="text-sm font-medium text-gray-900 truncate">{{ displayLocation }}</p>
                 </div>
 
-                <!-- Empty State (sem localização) -->
-                <div v-if="!hasLocation" class="px-4 py-4 text-center text-gray-500 text-sm">
-                    Nenhuma localização definida. Clique em "Buscar por CEP" ou selecione Estado/Cidade.
-                </div>
-
                 <!-- Location Form (inline no dropdown) -->
-                <LocationForm v-else @saved="close" />
+                <LocationForm @saved="close" />
 
                 <!-- Divider -->
                 <hr class="border-gray-100 my-1" />
@@ -110,13 +101,6 @@ const openCepLookup = () => {
                         Usar minha localização atual
                     </button>
 
-                    <button
-                        class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:text-orange-600 hover:bg-gray-50 rounded-lg transition"
-                        @click="openCepLookup"
-                    >
-                        <IconSearch class="w-5 h-5 flex-shrink-0" />
-                        Buscar por CEP
-                    </button>
                 </div>
             </div>
         </Transition>

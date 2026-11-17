@@ -30,11 +30,12 @@ export function useUserLocation() {
         return page.props.userLocation as UserLocation | null ?? null
     })
 
-    // Atualiza o override
+    // Atualiza a localização do cliente
     const updateLocation = (newLocation: UserLocation) => {
         manualOverride.value = newLocation
     }
 
+    // Limpa a localização do cliente
     const clearOverride = () => {
         manualOverride.value = null
     }
