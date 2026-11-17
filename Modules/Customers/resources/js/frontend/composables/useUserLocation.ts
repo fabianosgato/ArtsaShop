@@ -19,6 +19,12 @@ export interface UserLocation {
 // Estado local para override manual (dev tools OU atualização via API)
 const manualOverride = ref<UserLocation | null>(null)
 
+// Localização do servidor (Inertia props) - reativo às navegações
+const serverLocation = computed<UserLocation | null>(() => {
+    const page = usePage()
+    return page.props.userLocation as UserLocation | null ?? null
+})
+
 const location = computed<UserLocation | null>(() => {
     // 1. Override manual (dev tools OU atualização via API)
     if (manualOverride.value) return manualOverride.value
@@ -43,6 +49,7 @@ export function useUserLocation() {
 
     return {
         location,
+        serverLocation,
         updateLocation,
         clearOverride,
     }

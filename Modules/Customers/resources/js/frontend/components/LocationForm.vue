@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, watch} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import {useForm} from '@inertiajs/vue3'
 import {useUserLocation} from '../composables/useUserLocation'
 
@@ -31,7 +31,7 @@ const emit = defineEmits<{
     saved: [location: UserLocation]
 }>()
 
-const { updateLocation } = useUserLocation()
+const { serverLocation, updateLocation } = useUserLocation()
 
 const estados = ref<Estado[]>([
     { sigla: 'AC', nome: 'Acre' }, { sigla: 'AL', nome: 'Alagoas' }, { sigla: 'AP', nome: 'Amapá' },
@@ -148,6 +148,32 @@ const formatCep = (value: string) => {
     if (nums.length > 5) return `${nums.slice(0, 5)}-${nums.slice(5)}`
     return nums
 }
+
+// Preencher formulário com dados da sessão ao montar
+onMounted(() => {
+    if (serverLocation.value) {
+        const loc = serverLocation.value
+        form.cep = loc.postal_code || ''
+        form.estado = loc.state_code || ''
+
+        // Para cidade, precisamos carregar a lista primeiro
+        if (loc.state_code) {
+            // Dispara o watch que carrega cidades
+            form.estado = loc.state_code
+
+            // Aguarda carregar e define a cidade
+            setTimeout(() => {
+                if (loc.city) {
+                    const cidade = cidades.value.find(
+                        c => c.nome.toLowerCase() === loc.city?.toLowerCase()
+                    )
+                    if (cidade) form.cidade_id = String(cidade.id)
+                }
+            }, 500)
+        }
+    }
+})
+
 </script>
 
 <template>
