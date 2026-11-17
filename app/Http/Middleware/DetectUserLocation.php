@@ -35,13 +35,10 @@ class DetectUserLocation
 
         try {
 
+            // Retorna o IP do cliente
             $ip = $request->getClientIp();
 
-            // Skip local/private IPs in development
-            if ($this->isLocalIp($ip)) {
-                return $next($request);
-            }
-
+            // Busca a localização.
             $location = GeoIP::getLocation($ip);
 
             if ($location) {

@@ -125,12 +125,17 @@ const salvar = async () => {
             body: JSON.stringify(location),
         })
 
+        console.log('Response status:', response.status, response.ok) // ← ADICIONE
+
         if (response.ok) {
             updateLocation(location)
-            emit('saved', location)  // Fecha dropdown
+            emit('saved', location)
+
         } else {
-            console.error('Erro ao salvar localização')
+            const text = await response.text()
+            console.error('Response body:', text)
         }
+
     } catch (error) {
         console.error('Erro ao salvar:', error)
     }

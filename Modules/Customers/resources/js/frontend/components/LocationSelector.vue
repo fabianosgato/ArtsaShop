@@ -12,6 +12,7 @@ const { location } = useUserLocation()
 const open = ref(false)
 
 const displayLocation = computed(() => {
+    console.log(location.value)
     const loc = location.value
     const parts = []
     if (loc?.city) parts.push(loc.city)
