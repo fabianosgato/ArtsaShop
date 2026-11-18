@@ -23,6 +23,6 @@
     },
     "types": ["vite/client", "vue", "@inertiajs/vue3"]
   },
-  "include": ["resources/js/**/*", "vite.config.js"],
+  "include": ["resources/js/**/*", "vite.config.js", "resources/js/frontend/types/**/*"],
   "exclude": ["node_modules", "vendor"]
 }

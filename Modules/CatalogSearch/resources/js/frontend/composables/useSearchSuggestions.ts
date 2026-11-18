@@ -1,4 +1,3 @@
-// Modules/CatalogSearch/resources/js/frontend/composables/useSearchSuggestions.ts
 import {onUnmounted, ref} from 'vue'
 import {route} from 'ziggy-js'
 import {usePage} from "@inertiajs/vue3";
