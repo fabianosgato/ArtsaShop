@@ -92,7 +92,8 @@ body p {
 .header #logo{display:flex;align-items:center}
 .header #logo .logo{display:block;margin:0}
 .header #logo img{display:block;width:120px;height:auto}
-.header .header-search{width:100%}
+
+.header .header-search{width: 100%;}
 .header .header-search .form-search{width:100%}
 .header .header-search form{width:100%}
 .header .search-container{position:relative;width:100%}

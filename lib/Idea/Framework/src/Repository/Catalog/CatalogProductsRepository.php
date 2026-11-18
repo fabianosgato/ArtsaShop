@@ -33,13 +33,14 @@ use App\Models\SeoPage;
 use App\Models\SysUrlRewrite;
 use Idea\Framework\Concerns\SearchScoring;
 use Idea\Framework\Repository\AbstractRepository;
+use Idea\Framework\Repository\Catalog\Concerns\CatalogProductTrait;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class CatalogProductsRepository extends AbstractRepository
 {
-    use SearchScoring;
+    use SearchScoring, CatalogProductTrait;
 
     protected static $model = CatalogProduct::class;
 
@@ -152,46 +153,16 @@ class CatalogProductsRepository extends AbstractRepository
      * Metodo principal de retorno dos produtos
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public static function getProducts(): Builder
+    public static function getProducts(array $colums = []): Builder
     {
 
         // Inicializa a query do produto
         $query = self::loadModel()::query();
+        $arrayColumns = count($colums) == 0 ? self::catalogProductColums() : $colums;
 
-        $query->addSelect([
-            'catalog_product.product_id',
-            'catalog_product.attribute_set_id',
-            'catalog_product.brand_id',
-            'catalog_product.status_id',
-            'catalog_product.sku',
-            'catalog_product.name',
-            'catalog_product.video_url',
-            'catalog_product.description',
-            'catalog_product.short_description',
-            'catalog_product.slug_key',
-            'catalog_product.ean',
-            'catalog_product.qty',
-            'catalog_product.weight',
-            'catalog_product.volume_weight',
-            'catalog_product.height',
-            'catalog_product.width',
-            'catalog_product.length',
-            'catalog_product.image',
-            'catalog_product.thumbnail',
-            'catalog_product.is_excluded',
-            'catalog_product.updated_at',
-            'eav_attributes_set.attribute_set_key',
-            'eav_attributes_set.attribute_set_name',
-            'catalog_product_category.category_name',
-            'catalog_product_category.slug_key AS category_slug_key',
-            'catalog_product_brands.brand_name',
-            'catalog_product_brands.brand_key',
-            'catalog_product_prices.price_id',
-            'catalog_product_prices.price',
-            'catalog_product_prices.final_price',
-            'catalog_product_status.status',
-            'catalog_product_status.status_key',
-        ]);
+        $query->addSelect(
+            $arrayColumns
+        );
 
         $query->join(
             table: 'eav_attributes_set',
@@ -412,22 +383,27 @@ class CatalogProductsRepository extends AbstractRepository
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public static function searchProductsSuggestion(string $word, int $perPage = 32): LengthAwarePaginator
+    public static function searchProductsSuggestion(string $word, int $perPage = 5): LengthAwarePaginator
     {
-        // Processa termos de busca (usa método do trait)
-        $processed = self::processSearchTerms($word);
+        // Processa termos de busca COM prefixSearch=true para autocomplete
+        $processed = self::processSearchTerms($word, true);  // <-- ADICIONAR true
+
         $terms = $processed['terms'];
         $search = $processed['search'];
 
         if (empty($search)) {
-            return self::getProducts()
+            return self::getProducts(
+                colums: self::catalogSimpleColums()
+            )
                 ->where('catalog_product.status_id', '=', 1)
                 ->orderByDesc('catalog_product.product_id')
                 ->paginate($perPage);
         }
 
         // Query base
-        $query = self::getProducts();
+        $query = self::getProducts(
+            colums: self::catalogSimpleColums()
+        );
 
         // Apenas produtos ativos
         $query->where(
@@ -436,13 +412,13 @@ class CatalogProductsRepository extends AbstractRepository
             value: 1
         );
 
-        // FULLTEXT SEARCH
+        // FULLTEXT SEARCH com * para prefixo
         $query->whereRaw(
             "MATCH(
-            catalog_product.name,
-            catalog_product.description,
-            catalog_product.sku
-        ) AGAINST(? IN BOOLEAN MODE)",
+        catalog_product.name,
+        catalog_product.description,
+        catalog_product.sku
+    ) AGAINST(? IN BOOLEAN MODE)",
             [$search]
         );
 
@@ -463,6 +439,7 @@ class CatalogProductsRepository extends AbstractRepository
             ->paginate($perPage)
             ->withQueryString();
     }
+
 
     /**
      * Realiza a busca de produtos no site

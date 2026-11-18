@@ -46,6 +46,13 @@ class HandleInertiaRequests extends Middleware
                 'name' => $request->route()?->getName(),
             ],
 
+            // Configuração geral da busca
+            'searchConfig' => [
+                'minQueryLength' => getConfigData('catalog/search/min_query_length'),
+                'maxQueryLength' => getConfigData('catalog/search/max_query_length'),
+                'maxQueryWords' => getConfigData('catalog/search/max_query_words')
+            ],
+
             'auth' => [
                 'customer' => $request->user('customer')?->only('customer_id', 'customer_name', 'customer_email'),
             ],

@@ -64,7 +64,7 @@ trait SearchScoring
                 ? self::$relevanceWeights[0]
                 : self::$relevanceWeights['default'];
 
-            // Nome começando com termo
+            // Nome COMEÇANDO com termo (prefixo) - MAIOR PESO
             $scoreSql[] = "
                 CASE
                     WHEN catalog_product.name LIKE ? THEN ?
@@ -74,7 +74,7 @@ trait SearchScoring
             $bindings[] = $term . '%';
             $bindings[] = $weights['name_starts'];
 
-            // Nome contendo termo
+            // Nome CONTENDO termo
             $scoreSql[] = "
                 CASE
                     WHEN catalog_product.name LIKE ? THEN ?
@@ -129,10 +129,13 @@ trait SearchScoring
     /**
      * Processa a string de busca e retorna os termos e a string FULLTEXT
      *
+     * Para autocomplete/sugestões, adiciona * ao termo principal para busca por prefixo
+     *
      * @param string $word
+     * @param bool $prefixSearch Se true, adiciona * para busca por prefixo (autocomplete)
      * @return array{terms: array<int, string>, search: string}
      */
-    protected static function processSearchTerms(string $word): array
+    protected static function processSearchTerms(string $word, bool $prefixSearch = false): array
     {
         $word = trim($word);
 
@@ -145,7 +148,8 @@ trait SearchScoring
         }
 
         $mainTerm = $terms[0];
-        $search = '+' . $mainTerm;
+        // Adiciona * para busca por prefixo no FULLTEXT (autocomplete)
+        $search = $prefixSearch ? '+' . $mainTerm . '*' : '+' . $mainTerm;
 
         foreach (array_slice($terms, 1) as $term) {
             $search .= ' ' . $term;

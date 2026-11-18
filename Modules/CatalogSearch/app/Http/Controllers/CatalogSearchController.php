@@ -72,10 +72,17 @@ class CatalogSearchController extends Controller
      */
     public function suggestions(Request $request): \Illuminate\Http\JsonResponse
     {
-        $word = trim($request->get('q', ''));
 
-        if (mb_strlen($word) < 4) {
-            return response()->json([]);
+        $word = trim($request->input('q', ''));
+
+        // Valida a quantidade de itens da busca
+        if (mb_strlen($word) < getConfigData('catalog/search/min_query_length')) {
+            return response()->json([
+                'products' => [],
+                'total' => 0,
+                'url' => route('catalogsearch.result', ['q' => $word]),
+                'message' => "Informe quantidade maior que ".getConfigData('catalog/search/min_query_length')
+            ]);
         }
 
         $products = CatalogProductsRepository::searchProductsSuggestion(
@@ -83,8 +90,8 @@ class CatalogSearchController extends Controller
         );
 
         return response()->json([
-            'products' => $products['products'],
-            'total' => $products['total'],
+            'products' => $products->items(),
+            'total' => $products->total(),
             'url' => route('catalogsearch.result', [
                 'q' => $word
             ])

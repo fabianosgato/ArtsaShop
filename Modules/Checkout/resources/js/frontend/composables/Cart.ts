@@ -105,7 +105,7 @@ export const useCartStore = defineStore('cart', () => {
         if (qty <= 0) return remove(productId)
 
         try {
-            const response = await fetch(route('cart.updatePost'), {
+            const response = await fetch(`${route('cart.updatePost')}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
                 body: JSON.stringify({ product_id: productId, qty }),
