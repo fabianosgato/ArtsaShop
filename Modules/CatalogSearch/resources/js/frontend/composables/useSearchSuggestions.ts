@@ -2,7 +2,10 @@ import {onUnmounted, ref} from 'vue'
 import {route} from 'ziggy-js'
 import {usePage} from "@inertiajs/vue3";
 
-const page = usePage()
+const page = usePage<{
+    searchConfig: { minQueryLength: number }
+}>()
+
 
 interface RawProduct {
     product_id: number

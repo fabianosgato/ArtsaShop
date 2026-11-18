@@ -50,8 +50,10 @@ export const useCartStore = defineStore('cart', () => {
 
     const is_empty = computed(() => items.value.length === 0)
 
-    // Buscar carrinho do backend (Inertia props)
-    const fetch = async () => {
+    // ===== ACTIONS =====
+
+    // Carregar carrinho do backend (Inertia props)
+    const load = async () => {
         loading.value = true
         error.value = null
 
@@ -70,7 +72,6 @@ export const useCartStore = defineStore('cart', () => {
 
     // Hidratar store com dados do backend
     const hydrate = (data: any) => {
-        // Suporta tanto getSummary() quanto get() completo
         items.value = data.items || []
         total_qty.value = data.total_qty || 0
         subtotal.value = data.subtotal || 0
@@ -80,7 +81,7 @@ export const useCartStore = defineStore('cart', () => {
         discount_rule_id.value = data.discount_rule_id || null
     }
 
-    // Adicionar item (chama API + atualiza store otimisticamente)
+    // Adicionar item (chama API + atualiza store)
     const add = async (productId: number, qty: number = 1, productData?: any) => {
         try {
             const response = await fetch(route('cart.addTo'), {
@@ -93,7 +94,7 @@ export const useCartStore = defineStore('cart', () => {
             })
 
             if (response.ok) {
-                await fetch() // Recarrega do backend (source of truth)
+                await load() // Recarrega do backend (source of truth)
             }
         } catch (e) {
             error.value = 'Erro ao adicionar ao carrinho'
@@ -111,7 +112,7 @@ export const useCartStore = defineStore('cart', () => {
                 body: JSON.stringify({ product_id: productId, qty }),
             })
 
-            if (response.ok) await fetch()
+            if (response.ok) await load()
         } catch (e) {
             error.value = 'Erro ao atualizar carrinho'
         }
@@ -125,7 +126,7 @@ export const useCartStore = defineStore('cart', () => {
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
                 body: JSON.stringify({ product_id: productId }),
             })
-            if (response.ok) await fetch()
+            if (response.ok) await load()
         } catch (e) {
             error.value = 'Erro ao remover item'
         }
@@ -135,7 +136,7 @@ export const useCartStore = defineStore('cart', () => {
     const clear = async () => {
         try {
             const response = await fetch(route('cart.clear'), { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken() }})
-            if (response.ok) await fetch()
+            if (response.ok) await load()
         } catch (e) {
             error.value = 'Erro ao limpar carrinho'
         }
@@ -162,7 +163,7 @@ export const useCartStore = defineStore('cart', () => {
         grand_total_fmt,
         is_empty,
         // Actions
-        fetch,
+        load,
         hydrate,
         add,
         updateQty,
@@ -170,5 +171,3 @@ export const useCartStore = defineStore('cart', () => {
         clear,
     }
 })
-
-
