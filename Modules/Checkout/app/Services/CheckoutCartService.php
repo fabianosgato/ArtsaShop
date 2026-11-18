@@ -179,7 +179,6 @@ class CheckoutCartService
             $this->salesQuoteService->deleteQuoteItens($quote->quote_id);
         }
 
-
     }
 
     /**
@@ -189,11 +188,6 @@ class CheckoutCartService
     {
         $cart['total_qty'] = 0;
         $cart['subtotal']  = 0;
-
-        // NÃO deve resetar mais esses campos aqui
-        // $cart['discount_rule_id'] = 0;
-        // $cart['payment_method'] = null;
-        // $cart['discount_amount'] = 0;
 
         if (count($cart['items']) > 0) {
             foreach ($cart['items'] as &$item) {
@@ -237,7 +231,7 @@ class CheckoutCartService
     }
 
     /**
-     * Retorna um resumo do carrinho (mini-cart / AJAX)
+     * Retorna um resumo do carrinho (CartHeader.vue)
      */
     public function getSummary(): array
     {
@@ -252,16 +246,16 @@ class CheckoutCartService
 
     }
 
+    /**
+     * Valida se o carrinho está vazio
+     * @return bool
+     */
     public function checkIsEmpty(): bool
     {
-
         $cart = $this->get();
-
         if (count($cart['items']) == 0)
             return true;
-
         return false;
-
     }
 
 }

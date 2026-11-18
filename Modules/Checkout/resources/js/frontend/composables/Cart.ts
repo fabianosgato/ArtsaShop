@@ -50,26 +50,16 @@ export const useCartStore = defineStore('cart', () => {
 
     const is_empty = computed(() => items.value.length === 0)
 
-    // ===== ACTIONS =====
-
-    // Buscar carrinho do backend (Inertia props ou API)
+    // Buscar carrinho do backend (Inertia props)
     const fetch = async () => {
         loading.value = true
         error.value = null
 
         try {
-            // Opção A: Via Inertia props (já disponível no page.props.cart)
             const page = usePage()
             if (page.props.cart) {
                 hydrate(page.props.cart)
                 return
-            }
-
-            // Opção B: Via API (fallback)
-            const response = await fetch(route('api.cart.summary'))
-            if (response.ok) {
-                const data = await response.json()
-                hydrate(data)
             }
         } catch (e) {
             error.value = 'Erro ao carregar carrinho'

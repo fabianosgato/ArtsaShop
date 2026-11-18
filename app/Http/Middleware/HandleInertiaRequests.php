@@ -66,6 +66,9 @@ class HandleInertiaRequests extends Middleware
             // Retorna a localidade do cliente
             'userLocation' => fn() => $request->session()->get('user_location'),
 
+            // Retorna as informações do carrinho
+            'cart' => fn() => app(\Modules\Checkout\Services\CheckoutCartService::class)->getSummary(),
+
         ]);
     }
 }
