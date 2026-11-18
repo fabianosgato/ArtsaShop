@@ -3,6 +3,7 @@ import {Link, usePage} from '@inertiajs/vue3'
 import {route} from 'ziggy-js'
 import UserDropdown from '@customers/components/UserDropdown.vue'
 import LocationSelector from '@customers/components/LocationSelector.vue'
+import CartHeader from "@checkout/components/CartHeader.vue";
 
 const page = usePage()
 const appName = page.props.appName
@@ -29,6 +30,7 @@ const appUrl = page.props.appUrl
 
                 <!-- Centro/Direita: Busca + Location + UserDropdown -->
                 <div class="flex-1 flex items-center justify-end gap">
+                    <CartHeader />
                     <LocationSelector class="mr-4 hidden lg:flex" />
                     <UserDropdown />
                 </div>

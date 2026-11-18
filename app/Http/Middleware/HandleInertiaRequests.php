@@ -63,6 +63,7 @@ class HandleInertiaRequests extends Middleware
             'pagarmePublicKey' => fn() => getPagarmePublicKey(),
             'csrf_token' => fn() => csrf_token(),
 
+            // Retorna a localidade do cliente
             'userLocation' => fn() => $request->session()->get('user_location'),
 
         ]);
