@@ -93,7 +93,7 @@ const useCurrentLocation = async () => {
 </script>
 
 <template>
-    <div id="location-dropdown" class="relative">
+    <div id="location-dropdown" class="header-location">
         <!-- Trigger Button -->
         <button
             type="button"
@@ -117,7 +117,7 @@ const useCurrentLocation = async () => {
             <div
                 v-show="open"
                 id="location-dropdown"
-                class="absolute right-0 mt-2 w-72 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-50"
+                class="header-dropdown shadow-lg"
                 role="menu"
                 aria-orientation="vertical"
             >

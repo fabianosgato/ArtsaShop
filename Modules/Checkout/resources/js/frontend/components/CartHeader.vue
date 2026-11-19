@@ -9,7 +9,7 @@ const cartStore = useCartStore()
 
 // Buscar carrinho ao montar
 onMounted(() => {
-    cartStore.fetch()
+    cartStore.load()
 })
 
 // Getters reativos do store
@@ -26,7 +26,7 @@ const close = () => open.value = false
 </script>
 
 <template>
-    <div class="top-cart-wrapper px-3" @mouseover="toggle" @mouseout="close">
+    <div class="top-cart-wrapper" @mouseover="toggle" @mouseout="close">
         <div class="top-cart-trigger">
             <div class="top-cart-icon">
                 <svg
@@ -52,10 +52,10 @@ const close = () => open.value = false
             <div class="top-cart-inner">
 
                 <div class="top-cart-items">
-                    <ol class="cart-sidebar">
-                        <li v-if="isEmpty" class="cart-item empty">
-                            Carrinho vazio
-                        </li>
+                    <div class="cart-empty" v-if="isEmpty" >
+                        Carrinho vazio
+                    </div>
+                    <ol v-else class="cart-sidebar">
                         <li v-for="item in cartItems" :key="item.product_id" class="cart-item">
                             <a :href="route('product.show', item.product.slug_key)" class="cart-item-image">
                                 <img :src="item.product.image" :alt="item.product.name" />

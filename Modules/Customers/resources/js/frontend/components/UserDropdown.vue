@@ -36,11 +36,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div id="user-dropdown" class="relative">
+    <div id="user-dropdown" class="header-customer-button">
         <!-- Trigger Button -->
         <button
             type="button"
-            class="user-dropdown-trigger flex items-center gap-2 py-2 text-sm font-medium text-gray-700 hover:text-orange-600 rounded-lg transition"
+            class="user-dropdown-trigger flex items-center gap-2 py-2 text-sm font-medium  transition"
             @click="toggle"
             :aria-expanded="open"
             aria-label="Abrir menu do usuário"
@@ -65,7 +65,7 @@ onUnmounted(() => {
         >
             <div
                 v-show="open"
-                class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-50"
+                class="user-dropdown shadow-lg z-50"
                 role="menu"
                 aria-orientation="vertical"
             >
