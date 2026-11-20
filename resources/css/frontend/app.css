@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "./partials/buttons.css";
+@import "./styles.css";
+@import "./responsive.css";
 
 /* Theme customizado (opcional) */
 @theme {
@@ -74,8 +76,6 @@
 }
 
 /* Styles padrões */
-@import "./styles.css";
-@import "./responsive.css";
 
 /* MAPEAMENTO DE CAMINHOS PARA PURGE (Tailwind v4) */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';

@@ -34,8 +34,8 @@ class LoadCartAfterLogin
      */
     public function handle(Login $event): void
     {
-        // Atualiza as informaçoes do carrinho do cliente
-        // $this->checkoutCustomerService->quoteToCustomer();
+        // Atualiza as informações do carrinho do cliente
+        $this->checkoutCustomerService->quoteToCustomer();
     }
 
 }
