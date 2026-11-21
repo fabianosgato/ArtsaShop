@@ -88,7 +88,8 @@ body p {
 
 /** Wrap: .header **/
 .header{position:relative;width:100%;padding:24px 0;background-color:#fff;margin:0 auto;clear:both}
-.header .header-content{display:grid;grid-template-columns:150px minmax(300px,1fr) auto;align-items:center;column-gap:40px}
+.header .header-content{display:grid;grid-template-columns:150px minmax(300px,1fr) auto;align-items:center}
+
 .header #logo{display:flex;align-items:center}
 .header #logo .logo{display:block;margin:0}
 .header #logo img{display:block;width:120px;height:auto}
