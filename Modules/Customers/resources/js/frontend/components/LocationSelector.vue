@@ -103,7 +103,7 @@ const useCurrentLocation = async () => {
             aria-label="Alterar local de entrega"
         >
             <IconLocation class="w-5 h-5 text-orange-600" />
-            <span class="hidden sm:inline block truncate" style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ displayLocation }}</span>
+            <span class="hidden sm:inline block truncate location-text">{{ displayLocation }}</span>
             <IconChevronDown class="w-4 h-4 ml-1 text-gray-400" />
         </button>
 

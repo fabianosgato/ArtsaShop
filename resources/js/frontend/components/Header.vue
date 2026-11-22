@@ -29,19 +29,25 @@ const appUrl = page.props.appUrl
                     </Link>
                 </h1>
 
-                <!-- Centro: Busca (flex-1) -->
-                <div class="flex-1 min-w-0">
+                <!-- Centro: Busca Principal (apenas desktop ≥1024px) -->
+                <div class="header-search-middle">
                     <SearchHeader />
                 </div>
 
                 <!-- Direita: Cart + Location + User -->
                 <div class="flex items-center gap-4">
                     <CartHeader />
-                    <LocationSelector class="hidden lg:flex" />
+                    <LocationSelector class="hidden md:flex" />
                     <UserDropdown />
                 </div>
 
             </div>
+
+            <!-- Centro: Busca Mobile (apenas mobile ≤768px, full-width abaixo do header) -->
+            <div class="header-search-full lg:hidden">
+                <SearchHeader />
+            </div>
+
         </div>
     </header>
 </template>

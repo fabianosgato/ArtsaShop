@@ -1,8 +1,33 @@
+/* Tablet: 768px - 1024px - Ajustar grid para caber 3 colunas */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .header .header-content {
+        grid-template-columns: 120px minmax(200px, 1fr) minmax(280px, max-content);
+        column-gap: 12px;
+    }
+
+    .header #logo img {
+        width: 100px;
+    }
+
+    .header .top-cart-label {
+        display: none;
+    }
+
+    .header .location-trigger .location-text {
+        max-width: 120px;
+    }
+}
+
+/* Mobile: até 768px - Layout 2 colunas (logo + ações), busca embaixo */
 @media (max-width: 768px) {
 
     .header .header-content {
         grid-template-columns: 1fr auto;
         row-gap: 4px;
+    }
+
+    .header .header-search-middle {
+        display: none;
     }
 
     .header .header-search {
