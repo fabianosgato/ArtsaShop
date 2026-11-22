@@ -87,8 +87,8 @@ body p {
 #top_header ul.links li.contact-us-now{margin-left:0;margin-right:0;padding-left:28px;background:url(./images/ico-contactusnow.png) no-repeat left -1px}
 
 /** Wrap: .header **/
-.header{position:relative;width:100%;padding:24px 0;background-color:#fff;margin:0 auto;clear:both}
-.header .header-content{display:grid;grid-template-columns:150px minmax(300px,1fr) auto;align-items:center}
+.header{position:relative;width:100%;background-color:#fff;margin:0 auto;clear:both;z-index: 9;}
+.header .header-content{display:grid;grid-template-columns:150px minmax(300px,1fr) auto;align-items:center;margin: 12px 0;}
 
 .header #logo{display:flex;align-items:center}
 .header #logo .logo{display:block;margin:0}
@@ -114,6 +114,27 @@ body p {
 
 .header .header-location {position:relative;color: var(--text-over-primary);}
 .header .header-location .header-dropdown {position: absolute;right: 0;margin-top: 2px;background: #fff;width: 18rem;top: 38px;border: 1px solid var(--color-gray-200);}
+
+.header .header-location .location-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: transparent;
+    color: #444;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+.header .header-location .location-trigger:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+.header .header-location .location-trigger svg {
+    width: 20px;
+    height: 20px;
+}
 
 .header .header-customer-button {position: relative;color: var(--text-over-primary);}
 .header .user-dropdown {position:absolute;right:0;top: 38px;width: 16rem;background-color: #fff;border: 1px solid var(--color-gray-200);}

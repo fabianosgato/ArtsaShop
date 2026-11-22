@@ -12,12 +12,12 @@ const appUrl = page.props.appUrl
 </script>
 
 <template>
-    <header class="header sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between gap-4 py-4 flex-wrap">
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
 
                 <!-- Logo -->
-                <div id="logo" class="flex-shrink-0">
+                <h1 id="logo">
                     <Link :href="route('index.home')" class="logo" :aria-label="appName + ' - Home'">
                         <img
                             :src="appUrl + 'images/frontend/logo.webp'"
@@ -27,26 +27,21 @@ const appUrl = page.props.appUrl
                             loading="lazy"
                         />
                     </Link>
+                </h1>
+
+                <!-- Centro: Busca (flex-1) -->
+                <div class="flex-1 min-w-0">
+                    <SearchHeader />
                 </div>
 
-                <!-- Centro/Direita: Busca + Location + UserDropdown -->
-                <div class="flex-1 flex items-center justify-end gap">
-                    <SearchHeader />
+                <!-- Direita: Cart + Location + User -->
+                <div class="flex items-center gap-4">
                     <CartHeader />
-                    <LocationSelector class="mr-4 hidden lg:flex" />
+                    <LocationSelector class="hidden lg:flex" />
                     <UserDropdown />
                 </div>
 
-                <!-- Mobile Menu Toggle -->
-                <button class="md:hidden p-2 text-gray-600 hover:text-orange-600" aria-label="Menu">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
             </div>
         </div>
     </header>
 </template>
-
-<style scoped></style>
