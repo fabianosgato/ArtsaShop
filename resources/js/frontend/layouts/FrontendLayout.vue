@@ -26,7 +26,7 @@ const isCustomerLayout = computed(() => props.layout === '2columns-customer')
         <Header v-if="!isCustomerLayout"/>
 
         <!-- Navigation (Categorias topo) -->
-        <Navigation v-if="!isCustomerLayout"/>
+        <Navigation />
 
         <!-- Banners (só Home) -->
         <Banners v-if="showBanners"/>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Fabiano Gato
  *
@@ -14,8 +15,8 @@
  *
  * @copyright    Copyright (c) Fabiano Gato
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
- *
  */
+
 namespace App\View\Components\Frontend;
 
 use Idea\Framework\Repository\Catalog\CatalogCategoryRepository;
@@ -24,7 +25,6 @@ use Illuminate\View\Component;
 
 class VerticalMenu extends Component
 {
-
     public $categories;
 
     protected $activeCategoryId;
@@ -54,7 +54,7 @@ class VerticalMenu extends Component
                 $slug
             );
 
-            if (!empty($this->activePathIds)) {
+            if (! empty($this->activePathIds)) {
                 $this->activeCategoryId = end($this->activePathIds);
             }
         }
@@ -65,13 +65,13 @@ class VerticalMenu extends Component
     }
 
     /**
-     * 🔍 Busca caminho completo pelo slug (SEM DB)
+     * Busca caminho completo pelo slug (SEM DB)
      */
     protected function buildActivePathIdsFromTree(array $categories, string $slug, array $path = []): array
     {
         foreach ($categories as $category) {
 
-            if (!$category['has_products']) {
+            if (! $category['has_products']) {
                 continue;
             }
 
@@ -99,7 +99,7 @@ class VerticalMenu extends Component
     }
 
     /**
-     * 🔥 Aplica estado ativo (POR REFERÊNCIA)
+     * Aplica estado ativo (POR REFERÊNCIA)
      */
     protected function applyActiveState(array &$categories): void
     {
@@ -120,7 +120,7 @@ class VerticalMenu extends Component
     public function render()
     {
         return view('frontend.components.catalog.navigation.mega-menu', [
-            'categories' => $this->categories
+            'categories' => $this->categories,
         ]);
     }
 }

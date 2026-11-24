@@ -84,11 +84,6 @@ export function useSearchSuggestions() {
             resultsUrl.value = data.url || ''
             open.value = products.value.length > 0
 
-            console.log('Começa a buscar por... ' + encodeURIComponent(q))
-            console.log('open.value = ' + open.value)
-            console.log('products.value.length = ' + products.value.length)
-            console.log(products.value)
-
         } catch (error) {
             console.error('Erro ao buscar sugestões:', error)
             products.value = []

@@ -142,11 +142,8 @@
 
         const hasData = fields.some(name => {
             const el = document.querySelector(`[name="${name}"]`);
-            console.log(el)
             return el && el.value && el.value.trim() !== '';
         });
-
-        console.log(hasData)
 
         if (hasData) {
             container.classList.remove('hidden');

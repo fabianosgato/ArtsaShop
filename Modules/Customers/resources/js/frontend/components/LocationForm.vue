@@ -125,8 +125,6 @@ const salvar = async () => {
             body: JSON.stringify(location),
         })
 
-        console.log('Response status:', response.status, response.ok) // ← ADICIONE
-
         if (response.ok) {
             updateLocation(location)
             emit('saved', location)

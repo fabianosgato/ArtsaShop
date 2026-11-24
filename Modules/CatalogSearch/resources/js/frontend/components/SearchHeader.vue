@@ -7,9 +7,6 @@ const page = usePage()
 const minInputSearch = page.props.searchConfig.minQueryLength
 const maxInputSearch = page.props.searchConfig.maxQueryLength
 
-console.log("Min: " + minInputSearch)
-console.log("Max: " + maxInputSearch)
-
 const {
     query,
     products,

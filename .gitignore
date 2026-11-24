@@ -24,6 +24,7 @@ AGENTS.md
 boost.json
 opencode.json
 .agents
+.clinerules
 
 # Compiled Java class files
 *.class

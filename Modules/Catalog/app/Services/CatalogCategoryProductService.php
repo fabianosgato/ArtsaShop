@@ -27,6 +27,73 @@ use Illuminate\Support\Str;
 class CatalogCategoryProductService
 {
 
+    /**
+     * retorna a árvore de Categorias para o menu
+     * @return mixed
+     */
+    public function getMenuCategories()
+    {
+        return app(ServiceCache::class)->remember(
+            cacheKey: 'catalog:categories:vertical-menu',
+            tags: ['catalog_category'],
+            closure: fn () => CatalogCategoryRepository::getMenuCategories()
+        );
+    }
+
+    /**
+     * Busca caminho completo pelo slug (SEM DB)
+     */
+    public function buildActivePathIdsFromTree(array $categories, string $slug, array $path = []): array
+    {
+        foreach ($categories as $category) {
+
+            if (! $category['has_products']) {
+                continue;
+            }
+
+            $newPath = [...$path, $category['entity_id']];
+
+            if ($category['slug_key'] === $slug) {
+                return $newPath;
+            }
+
+            if ($category['has_children']) {
+
+                $found = $this->buildActivePathIdsFromTree(
+                    $category['children'],
+                    $slug,
+                    $newPath
+                );
+
+                if ($found) {
+                    return $found;
+                }
+            }
+        }
+
+        return [];
+    }
+
+
+    /**
+     * Aplica estado ativo (POR REFERÊNCIA)
+     */
+    public function applyActiveState(array &$categories, int $activeCategoryId, array $activePathIds): void
+    {
+        foreach ($categories as &$category) {
+
+            $category['is_active'] =
+                $category['entity_id'] === $activeCategoryId;
+
+            $category['is_open'] =
+                in_array($category['entity_id'], $activePathIds);
+
+            if ($category['has_children']) {
+                $this->applyActiveState($category['children'], $activeCategoryId, $activePathIds);
+            }
+        }
+    }
+
     public static function getCategoryByAttributeSetId($attributeSetId)
     {
         return app(ServiceCache::class)->remember(

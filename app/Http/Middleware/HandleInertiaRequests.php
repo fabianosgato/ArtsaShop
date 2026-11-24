@@ -14,12 +14,14 @@
  *
  * @copyright    Copyright (c) Fabiano Gato
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
- *
  */
+
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Modules\Catalog\Services\CatalogCategoryProductService;
+use Modules\Checkout\Services\CheckoutCartService;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -36,6 +38,38 @@ class HandleInertiaRequests extends Middleware
         // Retorna a loja atual
         $store = app('currentStore');
 
+        // Categorias do menu de navegação
+        $categories = app(CatalogCategoryProductService::class)->getMenuCategories();
+
+        // Resolve categoria ativa baseada no slug atual
+        $activeCategoryId = null;
+        $activePathIds = [];
+
+        $slug = trim($request->path(), '/');
+
+        if ($slug) {
+            $activePathIds = app(CatalogCategoryProductService::class)
+                ->buildActivePathIdsFromTree($categories, $slug);
+            if (!empty($activePathIds)) {
+                $activeCategoryId = end($activePathIds);
+            }
+        }
+
+        if ($activeCategoryId) {
+            app(CatalogCategoryProductService::class)->applyActiveState(
+                $categories,
+                $activeCategoryId,
+                $activePathIds
+            );
+        }
+
+        // Debug: log structure
+        \Log::info('[HandleInertiaRequests] Categories structure', [
+            'count' => count($categories),
+            'first' => $categories[0] ?? null,
+            'first_children' => ($categories[0]['children'] ?? 'NO_CHILDREN_KEY'),
+        ]);
+
         return array_merge(parent::share($request), [
             'appName' => $store->store_name,
             'appUrl' => asset('/'),
@@ -46,11 +80,16 @@ class HandleInertiaRequests extends Middleware
                 'name' => $request->route()?->getName(),
             ],
 
+            // Categorias para o menu de navegação
+            'categories' => $categories,
+            'activeCategoryId' => $activeCategoryId,
+            'activePathIds' => $activePathIds,
+
             // Configuração geral da busca
             'searchConfig' => [
                 'minQueryLength' => getConfigData('catalog/search/min_query_length'),
                 'maxQueryLength' => getConfigData('catalog/search/max_query_length'),
-                'maxQueryWords' => getConfigData('catalog/search/max_query_words')
+                'maxQueryWords' => getConfigData('catalog/search/max_query_words'),
             ],
 
             'auth' => [
@@ -74,8 +113,9 @@ class HandleInertiaRequests extends Middleware
             'userLocation' => fn() => $request->session()->get('user_location'),
 
             // Retorna as informações do carrinho
-            'cart' => fn() => app(\Modules\Checkout\Services\CheckoutCartService::class)->getSummary(),
+            'cart' => fn() => app(CheckoutCartService::class)->getSummary(),
 
         ]);
     }
+
 }
