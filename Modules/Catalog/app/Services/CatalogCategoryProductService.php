@@ -29,9 +29,9 @@ class CatalogCategoryProductService
 
     /**
      * retorna a árvore de Categorias para o menu
-     * @return mixed
+     * @return array
      */
-    public function getMenuCategories()
+    public function getMenuCategories(): array
     {
         return app(ServiceCache::class)->remember(
             cacheKey: 'catalog:categories:vertical-menu',
@@ -97,7 +97,7 @@ class CatalogCategoryProductService
     public static function getCategoryByAttributeSetId($attributeSetId)
     {
         return app(ServiceCache::class)->remember(
-            cacheKey: "catalog-category:category-by-attributeset:attributeSetId:{$attributeSetId}",
+            cacheKey: "catalog-category:category-by-attributeset:attributeSetId:$attributeSetId",
             tags: ['catalog_category'],
             closure: function () use ($attributeSetId) {
                 return EavAttributesCategoryRepository::getCategoryByAttributeSet(

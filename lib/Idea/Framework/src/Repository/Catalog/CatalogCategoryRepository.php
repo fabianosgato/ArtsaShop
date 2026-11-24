@@ -79,15 +79,15 @@ class CatalogCategoryRepository extends AbstractRepository
 
                 // Monta o nó
                 $tree[] = [
-                    'entity_id' => $category['entity_id'],
-                    'parent_id' => $category['parent_id'],
+                    'entityId' => $category['entity_id'],
+                    'parentId' => $category['parent_id'],
                     'category' => $category['category'],
-                    'slug_key' => $category['slug_key'],
+                    'slugKey' => $category['slug_key'],
                     'level' => $level,
-                    'category_path' => $category['category_path'],
-                    'is_open' => false,
-                    'has_products' => true,
-                    'has_children' => !empty($children),
+                    'categoryPath' => $category['category_path'],
+                    'isOpen' => false,
+                    'hasProducts' => true,
+                    'hasChildren' => !empty($children),
                     'children' => $children,
                 ];
             }
