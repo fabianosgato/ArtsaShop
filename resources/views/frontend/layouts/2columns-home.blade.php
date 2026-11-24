@@ -7,8 +7,7 @@
 <section class="wrapper">
     @include('frontend.components.html.header-top')
     @include('frontend.components.html.header')
-    @include('frontend.components.catalog.navigation')
-    <x-frontend.banners-component/>
+
     <div class="content">
         <div class="container">
             <div class="py-0">

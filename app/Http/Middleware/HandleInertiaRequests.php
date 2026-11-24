@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Fabiano Gato
  *
@@ -50,25 +51,18 @@ class HandleInertiaRequests extends Middleware
         if ($slug) {
             $activePathIds = app(CatalogCategoryProductService::class)
                 ->buildActivePathIdsFromTree($categories, $slug);
-            if (!empty($activePathIds)) {
+            if (! empty($activePathIds)) {
                 $activeCategoryId = end($activePathIds);
             }
         }
 
         if ($activeCategoryId) {
-            app(CatalogCategoryProductService::class)->applyActiveState(
+            $categories = app(CatalogCategoryProductService::class)->applyActiveState(
                 $categories,
                 $activeCategoryId,
                 $activePathIds
             );
         }
-
-        // Debug: log structure
-        \Log::info('[HandleInertiaRequests] Categories structure', [
-            'count' => count($categories),
-            'first' => $categories[0] ?? null,
-            'first_children' => ($categories[0]['children'] ?? 'NO_CHILDREN_KEY'),
-        ]);
 
         return array_merge(parent::share($request), [
             'appName' => $store->store_name,
@@ -97,8 +91,8 @@ class HandleInertiaRequests extends Middleware
             ],
 
             'flash' => [
-                'success' => fn() => $request->session()->get('success'),
-                'error' => fn() => $request->session()->get('error'),
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
             ],
 
             'store' => [
@@ -106,16 +100,15 @@ class HandleInertiaRequests extends Middleware
                 'layout' => app('currentStore')->layout,
             ],
 
-            'pagarmePublicKey' => fn() => getPagarmePublicKey(),
-            'csrf_token' => fn() => csrf_token(),
+            'pagarmePublicKey' => fn () => getPagarmePublicKey(),
+            'csrf_token' => fn () => csrf_token(),
 
             // Retorna a localidade do cliente
-            'userLocation' => fn() => $request->session()->get('user_location'),
+            'userLocation' => fn () => $request->session()->get('user_location'),
 
             // Retorna as informações do carrinho
-            'cart' => fn() => app(CheckoutCartService::class)->getSummary(),
+            'cart' => fn () => app(CheckoutCartService::class)->getSummary(),
 
         ]);
     }
-
 }

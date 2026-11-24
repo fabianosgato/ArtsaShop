@@ -11,5 +11,5 @@ export interface Category {
     hasProducts: boolean
     hasChildren: boolean
     children: Category[]
-    isActive?: boolean
+    isActive: boolean
 }

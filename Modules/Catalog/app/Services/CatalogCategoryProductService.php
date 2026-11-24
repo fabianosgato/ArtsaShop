@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Fabiano Gato
  *
@@ -14,8 +15,8 @@
  *
  * @copyright    Copyright (c) Fabiano Gato
  * @author       Fabiano Gato <fabianogattoti@gmail.com>
- *
  */
+
 namespace Modules\Catalog\Services;
 
 use Idea\Framework\Repository\Catalog\CatalogCategoryProductRepository;
@@ -23,44 +24,51 @@ use Idea\Framework\Repository\Catalog\CatalogCategoryRepository;
 use Idea\Framework\Repository\Eav\EavAttributesCategoryRepository;
 use Idea\Framework\Services\ServiceCache;
 use Illuminate\Support\Str;
+use Modules\Catalog\DTO\CategoryDto;
 
 class CatalogCategoryProductService
 {
-
     /**
-     * retorna a árvore de Categorias para o menu
-     * @return array
+     * Retorna a árvore de Categorias para o menu como DTOs tipados.
+     *
+     * @return CategoryDto[]
      */
     public function getMenuCategories(): array
     {
         return app(ServiceCache::class)->remember(
-            cacheKey: 'catalog:categories:vertical-menu',
+            cacheKey: 'catalog:categories:departments',
             tags: ['catalog_category'],
-            closure: fn () => CatalogCategoryRepository::getMenuCategories()
+            closure: fn () => array_map(
+                CategoryDto::fromArray(...),
+                CatalogCategoryRepository::getMenuCategories()
+            )
         );
     }
 
     /**
-     * Busca caminho completo pelo slug (SEM DB)
+     * Busca caminho completo pelo slug (SEM DB).
+     *
+     * @param  CategoryDto[]  $categories
+     * @return int[]
      */
     public function buildActivePathIdsFromTree(array $categories, string $slug, array $path = []): array
     {
         foreach ($categories as $category) {
 
-            if (! $category['has_products']) {
+            if (! $category->hasProducts) {
                 continue;
             }
 
-            $newPath = [...$path, $category['entity_id']];
+            $newPath = [...$path, $category->entityId];
 
-            if ($category['slug_key'] === $slug) {
+            if ($category->slugKey === $slug) {
                 return $newPath;
             }
 
-            if ($category['has_children']) {
+            if ($category->hasChildren) {
 
                 $found = $this->buildActivePathIdsFromTree(
-                    $category['children'],
+                    $category->children,
                     $slug,
                     $newPath
                 );
@@ -74,24 +82,29 @@ class CatalogCategoryProductService
         return [];
     }
 
-
     /**
-     * Aplica estado ativo (POR REFERÊNCIA)
+     * Aplica estado ativo (retorna nova árvore com DTOs atualizados - imutável).
+     *
+     * @param  CategoryDto[]  $categories
+     * @return CategoryDto[]
      */
-    public function applyActiveState(array &$categories, int $activeCategoryId, array $activePathIds): void
+    public function applyActiveState(array $categories, int $activeCategoryId, array $activePathIds): array
     {
-        foreach ($categories as &$category) {
+        $result = [];
 
-            $category['is_active'] =
-                $category['entity_id'] === $activeCategoryId;
+        foreach ($categories as $category) {
+            $isActive = $category->entityId === $activeCategoryId;
+            $isOpen = in_array($category->entityId, $activePathIds);
 
-            $category['is_open'] =
-                in_array($category['entity_id'], $activePathIds);
+            $updatedChildren = $category->hasChildren
+                ? $this->applyActiveState($category->children, $activeCategoryId, $activePathIds)
+                : $category->children;
 
-            if ($category['has_children']) {
-                $this->applyActiveState($category['children'], $activeCategoryId, $activePathIds);
-            }
+            $result[] = $category->withChildren($updatedChildren)
+                ->withActiveState($isActive, $isOpen);
         }
+
+        return $result;
     }
 
     public static function getCategoryByAttributeSetId($attributeSetId)
@@ -119,7 +132,7 @@ class CatalogCategoryProductService
 
         // Slug completo (hierárquico)
         $slugKey = $parentSlug
-            ? $parentSlug . '/' . $currentSlug
+            ? $parentSlug.'/'.$currentSlug
             : $currentSlug;
 
         // Retorna os dados da Categoria pelo slug
@@ -133,10 +146,10 @@ class CatalogCategoryProductService
             CatalogCategoryProductRepository::create([
                 'category_id' => $catalogCategory->entity_id,
                 'product_id' => $productId,
-                'position' => 0
+                'position' => 0,
             ]);
 
-            if (!$isLast) {
+            if (! $isLast) {
                 self::saveProductCategories(
                     productId: $productId,
                     path: $parts[1],
@@ -149,5 +162,4 @@ class CatalogCategoryProductService
         }
 
     }
-
 }
