@@ -52,4 +52,25 @@ class CmsPage extends Model implements SeoAware
     {
         return $this->page_id;
     }
+
+    // Métodos exigidos pelo HasSeoResponse trait
+    public function getDefaultTitle(): string
+    {
+        return $this->seo_page_title ?: $this->title;
+    }
+
+    public function getDefaultDescription(): string
+    {
+        return $this->seo_meta_description ?: '';
+    }
+
+    public function getDefaultNoIndex(): bool
+    {
+        return false;
+    }
+
+    public function getDefaultNoFollow(): bool
+    {
+        return false;
+    }
 }
