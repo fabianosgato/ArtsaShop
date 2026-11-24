@@ -5,11 +5,16 @@ import {ZiggyVue} from 'ziggy-js'
 import {createPinia} from 'pinia'
 import '../../css/frontend/app.css'
 import Button from './ui/Button.vue'
-import enabledModules from "../../../modules_statuses.json";
+
+// Type for the enabled modules JSON
+interface EnabledModules {
+    [key: string]: boolean;
+}
 
 // Static globs - Vite requires static strings at compile time
 const mainPages = import.meta.glob('./pages/**/*.vue');
 const allModulePages = import.meta.glob('../../../Modules/*/resources/js/frontend/pages/**/*.vue');
+const enabledModules = (await import("../../../modules_statuses.json")).default as EnabledModules;
 
 createInertiaApp({
     // resolve: (name: string): Promise<DefineComponent> =>
@@ -44,6 +49,7 @@ async function resolvePage(pageUri: string): Promise<DefineComponent> {
 
     if (!module) {
         // Main app page: ./pages/{page}.vue
+
         pagePath = `./pages/${page}.vue`;
         pageImport = mainPages[pagePath];
     } else {
