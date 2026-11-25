@@ -4,7 +4,6 @@ import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import Navigation from '@/components/Navigation.vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
-import Banners from '@/components/Banners.vue'
 
 interface Props {
     layout?: '1column' | '2columns-left' | '2columns-right' | '2columns-home' | '2columns-product' | '2columns-customer'
@@ -14,7 +13,6 @@ const props = withDefaults(defineProps<Props>(), {
     layout: '2columns-left' as const,
 })
 
-const showBanners = computed(() => props.layout === '2columns-home')
 const showBreadcrumbs = computed(() => props.layout !== '2columns-home' && props.layout !== '1column')
 const showLeftNav = computed(() => props.layout === '2columns-left' || props.layout === '2columns-product')
 const isCustomerLayout = computed(() => props.layout === '2columns-customer')
@@ -28,15 +26,12 @@ const isCustomerLayout = computed(() => props.layout === '2columns-customer')
         <!-- Navigation (Categorias topo) -->
         <Navigation />
 
-        <!-- Banners (só Home) -->
-        <Banners v-if="showBanners"/>
-
         <!-- Breadcrumbs -->
         <Breadcrumbs v-if="showBreadcrumbs"/>
 
         <!-- Conteúdo Principal -->
         <div class="flex-1">
-            <div class="mx-auto px-4 max-w-[1400px]">
+            <div class="container">
                 <!-- Home: container centralizado simples -->
                 <div class="py-0" v-if="props.layout === '2columns-home'">
                     <slot/>

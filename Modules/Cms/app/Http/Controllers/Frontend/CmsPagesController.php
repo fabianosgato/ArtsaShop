@@ -23,6 +23,7 @@ use App\Http\Controllers\Controller;
 use Idea\Framework\Repository\Cms\CmsPageRepository;
 use Idea\Framework\Seo\Traits\HasSeoResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CmsPagesController extends Controller
 {
@@ -32,7 +33,7 @@ class CmsPagesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(int $pageId)
+    public function index(int $pageId): Response
     {
 
         // Retorna a pagina pelo ID
@@ -41,7 +42,7 @@ class CmsPagesController extends Controller
         if (!$page)
             abort(404);
 
-        // Compartilha as informacoes da página para o breadcrumb
+        // Compartilha as informações da página para o breadcrumb
         view()->share('cms', $page);
 
         // MetaTags da página
@@ -54,10 +55,8 @@ class CmsPagesController extends Controller
         $content = preg_replace($regex, '$1', $page->content);
 
         return Inertia::render('Cms::CmsPage', [
-            'page' => [
-                'title' => $page->title,
-                'content' => $content,
-            ]
+            'title' => $page->title,
+            'content' => $content,
         ]);
 
     }
