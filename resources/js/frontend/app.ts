@@ -18,14 +18,7 @@ const allModulePages = import.meta.glob<{ default: DefineComponent }>('../../../
 const enabledModules = (await import("../../../modules_statuses.json")).default as EnabledModules;
 
 createInertiaApp({
-    // resolve: (name: string): Promise<DefineComponent> =>
-    //     resolvePageComponent(
-    //         `./pages/${name}.vue`,
-    //         modules
-    //     ) as Promise<DefineComponent>,
-
     resolve: name => resolvePage(name),
-
     setup({el, App, props, plugin}) {
         const app = createApp({render: () => h(App, props)})
         app.use(plugin)
@@ -34,7 +27,6 @@ createInertiaApp({
         app.mount(el)
         app.component('Button', Button)
     },
-
     progress: {
         color: '#ff8400',
         showSpinner: true,
@@ -45,23 +37,22 @@ createInertiaApp({
 async function resolvePage(pageUri: string): Promise<DefineComponent> {
     const [moduleName, page] = pageUri.split('::');
 
+    // Determine the base path and glob map based on module
     let pageImport: (() => Promise<{ default: DefineComponent }>) | undefined;
     let pagePath = "";
 
-    if (!moduleName) {
-        pagePath = `./pages/${page}.vue`;
+    if (!moduleName || moduleName.toLowerCase() === 'home') {
+        // Main app pages (including home special case)
+        // If moduleName is "home", page will be "index" or similar
+        // If no moduleName, page is the actual page name
+        const pageName = moduleName ? 'Home' : page;
+        pagePath = `./pages/${pageName}.vue`;
         pageImport = mainPages[pagePath];
-
-    } else if (moduleName.toLowerCase() === 'home') {
-        pagePath = `./pages/Home.vue`;
-        pageImport = mainPages[pagePath];
-
     } else {
-        // Valida se o módulo está ativo
+        // Module pages
         if (!enabledModules[moduleName]) {
             throw new Error(`Module not enabled: ${moduleName}`);
         }
-
         pagePath = `../../../Modules/${moduleName}/resources/js/frontend/pages/${page}.vue`;
         pageImport = allModulePages[pagePath];
     }
@@ -72,5 +63,4 @@ async function resolvePage(pageUri: string): Promise<DefineComponent> {
 
     const pageModule = await pageImport();
     return pageModule.default;
-
 }
